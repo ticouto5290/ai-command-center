@@ -313,7 +313,7 @@ CODING_TOOL_SCHEMAS = [
         "type": "function",
         "function": {
             "name": "run_command",
-            "description": "Run a short shell command with cwd set to the project root. No destructive system commands.",
+            "description": "Run a short shell command with cwd set to the project root. It runs with the current macOS user's permissions and is not OS-sandboxed.",
             "parameters": {
                 "type": "object",
                 "properties": {"command": {"type": "string"}},

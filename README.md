@@ -50,13 +50,13 @@ Stop Docker before using native mode: `docker compose --env-file .env.docker dow
 - Chat with local **MLX** models (preferred, listed first) and GGUF models through the app-managed engines.
 - Recommended model links on the Models page for manual download.
 - **Image Studio engines:** Auto / PyTorch MPS / stable-diffusion.cpp (select in UI). Optional: `pip install torch torchvision diffusers transformers accelerate safetensors` in `.venv`.
-- **Code workspace (MVP):** set a project folder, browse tree, select context files, chat with coding agent tools (`list_dir`, `read_file`, `write_file`, `run_command`, `add_lesson`).
+- **Code workspace (MVP):** set a project folder, browse the tree, select context files, and chat with coding agent tools (`list_dir`, `read_file`, `write_file`, `run_command`, `add_lesson`). File tools enforce the selected folder boundary. Terminal commands start there but run with this Mac user's permissions.
 - **Local tool create/review (MVP):** Tools page → describe tool → generate → review/edit source → test → approve. Tools stored under `app/data/tools/`.
 - PDF create/read/edit tools; Library; custom HTTP tools; MCP stdio config.
 
 ## Still to build
 
-- Coding workspace polish: diff preview UI, stronger sandbox, richer playbook.
+- Coding workspace polish: diff preview UI, OS-level terminal sandbox and command approval, richer playbook.
 - Local tools: expose approved tools as per-chat LLM tools; better schema editor.
 - Blank-frame detection for sd.cpp; PyTorch LoRA support.
 - Model Center hardware controls; Model Workshop (LoRA training).

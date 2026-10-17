@@ -864,7 +864,7 @@ class AppHandler(BaseHTTPRequestHandler):
                     "content": (
                         "You are the coding agent for AI Command Center. "
                         "You can call tools: list_dir, read_file, write_file, run_command, add_lesson. "
-                        "Always stay inside the project folder. Read before write. Prefer small diffs.\n\n"
+                        "Keep file-tool paths inside the project folder. Terminal commands start there but are not OS-sandboxed and have the current macOS user's permissions. Read before write. Prefer small diffs.\n\n"
                         + ctx.get("context", "")
                     ),
                 }

@@ -825,8 +825,8 @@ async function refreshCodeProject() {
     if (pathInput && prefs.project_root) pathInput.value = prefs.project_root;
     document.querySelector("#code-project-title").textContent = prefs.project_root || "No project folder selected";
     document.querySelector("#code-project-copy").textContent = prefs.project_root
-      ? "Agent tools are scoped to this folder."
-      : "Choose a folder on this Mac. The agent can only read and write inside it.";
+      ? "File tools are scoped to this folder. Terminal commands start here with your macOS account permissions."
+      : "Choose a folder. File tools stay inside it; terminal commands run with your macOS account permissions.";
     document.querySelector("#code-project-state").textContent = prefs.project_root ? "READY" : "IDLE";
     if (prefs.project_root) await refreshCodeTree();
   } catch (e) {

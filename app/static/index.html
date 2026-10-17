@@ -111,7 +111,7 @@
                 <section class="view" id="view-code">
           <div class="page-content">
             <div class="page-intro"><div class="eyebrow"><span class="eyebrow-line"></span> BUILD WITH CONTEXT</div><h1>Code <em>workspace</em></h1><p>Project-aware agent with file tools, a scoped terminal, and a playbook that grows with you.</p></div>
-            <div class="runtime-banner"><div class="runtime-symbol">{ }</div><div><strong id="code-project-title">No project folder selected</strong><p id="code-project-copy">Choose a folder on this Mac. The agent can only read and write inside it.</p></div><span class="runtime-state" id="code-project-state">IDLE</span></div>
+            <div class="runtime-banner"><div class="runtime-symbol">{ }</div><div><strong id="code-project-title">No project folder selected</strong><p id="code-project-copy">Choose a folder. File tools stay inside it; terminal commands run with your macOS account permissions.</p></div><span class="runtime-state" id="code-project-state">IDLE</span></div>
             <div class="model-ingest-grid" style="margin-bottom:20px;">
               <section class="model-ingest-card">
                 <div class="ingest-eyebrow">PROJECT</div>
@@ -128,7 +128,7 @@
                 <small>Click files to add them to agent context (max 40).</small>
               </section>
             </div>
-            <div class="section-heading"><div><h2>Coding agent</h2><p>Uses the selected chat model with list/read/write/run tools scoped to the project.</p></div></div>
+            <div class="section-heading"><div><h2>Coding agent</h2><p>Uses your selected chat model with project-scoped file tools and a terminal that starts in this folder.</p></div></div>
             <div class="image-workspace">
               <div id="code-chat-log" class="pdf-read-result" style="min-height:180px;max-height:320px;overflow:auto;margin-bottom:12px;">Messages appear here.</div>
               <label class="field-label" for="code-input">Message</label>
@@ -292,7 +292,7 @@
               <article class="tool-row"><span class="tool-row-icon blue">⌕</span><div><strong>Project search</strong><p>Find files and symbols inside an approved workspace.</p></div><span class="status-tag upcoming"><span></span> PLANNED</span></article>
               <article class="tool-row"><span class="tool-row-icon violet">▤</span><div><strong>Skill library</strong><p>Reusable playbooks for languages, CMSs, frameworks, and workflows.</p></div><span class="status-tag upcoming"><span></span> PLANNED</span></article>
               <article class="tool-row"><span class="tool-row-icon amber">⛓</span><div><strong>MCP connections</strong><p>Connect this assistant to compatible local or remote tool servers.</p></div><span class="status-tag upcoming"><span></span> PLANNED</span></article>
-              <article class="tool-row"><span class="tool-row-icon green">⌘</span><div><strong>Scoped terminal</strong><p>Run approved commands in an isolated project workspace.</p></div><span class="status-tag upcoming"><span></span> PLANNED</span></article>
+              <article class="tool-row"><span class="tool-row-icon green">⌘</span><div><strong>Terminal isolation</strong><p>Add OS-level limits and command approval for project commands.</p></div><span class="status-tag upcoming"><span></span> PLANNED</span></article>
             </div>
           </div>
         </section>
