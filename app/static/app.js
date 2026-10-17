@@ -117,27 +117,30 @@ async function refreshImageCatalog() {
     const ready = Boolean(data.engine_ready);
     const dockerCpu = Boolean(data.docker_cpu);
     document.querySelector("#image-runtime-title").textContent = checkpoints.length ? "Local image models found" : "No compatible image models found";
-    const pytorch = catalog.pytorch || {};
-    const engines = catalog.engines || {};
+    const pytorch = data.pytorch || {};
+    const engines = data.engines || {};
     const pytorchReady = !!(engines.pytorch && engines.pytorch.ready);
-    const sdReady = !!(engines.sd_cpp && engines.sd_cpp.ready) || !!catalog.sd_cpp_ready;
+    const mpsReady = !!pytorch.mps_available;
+    const sdReady = !!(engines.sd_cpp && engines.sd_cpp.ready) || !!data.sd_cpp_ready;
     let engineNote = "";
-    if (pytorchReady) engineNote = " PyTorch MPS is available (preferred for reliability).";
+    if (mpsReady) engineNote = " PyTorch MPS is ready (preferred for reliability).";
+    else if (pytorch.torch_installed) engineNote = " PyTorch is using CPU; this can be slow. Auto will use stable-diffusion.cpp.";
     else if (pytorch.message) engineNote = ` ${pytorch.message}`;
     if (sdReady) engineNote += " stable-diffusion.cpp is available.";
     document.querySelector("#image-runtime-copy").textContent = ready
       ? `${checkpoints.length} checkpoints and ${loras.length} LoRAs are available.${engineNote} ${dockerCpu ? "Docker uses CPU image generation; start with a smaller image and fewer steps. " : ""}Image runs unload the chat model to free memory; the next chat message reloads it.`
       : "No image engine is ready yet. On native macOS install PyTorch (see README) or finish sd.cpp setup with run.command.";
-    document.querySelector("#image-runtime-state").textContent = ready ? (pytorchReady ? "PYTORCH" : "READY") : "SETTING UP";
+    document.querySelector("#image-runtime-state").textContent = ready ? (mpsReady ? "PYTORCH MPS" : "READY") : "SETTING UP";
     if (elements.imageEngine) {
       const autoOpt = elements.imageEngine.querySelector('option[value="auto"]');
       const ptOpt = elements.imageEngine.querySelector('option[value="pytorch"]');
       const sdOpt = elements.imageEngine.querySelector('option[value="sd_cpp"]');
+      if (ptOpt) ptOpt.textContent = mpsReady ? "PyTorch MPS (preferred / modern models)" : (pytorchReady ? "PyTorch CPU (slow)" : "PyTorch (not installed)");
       if (ptOpt) ptOpt.disabled = !pytorchReady;
       if (sdOpt) sdOpt.disabled = !sdReady;
-      if (autoOpt) autoOpt.textContent = pytorchReady
-        ? "Auto (prefer PyTorch MPS when available)"
-        : "Auto (sd.cpp — install PyTorch for MPS)";
+      if (autoOpt) autoOpt.textContent = mpsReady
+        ? "Auto (prefer PyTorch MPS)"
+        : (sdReady ? "Auto (stable-diffusion.cpp; MPS unavailable)" : (pytorchReady ? "Auto (PyTorch CPU; slow)" : "Auto (no image engine ready)"));
     }
     banner.classList.toggle("is-connected", ready);
     elements.imageCheckpoint.innerHTML = checkpoints.length

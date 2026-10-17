@@ -582,11 +582,11 @@ def generate_image(payload: dict) -> dict:
         return image_pytorch.generate_image(payload)
     if engine in ("sd", "sd_cpp", "sd-cpp", "cpp"):
         return image_runtime.generate_image(payload)
-    # auto: prefer PyTorch when available on native macOS
+    # auto: prefer PyTorch only when Apple MPS is available; CPU fallback is slow.
     try:
         import image_pytorch
         status = image_pytorch.engine_status()
-        if status.get("available") and not status.get("docker"):
+        if status.get("mps_available") and not status.get("docker"):
             try:
                 result = image_pytorch.generate_image(payload)
                 result.setdefault("engine", "pytorch-mps" if status.get("device") == "mps" else "pytorch")

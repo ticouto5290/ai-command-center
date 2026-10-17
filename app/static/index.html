@@ -200,8 +200,8 @@
               <form id="image-form" class="image-form">
                 <label class="field-label" for="image-engine">Image engine</label>
                 <select id="image-engine">
-                  <option value="auto">Auto (prefer PyTorch MPS when available)</option>
-                  <option value="pytorch">PyTorch MPS (reliable / modern models)</option>
+                  <option value="auto">Auto (checking available engines)</option>
+                  <option value="pytorch">PyTorch (checking availability)</option>
                   <option value="sd_cpp">stable-diffusion.cpp (lightweight)</option>
                 </select>
                 <label class="field-label" for="image-checkpoint">Image model</label><select id="image-checkpoint" required><option value="">Finding image models…</option></select>
