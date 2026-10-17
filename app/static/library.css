@@ -1,0 +1,40 @@
+.chat-tools-help { margin:8px 0; color:#82808b; font-size:9px; }
+.chat-tools-options { display:grid; gap:7px; }
+.chat-tools-options label { display:flex; align-items:flex-start; gap:8px; padding:8px; border:1px solid var(--border); border-radius:7px; cursor:pointer; }
+.chat-tools-options input { margin:2px 0 0; accent-color:#a99be9; }
+.chat-tools-options strong,.chat-tools-options small { display:block; }
+.chat-tools-options strong { color:#d8d5df; font-size:9px; font-weight:600; }
+.chat-tools-options small { margin-top:2px; color:#82808b; font-size:8px; line-height:1.45; }
+.library-toolbar { display:flex; align-items:center; gap:10px; margin:20px 0 13px; }
+.library-search { display:flex; align-items:center; gap:8px; min-width:160px; flex:1; padding:0 11px; border:1px solid var(--border); border-radius:7px; background:rgba(255,255,255,.018); color:#898691; }
+.library-search input { width:100%; height:35px; border:0; outline:0; background:transparent; color:#e4e1eb; font:9px var(--display); }
+.library-upload-button { display:flex; align-items:center; justify-content:center; cursor:pointer; }
+.library-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.library-card { min-width:0; overflow:hidden; border:1px solid var(--border); border-radius:9px; background:rgba(255,255,255,.018); }
+.library-preview { display:grid; height:130px; place-items:center; overflow:hidden; border-bottom:1px solid var(--border); background:rgba(0,0,0,.12); color:#a99be9; font-size:32px; }
+.library-preview img { width:100%; height:100%; object-fit:cover; }
+.library-preview.pdf { color:#e59d9d; background:rgba(176,72,72,.07); }
+.library-preview.doc { color:#9cbaff; background:rgba(84,144,236,.07); }
+.library-card-copy { padding:11px; }
+.library-card-copy strong { display:block; overflow:hidden; color:#dedbe4; font-size:9px; font-weight:600; text-overflow:ellipsis; white-space:nowrap; }
+.library-card-copy small { display:block; margin-top:5px; color:#83808c; font-size:8px; }
+.library-card-actions { display:flex; gap:8px; padding:0 11px 11px; }
+.library-card-actions a { color:#b8aaff; font-size:8px; text-decoration:none; }
+.library-card-actions a:hover { color:#ded5ff; }
+.pdf-workspace { margin:23px 0 30px; padding:16px; border:1px solid var(--border); border-radius:10px; background:rgba(255,255,255,.015); }
+.pdf-workspace .section-heading { align-items:center; margin-bottom:13px; }
+.status-tag.ready { color:#8bcba4; }
+.pdf-tool-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.pdf-tool-card { display:flex; min-width:0; flex-direction:column; align-items:stretch; padding:13px; border:1px solid var(--border); border-radius:8px; background:rgba(255,255,255,.018); }
+.pdf-tool-card h3 { margin:11px 0 13px; color:#e1dfe7; font:600 11px var(--display); }
+.pdf-tool-card label { margin:0 0 5px; color:#aaa7b2; font-size:8px; }
+.pdf-tool-card input,.pdf-tool-card select,.pdf-tool-card textarea { width:100%; min-width:0; margin:0 0 10px; padding:9px; border:1px solid var(--border); border-radius:6px; outline:0; background:rgba(11,11,14,.4); color:#e4e1eb; font:9px var(--display); resize:vertical; }
+.pdf-tool-card select option { background:#1e1f24; color:#e4e1eb; }
+.pdf-tool-card input:focus,.pdf-tool-card select:focus,.pdf-tool-card textarea:focus { border-color:rgba(173,157,255,.42); }
+.pdf-tool-card .primary-button,.pdf-tool-card .secondary-button { width:100%; justify-content:center; margin-top:auto; }
+.pdf-tool-card > small { margin-top:8px; color:#82808b; font-size:8px; }
+.pdf-read-result { max-height:230px; min-height:100px; overflow:auto; margin-top:11px; padding:9px; border:1px solid var(--border); border-radius:6px; background:rgba(0,0,0,.12); color:#aaa7b2; font:8px/1.6 var(--mono); white-space:pre-wrap; overflow-wrap:anywhere; }
+.pdf-result-link { display:block; margin-top:8px; color:#b8aaff; font-size:8px; text-decoration:none; }
+.code-empty-state a.primary-button { margin-top:9px; text-decoration:none; }
+@media (max-width:900px) { .library-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .pdf-tool-grid { grid-template-columns:1fr; } }
+@media (max-width:620px) { .library-toolbar { flex-wrap:wrap; } .library-search { flex-basis:100%; } .library-grid { grid-template-columns:1fr; } }

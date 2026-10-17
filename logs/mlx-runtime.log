@@ -1,0 +1,134 @@
+<local-path> UserWarning: mlx_lm.server is not recommended for production as it only implements basic security checks.
+  warnings.warn(
+2026-10-16 23:49:23,717 - INFO - Starting httpd at 127.0.0.1 on port 62034...
+127.0.0.1 - - [16/Oct/2026 23:49:23] "GET /v1/models HTTP/1.1" 200 -
+2026-10-16 23:49:25,447 - INFO - Prompt Cache: 0 sequences, 0.00 GB
+2026-10-16 23:49:25,447 - INFO - - assistant: 0 sequences, 0.00 GB
+2026-10-16 23:49:25,447 - INFO - - user: 0 sequences, 0.00 GB
+2026-10-16 23:49:25,447 - INFO - - system: 0 sequences, 0.00 GB
+127.0.0.1 - - [16/Oct/2026 23:49:25] "POST /v1/chat/completions HTTP/1.1" 200 -
+2026-10-16 23:49:26,724 - INFO - Prompt processing progress: 38/39
+2026-10-16 23:49:27,398 - INFO - Prompt processing progress: 39/39
+<local-path> UserWarning: mlx_lm.server is not recommended for production as it only implements basic security checks.
+  warnings.warn(
+2026-10-16 23:55:35,295 - INFO - Starting httpd at 127.0.0.1 on port 62256...
+127.0.0.1 - - [16/Oct/2026 23:55:35] "GET /v1/models HTTP/1.1" 200 -
+2026-10-16 23:55:37,019 - INFO - Prompt Cache: 0 sequences, 0.00 GB
+2026-10-16 23:55:37,020 - INFO - - assistant: 0 sequences, 0.00 GB
+2026-10-16 23:55:37,020 - INFO - - user: 0 sequences, 0.00 GB
+2026-10-16 23:55:37,020 - INFO - - system: 0 sequences, 0.00 GB
+127.0.0.1 - - [16/Oct/2026 23:55:37] "POST /v1/chat/completions HTTP/1.1" 200 -
+2026-10-16 23:55:38,087 - INFO - Prompt processing progress: 440/441
+2026-10-16 23:55:38,162 - INFO - Prompt processing progress: 441/441
+<local-path> UserWarning: mlx_lm.server is not recommended for production as it only implements basic security checks.
+  warnings.warn(
+2026-10-16 23:57:28,266 - INFO - Starting httpd at 127.0.0.1 on port 62312...
+127.0.0.1 - - [16/Oct/2026 23:57:28] "GET /v1/models HTTP/1.1" 200 -
+2026-10-16 23:57:30,058 - INFO - Prompt Cache: 0 sequences, 0.00 GB
+2026-10-16 23:57:30,058 - INFO - - assistant: 0 sequences, 0.00 GB
+2026-10-16 23:57:30,058 - INFO - - user: 0 sequences, 0.00 GB
+2026-10-16 23:57:30,058 - INFO - - system: 0 sequences, 0.00 GB
+127.0.0.1 - - [16/Oct/2026 23:57:30] "POST /v1/chat/completions HTTP/1.1" 200 -
+2026-10-16 23:57:30,403 - INFO - Prompt processing progress: 122/123
+2026-10-16 23:57:30,479 - INFO - Prompt processing progress: 123/123
+<local-path> UserWarning: mlx_lm.server is not recommended for production as it only implements basic security checks.
+  warnings.warn(
+2026-10-17 00:04:12,625 - INFO - Starting httpd at 127.0.0.1 on port 62439...
+127.0.0.1 - - [17/Oct/2026 00:04:12] "GET /v1/models HTTP/1.1" 200 -
+2026-10-17 00:04:14,297 - INFO - Prompt Cache: 0 sequences, 0.00 GB
+2026-10-17 00:04:14,297 - INFO - - assistant: 0 sequences, 0.00 GB
+2026-10-17 00:04:14,297 - INFO - - user: 0 sequences, 0.00 GB
+2026-10-17 00:04:14,297 - INFO - - system: 0 sequences, 0.00 GB
+127.0.0.1 - - [17/Oct/2026 00:04:14] "POST /v1/chat/completions HTTP/1.1" 200 -
+2026-10-17 00:04:14,963 - INFO - Prompt processing progress: 237/291
+2026-10-17 00:04:15,131 - INFO - Prompt processing progress: 290/291
+2026-10-17 00:04:15,204 - INFO - Prompt processing progress: 291/291
+<local-path> UserWarning: mlx_lm.server is not recommended for production as it only implements basic security checks.
+  warnings.warn(
+2026-10-17 00:05:30,540 - INFO - Starting httpd at 127.0.0.1 on port 62485...
+127.0.0.1 - - [17/Oct/2026 00:05:30] "GET /v1/models HTTP/1.1" 200 -
+2026-10-17 00:05:32,301 - INFO - Prompt Cache: 0 sequences, 0.00 GB
+2026-10-17 00:05:32,301 - INFO - - assistant: 0 sequences, 0.00 GB
+2026-10-17 00:05:32,301 - INFO - - user: 0 sequences, 0.00 GB
+2026-10-17 00:05:32,301 - INFO - - system: 0 sequences, 0.00 GB
+127.0.0.1 - - [17/Oct/2026 00:05:32] "POST /v1/chat/completions HTTP/1.1" 200 -
+2026-10-17 00:05:32,920 - INFO - Prompt processing progress: 237/290
+2026-10-17 00:05:33,086 - INFO - Prompt processing progress: 289/290
+2026-10-17 00:05:33,161 - INFO - Prompt processing progress: 290/290
+127.0.0.1 - - [17/Oct/2026 00:05:51] "GET /v1/models HTTP/1.1" 200 -
+<local-path> UserWarning: mlx_lm.server is not recommended for production as it only implements basic security checks.
+  warnings.warn(
+2026-10-17 00:06:11,630 - INFO - Starting httpd at 127.0.0.1 on port 62537...
+127.0.0.1 - - [17/Oct/2026 00:06:11] "GET /v1/models HTTP/1.1" 200 -
+2026-10-17 00:06:13,333 - INFO - Prompt Cache: 0 sequences, 0.00 GB
+2026-10-17 00:06:13,333 - INFO - - assistant: 0 sequences, 0.00 GB
+2026-10-17 00:06:13,333 - INFO - - user: 0 sequences, 0.00 GB
+2026-10-17 00:06:13,333 - INFO - - system: 0 sequences, 0.00 GB
+127.0.0.1 - - [17/Oct/2026 00:06:13] "POST /v1/chat/completions HTTP/1.1" 200 -
+2026-10-17 00:06:13,944 - INFO - Prompt processing progress: 237/283
+2026-10-17 00:06:14,107 - INFO - Prompt processing progress: 282/283
+2026-10-17 00:06:14,177 - INFO - Prompt processing progress: 283/283
+<local-path> UserWarning: mlx_lm.server is not recommended for production as it only implements basic security checks.
+  warnings.warn(
+2026-10-17 00:06:54,235 - INFO - Starting httpd at 127.0.0.1 on port 62571...
+127.0.0.1 - - [17/Oct/2026 00:06:54] "GET /v1/models HTTP/1.1" 200 -
+2026-10-17 00:06:56,018 - INFO - Prompt Cache: 0 sequences, 0.00 GB
+2026-10-17 00:06:56,018 - INFO - - assistant: 0 sequences, 0.00 GB
+2026-10-17 00:06:56,018 - INFO - - user: 0 sequences, 0.00 GB
+2026-10-17 00:06:56,018 - INFO - - system: 0 sequences, 0.00 GB
+127.0.0.1 - - [17/Oct/2026 00:06:56] "POST /v1/chat/completions HTTP/1.1" 200 -
+2026-10-17 00:06:56,624 - INFO - Prompt processing progress: 237/270
+2026-10-17 00:06:56,943 - INFO - Prompt processing progress: 269/270
+2026-10-17 00:06:57,019 - INFO - Prompt processing progress: 270/270
+2026-10-17 00:06:59,983 - INFO - Prompt Cache: 1 sequences, 0.06 GB
+2026-10-17 00:06:59,983 - INFO - - assistant: 1 sequences, 0.06 GB
+2026-10-17 00:06:59,983 - INFO - - user: 0 sequences, 0.00 GB
+2026-10-17 00:06:59,983 - INFO - - system: 0 sequences, 0.00 GB
+127.0.0.1 - - [17/Oct/2026 00:06:59] "POST /v1/chat/completions HTTP/1.1" 200 -
+2026-10-17 00:07:00,437 - INFO - Prompt processing progress: 103/104
+2026-10-17 00:07:00,511 - INFO - Prompt processing progress: 104/104
+127.0.0.1 - - [17/Oct/2026 00:07:25] "GET /v1/models HTTP/1.1" 200 -
+2026-10-17 00:07:25,998 - INFO - Prompt Cache: 1 sequences, 0.09 GB
+2026-10-17 00:07:25,998 - INFO - - assistant: 1 sequences, 0.09 GB
+2026-10-17 00:07:25,998 - INFO - - user: 0 sequences, 0.00 GB
+2026-10-17 00:07:25,998 - INFO - - system: 0 sequences, 0.00 GB
+127.0.0.1 - - [17/Oct/2026 00:07:25] "POST /v1/chat/completions HTTP/1.1" 200 -
+2026-10-17 00:07:27,581 - INFO - Prompt processing progress: 196/346
+2026-10-17 00:07:28,045 - INFO - Prompt processing progress: 345/346
+2026-10-17 00:07:28,110 - INFO - Prompt processing progress: 346/346
+<local-path> UserWarning: mlx_lm.server is not recommended for production as it only implements basic security checks.
+  warnings.warn(
+2026-10-17 00:08:03,555 - INFO - Starting httpd at 127.0.0.1 on port 62619...
+127.0.0.1 - - [17/Oct/2026 00:08:03] "GET /v1/models HTTP/1.1" 200 -
+2026-10-17 00:08:05,242 - INFO - Prompt Cache: 0 sequences, 0.00 GB
+2026-10-17 00:08:05,243 - INFO - - assistant: 0 sequences, 0.00 GB
+2026-10-17 00:08:05,243 - INFO - - user: 0 sequences, 0.00 GB
+2026-10-17 00:08:05,243 - INFO - - system: 0 sequences, 0.00 GB
+127.0.0.1 - - [17/Oct/2026 00:08:05] "POST /v1/chat/completions HTTP/1.1" 200 -
+2026-10-17 00:08:05,910 - INFO - Prompt processing progress: 252/302
+2026-10-17 00:08:06,093 - INFO - Prompt processing progress: 301/302
+2026-10-17 00:08:06,164 - INFO - Prompt processing progress: 302/302
+2026-10-17 00:08:10,320 - INFO - Prompt Cache: 1 sequences, 0.07 GB
+2026-10-17 00:08:10,320 - INFO - - assistant: 1 sequences, 0.07 GB
+2026-10-17 00:08:10,320 - INFO - - user: 0 sequences, 0.00 GB
+2026-10-17 00:08:10,320 - INFO - - system: 0 sequences, 0.00 GB
+127.0.0.1 - - [17/Oct/2026 00:08:10] "POST /v1/chat/completions HTTP/1.1" 200 -
+2026-10-17 00:08:10,647 - INFO - Prompt processing progress: 89/90
+2026-10-17 00:08:10,711 - INFO - Prompt processing progress: 90/90
+127.0.0.1 - - [17/Oct/2026 00:08:26] "GET /v1/models HTTP/1.1" 200 -
+2026-10-17 00:08:26,889 - INFO - Prompt Cache: 1 sequences, 0.10 GB
+2026-10-17 00:08:26,889 - INFO - - assistant: 1 sequences, 0.10 GB
+2026-10-17 00:08:26,889 - INFO - - user: 0 sequences, 0.00 GB
+2026-10-17 00:08:26,889 - INFO - - system: 0 sequences, 0.00 GB
+127.0.0.1 - - [17/Oct/2026 00:08:26] "POST /v1/chat/completions HTTP/1.1" 200 -
+2026-10-17 00:08:27,502 - INFO - Prompt processing progress: 178/396
+2026-10-17 00:08:28,114 - INFO - Prompt processing progress: 395/396
+2026-10-17 00:08:28,179 - INFO - Prompt processing progress: 396/396
+2026-10-17 00:08:33,490 - INFO - Prompt Cache: 2 sequences, 0.23 GB
+2026-10-17 00:08:33,490 - INFO - - assistant: 2 sequences, 0.23 GB
+2026-10-17 00:08:33,490 - INFO - - user: 0 sequences, 0.00 GB
+2026-10-17 00:08:33,490 - INFO - - system: 0 sequences, 0.00 GB
+127.0.0.1 - - [17/Oct/2026 00:08:33] "POST /v1/chat/completions HTTP/1.1" 200 -
+2026-10-17 00:08:33,977 - INFO - Prompt processing progress: 185/186
+2026-10-17 00:08:34,044 - INFO - Prompt processing progress: 186/186
+127.0.0.1 - - [17/Oct/2026 00:09:59] "GET /v1/models HTTP/1.1" 200 -

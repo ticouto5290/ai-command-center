@@ -1,0 +1,2002 @@
+ggml_metal_device_init: testing tensor API for f16 support
+ggml_metal_library_compile_pipeline: compiling pipeline: base = 'dummy_kernel', name = 'dummy_kernel'
+ggml_metal_library_compile_pipeline: loaded dummy_kernel                                  0x1056f2580 | th_max = 1024 | th_width =   32
+ggml_metal_device_init: testing tensor API for bfloat support
+ggml_metal_library_compile_pipeline: compiling pipeline: base = 'dummy_kernel', name = 'dummy_kernel'
+ggml_metal_library_compile_pipeline: loaded dummy_kernel                                  0x105722b60 | th_max = 1024 | th_width =   32
+ggml_metal_library_init: using embedded metal library
+ggml_metal_library_compile_all: compiled 'fa_aux' library in 0.284 sec
+ggml_metal_library_compile_all: compiled 'fa_f16' library in 2.174 sec
+ggml_metal_library_compile_all: compiled 'fa_f32' library in 3.100 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_0' library in 1.232 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_1' library in 3.100 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_0' library in 3.100 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_1' library in 1.033 sec
+ggml_metal_library_compile_all: compiled 'fa_q8_0' library in 1.455 sec
+ggml_metal_library_compile_all: compiled 'fa_tensor' library in 0.400 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f16' library in 3.113 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f32' library in 1.040 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_0' library in 3.980 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_1' library in 3.170 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_0' library in 4.053 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_1' library in 3.789 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q8_0' library in 3.100 sec
+ggml_metal_library_compile_all: compiled 'mul_mv' library in 1.361 sec
+ggml_metal_library_compile_all: compiled 'mul_mv_mma' library in 3.170 sec
+ggml_metal_library_compile_all: compiled 'mul_mm' library in 3.099 sec
+ggml_metal_library_compile_all: compiled 'quantize' library in 3.099 sec
+ggml_metal_library_compile_all: compiled 'softmax' library in 0.124 sec
+ggml_metal_library_compile_all: compiled 'norm' library in 0.166 sec
+ggml_metal_library_compile_all: compiled 'unary' library in 3.169 sec
+ggml_metal_library_compile_all: compiled 'binbcast' library in 3.112 sec
+ggml_metal_library_compile_all: compiled 'reduce' library in 0.130 sec
+ggml_metal_library_compile_all: compiled 'tri' library in 0.092 sec
+ggml_metal_library_compile_all: compiled 'ssm' library in 0.217 sec
+ggml_metal_library_compile_all: compiled 'wkv' library in 0.283 sec
+ggml_metal_library_compile_all: compiled 'gated_delta_net' library in 0.105 sec
+ggml_metal_library_compile_all: compiled 'solve_tri' library in 0.084 sec
+ggml_metal_library_compile_all: compiled 'rope' library in 0.156 sec
+ggml_metal_library_compile_all: compiled 'conv' library in 0.422 sec
+ggml_metal_library_compile_all: compiled 'upscale' library in 0.396 sec
+ggml_metal_library_compile_all: compiled 'argsort' library in 0.396 sec
+ggml_metal_library_compile_all: compiled 'pool' library in 0.396 sec
+ggml_metal_library_compile_all: compiled 'misc' library in 0.396 sec
+ggml_metal_library_compile_all: loaded 36 libraries from embedded data in 4.053 sec (max single = 4.053 sec)
+ggml_metal_rsets_init: creating a residency set collection (keep_alive = 180 s)
+ggml_metal_device_init: GPU name:   MTL0 (Apple M5)
+ggml_metal_device_init: GPU family: MTLGPUFamilyApple10  (1010)
+ggml_metal_device_init: GPU family: MTLGPUFamilyMetal4  (5002)
+ggml_metal_device_init: simdgroup reduction   = true
+ggml_metal_device_init: simdgroup matrix mul. = true
+ggml_metal_device_init: has unified memory    = true
+ggml_metal_device_init: has bfloat            = true
+ggml_metal_device_init: has tensor            = true
+ggml_metal_device_init: use residency sets    = true
+ggml_metal_device_init: use shared buffers    = true
+ggml_metal_device_init: recommendedMaxWorkingSetSize  = 12713.12 MB
+[I] loading model from '<local-path>' --- diffusion_engine.cpp:731
+[I] load <local-path> using safetensors format --- model_loader.cpp:222
+[I] Version: SD 1.x  --- diffusion_engine.cpp:1016
+[I] auto-fit plan: --- backend_fit.cpp:323
+[I]   devices: --- backend_fit.cpp:324
+[I]     MTL0         Apple M5                         free  12123 MiB, budget  11611 MiB --- backend_fit.cpp:328
+[I]     RAM          free   8191 MiB, params budget   6143 MiB --- backend_fit.cpp:334
+[I]   compute-device weight cache priority: diffusion > te > vae --- backend_fit.cpp:336
+[I]   components (params: compute device -> RAM -> other GPU -> disk): --- backend_fit.cpp:337
+[I]     DiT          params   1639 MiB, compute reserve  2048 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I]     Conditioner  params    234 MiB, compute reserve  2048 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I]     VAE          params    159 MiB, compute reserve  1024 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I] auto-fit: --backend "diffusion=MTL0,te=MTL0,vae=MTL0" --- backend_fit.cpp:477
+[I] ggml: ggml_metal_init: allocating
+[I] ggml: ggml_metal_init: found device: Apple M5
+[I] ggml: ggml_metal_init: picking default device: Apple M5
+[I] ggml: ggml_metal_init: use fusion         = true
+[I] ggml: ggml_metal_init: use concurrency    = true
+[I] ggml: ggml_metal_init: use graph optimize = true
+[I] Weight type stat:                      f16: 1130 |     i32: 1     --- diffusion_engine.cpp:1641
+[I] Conditioner weight type stat:          f16: 196  |     i32: 1     --- diffusion_engine.cpp:1642
+[I] Diffusion model weight type stat:      f16: 686   --- diffusion_engine.cpp:1643
+[I] VAE weight type stat:                  f16: 248   --- diffusion_engine.cpp:1644
+[I] using VAE for encoding / decoding --- model_builders.cpp:657
+[I] vae decoder: ch = 128 --- auto_encoder_kl.hpp:529
+[I] flash attention auto: MTL0 -> off (probe: normal 4.030 ms, flash 4.024 ms) --- flash_attn.cpp:95
+[I] conv2d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] conv3d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] total params memory size = 2035.00MB (VRAM 2035.00MB, RAM 0.00MB): text_encoders 235.06MB(VRAM), diffusion_model 1640.25MB(VRAM), vae 159.68MB(VRAM), controlnet 0.00MB(N/A), extensions 0.00MB(N/A) --- diffusion_engine.cpp:1451
+[I] running in eps-prediction mode --- diffusion_engine.cpp:1561
+[I] generate_image 512x512 --- image.cpp:814
+[I] get_sigmas with discrete scheduler --- denoiser.hpp:1129
+[I] sampling using Euler method --- request.cpp:422
+[I] clip build cached graph cut plan done (taking 0 ms) --- ggml_graph_cut.cpp:1034
+
+  |##################################                | 130/196 - 478.73MB/s[K
+  |##################################################| 196/196 - 565.59MB/s[K
+[I] loading tensors completed, taking 0.41s (read: 0.31s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] get_learned_condition completed, taking 0.68s --- image.cpp:529
+[I] generating image: 1/1 - seed 123 --- image.cpp:866
+[I] unet build cached graph cut plan done (taking 2 ms) --- ggml_graph_cut.cpp:1034
+
+  |#########                                         | 114/686 - 677.15MB/s[K
+  |################                                  | 212/686 - 617.01MB/s[K
+  |###################                               | 250/686 - 664.24MB/s[K
+  |######################                            | 290/686 - 686.53MB/s[K
+  |########################                          | 320/686 - 654.79MB/s[K
+  |##############################                    | 410/686 - 660.98MB/s[K
+  |###############################                   | 424/686 - 649.75MB/s[K
+  |##################################                | 462/686 - 682.87MB/s[K
+  |#####################################             | 498/686 - 662.03MB/s[K
+  |########################################          | 538/686 - 694.32MB/s[K
+  |################################################  | 650/686 - 706.51MB/s[K
+  |##################################################| 686/686 - 662.12MB/s[K
+[I] loading tensors completed, taking 2.48s (read: 2.28s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.02s) --- model_loader.cpp:1401
+
+  |========>                                         | 1/6 - 5.65s/it[K
+  |================>                                 | 2/6 - 2.85s/it[K
+  |=========================>                        | 3/6 - 2.84s/it[K
+  |=================================>                | 4/6 - 2.84s/it[K
+  |=========================================>        | 5/6 - 2.84s/it[K
+  |==================================================| 6/6 - 2.84s/it[K
+[I] sampling completed, taking 19.86s --- image.cpp:899
+[I] generating 1 latent images completed, taking 19.86s --- image.cpp:913
+[I] decoding 1 latents --- image.cpp:554
+[I] vae build cached graph cut plan done (taking 0 ms) --- ggml_graph_cut.cpp:1034
+
+  |##################################################| 140/140 - 460.46MB/s[K
+[I] loading tensors completed, taking 0.20s (read: 0.12s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] latent 1 decoded, taking 2.45s --- image.cpp:620
+[I] decode_first_stage completed, taking 2.45s --- image.cpp:624
+[I] generate_image completed in 22.99s --- image.cpp:1050
+[I] ggml: ggml_metal_free: deallocating
+[I] save result image 0 to '<local-path>' (success) --- main.cpp:498
+[I] 1/1 images saved --- main.cpp:574
+ggml_metal_device_init: testing tensor API for f16 support
+ggml_metal_library_compile_pipeline: compiling pipeline: base = 'dummy_kernel', name = 'dummy_kernel'
+ggml_metal_library_compile_pipeline: loaded dummy_kernel                                  0x1059a2620 | th_max = 1024 | th_width =   32
+ggml_metal_device_init: testing tensor API for bfloat support
+ggml_metal_library_compile_pipeline: compiling pipeline: base = 'dummy_kernel', name = 'dummy_kernel'
+ggml_metal_library_compile_pipeline: loaded dummy_kernel                                  0x1059a2620 | th_max = 1024 | th_width =   32
+ggml_metal_library_init: using embedded metal library
+ggml_metal_library_compile_all: compiled 'fa_aux' library in 0.003 sec
+ggml_metal_library_compile_all: compiled 'fa_f16' library in 0.010 sec
+ggml_metal_library_compile_all: compiled 'fa_f32' library in 0.004 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_0' library in 0.004 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_1' library in 0.020 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_0' library in 0.004 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_1' library in 0.020 sec
+ggml_metal_library_compile_all: compiled 'fa_q8_0' library in 0.013 sec
+ggml_metal_library_compile_all: compiled 'fa_tensor' library in 0.001 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f16' library in 0.018 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f32' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_0' library in 0.019 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_1' library in 0.008 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_0' library in 0.015 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_1' library in 0.007 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q8_0' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'mul_mv' library in 0.009 sec
+ggml_metal_library_compile_all: compiled 'mul_mv_mma' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'mul_mm' library in 0.016 sec
+ggml_metal_library_compile_all: compiled 'quantize' library in 0.012 sec
+ggml_metal_library_compile_all: compiled 'softmax' library in 0.001 sec
+ggml_metal_library_compile_all: compiled 'norm' library in 0.001 sec
+ggml_metal_library_compile_all: compiled 'unary' library in 0.008 sec
+ggml_metal_library_compile_all: compiled 'binbcast' library in 0.007 sec
+ggml_metal_library_compile_all: compiled 'reduce' library in 0.001 sec
+ggml_metal_library_compile_all: compiled 'tri' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'ssm' library in 0.013 sec
+ggml_metal_library_compile_all: compiled 'wkv' library in 0.009 sec
+ggml_metal_library_compile_all: compiled 'gated_delta_net' library in 0.009 sec
+ggml_metal_library_compile_all: compiled 'solve_tri' library in 0.009 sec
+ggml_metal_library_compile_all: compiled 'rope' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'conv' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'upscale' library in 0.009 sec
+ggml_metal_library_compile_all: compiled 'argsort' library in 0.016 sec
+ggml_metal_library_compile_all: compiled 'pool' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'misc' library in 0.017 sec
+ggml_metal_library_compile_all: loaded 36 libraries from embedded data in 0.020 sec (max single = 0.020 sec)
+ggml_metal_rsets_init: creating a residency set collection (keep_alive = 180 s)
+ggml_metal_device_init: GPU name:   MTL0 (Apple M5)
+ggml_metal_device_init: GPU family: MTLGPUFamilyApple10  (1010)
+ggml_metal_device_init: GPU family: MTLGPUFamilyMetal4  (5002)
+ggml_metal_device_init: simdgroup reduction   = true
+ggml_metal_device_init: simdgroup matrix mul. = true
+ggml_metal_device_init: has unified memory    = true
+ggml_metal_device_init: has bfloat            = true
+ggml_metal_device_init: has tensor            = true
+ggml_metal_device_init: use residency sets    = true
+ggml_metal_device_init: use shared buffers    = true
+ggml_metal_device_init: recommendedMaxWorkingSetSize  = 12713.12 MB
+[I] loading model from '<local-path>' --- diffusion_engine.cpp:731
+[I] load <local-path> using safetensors format --- model_loader.cpp:222
+[I] Version: SD 1.x  --- diffusion_engine.cpp:1016
+[I] auto-fit plan: --- backend_fit.cpp:323
+[I]   devices: --- backend_fit.cpp:324
+[I]     MTL0         Apple M5                         free  12123 MiB, budget  11611 MiB --- backend_fit.cpp:328
+[I]     RAM          free   7086 MiB, params budget   5038 MiB --- backend_fit.cpp:334
+[I]   compute-device weight cache priority: diffusion > te > vae --- backend_fit.cpp:336
+[I]   components (params: compute device -> RAM -> other GPU -> disk): --- backend_fit.cpp:337
+[I]     DiT          params   1639 MiB, compute reserve  2048 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I]     Conditioner  params    234 MiB, compute reserve  2048 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I]     VAE          params    159 MiB, compute reserve  1024 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I] auto-fit: --backend "diffusion=MTL0,te=MTL0,vae=MTL0" --- backend_fit.cpp:477
+[I] ggml: ggml_metal_init: allocating
+[I] ggml: ggml_metal_init: found device: Apple M5
+[I] ggml: ggml_metal_init: picking default device: Apple M5
+[I] ggml: ggml_metal_init: use fusion         = true
+[I] ggml: ggml_metal_init: use concurrency    = true
+[I] ggml: ggml_metal_init: use graph optimize = true
+[I] Weight type stat:                      f16: 1130 |     i32: 1     --- diffusion_engine.cpp:1641
+[I] Conditioner weight type stat:          f16: 196  |     i32: 1     --- diffusion_engine.cpp:1642
+[I] Diffusion model weight type stat:      f16: 686   --- diffusion_engine.cpp:1643
+[I] VAE weight type stat:                  f16: 248   --- diffusion_engine.cpp:1644
+[I] using VAE for encoding / decoding --- model_builders.cpp:657
+[I] vae decoder: ch = 128 --- auto_encoder_kl.hpp:529
+[I] flash attention auto: MTL0 -> off (probe: normal 2.916 ms, flash 2.819 ms) --- flash_attn.cpp:95
+[I] conv2d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] conv3d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] total params memory size = 2035.00MB (VRAM 2035.00MB, RAM 0.00MB): text_encoders 235.06MB(VRAM), diffusion_model 1640.25MB(VRAM), vae 159.68MB(VRAM), controlnet 0.00MB(N/A), extensions 0.00MB(N/A) --- diffusion_engine.cpp:1451
+[I] running in eps-prediction mode --- diffusion_engine.cpp:1561
+[I] generate_image 512x512 --- image.cpp:814
+[I] get_sigmas with discrete scheduler --- denoiser.hpp:1129
+[I] sampling using Euler A method --- request.cpp:422
+[I] clip build cached graph cut plan done (taking 0 ms) --- ggml_graph_cut.cpp:1034
+
+  |#####################################             | 142/196 - 531.10MB/s[K
+  |##################################################| 196/196 - 575.29MB/s[K
+[I] loading tensors completed, taking 0.41s (read: 0.29s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] get_learned_condition completed, taking 0.43s --- image.cpp:529
+[I] generating image: 1/1 - seed 42 --- image.cpp:866
+[I] unet build cached graph cut plan done (taking 2 ms) --- ggml_graph_cut.cpp:1034
+
+  |##########                                        | 128/686 - 754.05MB/s[K
+  |################                                  | 216/686 - 647.90MB/s[K
+  |###################                               | 258/686 - 703.20MB/s[K
+  |######################                            | 300/686 - 719.58MB/s[K
+  |########################                          | 322/686 - 694.27MB/s[K
+  |###############################                   | 414/686 - 726.73MB/s[K
+  |################################                  | 438/686 - 738.66MB/s[K
+  |###################################               | 478/686 - 734.24MB/s[K
+  |######################################            | 515/686 - 738.13MB/s[K
+  |############################################      | 592/686 - 764.83MB/s[K
+  |##################################################| 686/686 - 737.47MB/s[K
+[I] loading tensors completed, taking 2.22s (read: 2.10s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.02s) --- model_loader.cpp:1401
+
+  |==>                                               | 1/20 - 5.19s/it[K
+  |=====>                                            | 2/20 - 2.84s/it[K
+  |=======>                                          | 3/20 - 2.88s/it[K
+  |==========>                                       | 4/20 - 2.89s/it[K
+  |============>                                     | 5/20 - 2.88s/it[K
+  |===============>                                  | 6/20 - 2.84s/it[K
+  |=================>                                | 7/20 - 2.88s/it[K
+  |====================>                             | 8/20 - 2.88s/it[K
+  |======================>                           | 9/20 - 3.06s/it[K
+  |=========================>                        | 10/20 - 2.86s/it[K
+  |===========================>                      | 11/20 - 2.84s/it[K
+  |==============================>                   | 12/20 - 2.87s/it[K
+  |================================>                 | 13/20 - 2.87s/it[K
+  |===================================>              | 14/20 - 2.88s/it[K
+  |=====================================>            | 15/20 - 2.86s/it[K
+  |========================================>         | 16/20 - 2.91s/it[K
+  |==========================================>       | 17/20 - 2.87s/it[K
+  |=============================================>    | 18/20 - 2.89s/it[K
+  |===============================================>  | 19/20 - 2.89s/it[K
+  |==================================================| 20/20 - 2.93s/it[K
+[I] sampling completed, taking 60.02s --- image.cpp:899
+[I] generating 1 latent images completed, taking 60.02s --- image.cpp:913
+[I] decoding 1 latents --- image.cpp:554
+[I] vae build cached graph cut plan done (taking 1 ms) --- ggml_graph_cut.cpp:1034
+
+  |##################################################| 140/140 - 462.72MB/s[K
+[I] loading tensors completed, taking 0.20s (read: 0.12s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] latent 1 decoded, taking 2.51s --- image.cpp:620
+[I] decode_first_stage completed, taking 2.51s --- image.cpp:624
+[I] generate_image completed in 62.96s --- image.cpp:1050
+[I] ggml: ggml_metal_free: deallocating
+[I] save result image 0 to '<local-path>' (success) --- main.cpp:498
+[I] 1/1 images saved --- main.cpp:574
+ggml_metal_device_init: testing tensor API for f16 support
+ggml_metal_library_compile_pipeline: compiling pipeline: base = 'dummy_kernel', name = 'dummy_kernel'
+ggml_metal_library_compile_pipeline: loaded dummy_kernel                                  0x103363650 | th_max = 1024 | th_width =   32
+ggml_metal_device_init: testing tensor API for bfloat support
+ggml_metal_library_compile_pipeline: compiling pipeline: base = 'dummy_kernel', name = 'dummy_kernel'
+ggml_metal_library_compile_pipeline: loaded dummy_kernel                                  0x103362e50 | th_max = 1024 | th_width =   32
+ggml_metal_library_init: using embedded metal library
+ggml_metal_library_compile_all: compiled 'fa_aux' library in 0.003 sec
+ggml_metal_library_compile_all: compiled 'fa_f16' library in 0.004 sec
+ggml_metal_library_compile_all: compiled 'fa_f32' library in 0.010 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_0' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_1' library in 0.013 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_0' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_1' library in 0.014 sec
+ggml_metal_library_compile_all: compiled 'fa_q8_0' library in 0.004 sec
+ggml_metal_library_compile_all: compiled 'fa_tensor' library in 0.001 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f16' library in 0.009 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f32' library in 0.004 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_0' library in 0.016 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_1' library in 0.012 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_0' library in 0.016 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_1' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q8_0' library in 0.011 sec
+ggml_metal_library_compile_all: compiled 'mul_mv' library in 0.007 sec
+ggml_metal_library_compile_all: compiled 'mul_mv_mma' library in 0.013 sec
+ggml_metal_library_compile_all: compiled 'mul_mm' library in 0.014 sec
+ggml_metal_library_compile_all: compiled 'quantize' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'softmax' library in 0.012 sec
+ggml_metal_library_compile_all: compiled 'norm' library in 0.003 sec
+ggml_metal_library_compile_all: compiled 'unary' library in 0.007 sec
+ggml_metal_library_compile_all: compiled 'binbcast' library in 0.007 sec
+ggml_metal_library_compile_all: compiled 'reduce' library in 0.002 sec
+ggml_metal_library_compile_all: compiled 'tri' library in 0.010 sec
+ggml_metal_library_compile_all: compiled 'ssm' library in 0.010 sec
+ggml_metal_library_compile_all: compiled 'wkv' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'gated_delta_net' library in 0.002 sec
+ggml_metal_library_compile_all: compiled 'solve_tri' library in 0.010 sec
+ggml_metal_library_compile_all: compiled 'rope' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'conv' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'upscale' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'argsort' library in 0.007 sec
+ggml_metal_library_compile_all: compiled 'pool' library in 0.010 sec
+ggml_metal_library_compile_all: compiled 'misc' library in 0.003 sec
+ggml_metal_library_compile_all: loaded 36 libraries from embedded data in 0.017 sec (max single = 0.016 sec)
+ggml_metal_rsets_init: creating a residency set collection (keep_alive = 180 s)
+ggml_metal_device_init: GPU name:   MTL0 (Apple M5)
+ggml_metal_device_init: GPU family: MTLGPUFamilyApple10  (1010)
+ggml_metal_device_init: GPU family: MTLGPUFamilyMetal4  (5002)
+ggml_metal_device_init: simdgroup reduction   = true
+ggml_metal_device_init: simdgroup matrix mul. = true
+ggml_metal_device_init: has unified memory    = true
+ggml_metal_device_init: has bfloat            = true
+ggml_metal_device_init: has tensor            = true
+ggml_metal_device_init: use residency sets    = true
+ggml_metal_device_init: use shared buffers    = true
+ggml_metal_device_init: recommendedMaxWorkingSetSize  = 12713.12 MB
+[I] loading model from '<local-path>' --- diffusion_engine.cpp:731
+[I] load <local-path> using safetensors format --- model_loader.cpp:222
+[I] Version: SDXL  --- diffusion_engine.cpp:1016
+[I] auto-fit plan: --- backend_fit.cpp:323
+[I]   devices: --- backend_fit.cpp:324
+[I]     MTL0         Apple M5                         free  12123 MiB, budget  11611 MiB --- backend_fit.cpp:328
+[I]     RAM          free   7621 MiB, params budget   5573 MiB --- backend_fit.cpp:334
+[I]   compute-device weight cache priority: diffusion > te > vae --- backend_fit.cpp:336
+[I]   components (params: compute device -> RAM -> other GPU -> disk): --- backend_fit.cpp:337
+[I]     DiT          params   4897 MiB, compute reserve  2048 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I]     Conditioner  params   1559 MiB, compute reserve  2048 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I]     VAE          params    159 MiB, compute reserve  1024 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I] auto-fit: --backend "diffusion=MTL0,te=MTL0,vae=MTL0" --- backend_fit.cpp:477
+[I] ggml: ggml_metal_init: allocating
+[I] ggml: ggml_metal_init: found device: Apple M5
+[I] ggml: ggml_metal_init: picking default device: Apple M5
+[I] ggml: ggml_metal_init: use fusion         = true
+[I] ggml: ggml_metal_init: use concurrency    = true
+[I] ggml: ggml_metal_init: use graph optimize = true
+[I] Weight type stat:                      f16: 2515  --- diffusion_engine.cpp:1641
+[I] Conditioner weight type stat:          f16: 587   --- diffusion_engine.cpp:1642
+[I] Diffusion model weight type stat:      f16: 1680  --- diffusion_engine.cpp:1643
+[I] VAE weight type stat:                  f16: 248   --- diffusion_engine.cpp:1644
+[I] using VAE for encoding / decoding --- model_builders.cpp:657
+[I] vae decoder: ch = 128 --- auto_encoder_kl.hpp:529
+[W] No valid VAE specified with --vae or --force-sdxl-vae-conv-scale flag set, using Conv2D scale 0.031 --- model_builders.cpp:636
+[I] flash attention auto: MTL0 -> off (probe: normal 4.524 ms, flash 4.647 ms) --- flash_attn.cpp:95
+[I] conv2d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] conv3d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] total params memory size = 6624.11MB (VRAM 6624.11MB, RAM 0.00MB): text_encoders 1564.36MB(VRAM), diffusion_model 4900.07MB(VRAM), vae 159.68MB(VRAM), controlnet 0.00MB(N/A), extensions 0.00MB(N/A) --- diffusion_engine.cpp:1451
+[I] running in eps-prediction mode --- diffusion_engine.cpp:1561
+[I] generate_image 1024x1024 --- image.cpp:814
+[I] get_sigmas with discrete scheduler --- denoiser.hpp:1129
+[I] sampling using Euler method --- request.cpp:422
+[I] clip build cached graph cut plan done (taking 0 ms) --- ggml_graph_cut.cpp:1034
+
+  |########################################          | 140/178 - 528.19MB/s[K
+  |##################################################| 178/178 - 543.48MB/s[K
+[I] loading tensors completed, taking 0.41s (read: 0.30s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] clip build cached graph cut plan done (taking 1 ms) --- ggml_graph_cut.cpp:1034
+
+  |######                                            | 40/374 - 434.61MB/s[K
+  |###########                                       | 76/374 - 492.35MB/s[K
+  |###############                                   | 112/374 - 511.41MB/s[K
+  |######################                            | 160/374 - 699.18MB/s[K
+  |#############################                     | 210/374 - 719.47MB/s[K
+  |###################################               | 258/374 - 722.21MB/s[K
+  |#########################################         | 306/374 - 725.19MB/s[K
+  |################################################# | 360/374 - 728.46MB/s[K
+  |##################################################| 374/374 - 700.65MB/s[K
+[I] loading tensors completed, taking 1.83s (read: 1.70s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.02s) --- model_loader.cpp:1401
+[I] clip build cached graph cut plan done (taking 1 ms) --- ggml_graph_cut.cpp:1034
+
+  |##################################################| 15/15 - 197.39MB/s[K
+[I] loading tensors completed, taking 0.21s (read: 0.05s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] clip build cached graph cut plan done (taking 1 ms) --- ggml_graph_cut.cpp:1034
+[I] get_learned_condition completed, taking 2.79s --- image.cpp:529
+[I] generating image: 1/1 - seed 4205214304 --- image.cpp:866
+[I] unet build cached graph cut plan done (taking 3 ms) --- ggml_graph_cut.cpp:1034
+
+  |#####                                             | 159/1680 - 641.86MB/s[K
+  |#######                                           | 202/1680 - 675.77MB/s[K
+  |########                                          | 246/1680 - 702.34MB/s[K
+  |#########                                         | 292/1680 - 706.89MB/s[K
+  |###########                                       | 339/1680 - 703.16MB/s[K
+  |############                                      | 379/1680 - 704.56MB/s[K
+  |#############                                     | 423/1680 - 722.61MB/s[K
+  |##############                                    | 468/1680 - 721.76MB/s[K
+  |################                                  | 515/1680 - 716.87MB/s[K
+  |#################                                 | 560/1680 - 726.72MB/s[K
+  |##################                                | 604/1680 - 721.19MB/s[K
+  |####################                              | 643/1680 - 725.61MB/s[K
+  |#####################                             | 695/1680 - 726.48MB/s[K
+  |######################                            | 738/1680 - 731.14MB/s[K
+  |########################                          | 783/1680 - 733.85MB/s[K
+  |#########################                         | 818/1680 - 713.92MB/s[K
+  |##########################                        | 856/1680 - 733.16MB/s[K
+  |###########################                       | 907/1680 - 731.40MB/s[K
+  |#############################                     | 950/1680 - 734.58MB/s[K
+  |##############################                    | 995/1680 - 736.26MB/s[K
+  |###############################                   | 1038/1680 - 730.61MB/s[K
+  |################################                  | 1074/1680 - 726.28MB/s[K
+  |##################################                | 1118/1680 - 736.16MB/s[K
+  |###################################               | 1168/1680 - 739.20MB/s[K
+  |#####################################             | 1213/1680 - 740.36MB/s[K
+  |######################################            | 1262/1680 - 736.71MB/s[K
+  |#######################################           | 1303/1680 - 739.91MB/s[K
+  |#########################################         | 1346/1680 - 741.50MB/s[K
+  |##########################################        | 1391/1680 - 742.04MB/s[K
+  |###########################################       | 1436/1680 - 741.17MB/s[K
+  |#############################################     | 1482/1680 - 736.53MB/s[K
+  |################################################  | 1612/1680 - 743.99MB/s[K
+  |##################################################| 1680/1680 - 732.43MB/s[K
+[I] loading tensors completed, taking 6.69s (read: 6.49s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.06s) --- model_loader.cpp:1401
+
+  |==>                                               | 1/24 - 12.17s/it[K
+  |====>                                             | 2/24 - 4.61s/it[Kggml_metal_library_init: using embedded metal library
+ggml_metal_library_compile_all: compiled 'fa_aux' library in 0.446 sec
+ggml_metal_library_compile_all: compiled 'fa_f16' library in 1.838 sec
+ggml_metal_library_compile_all: compiled 'fa_f32' library in 2.999 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_0' library in 1.121 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_1' library in 1.273 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_0' library in 2.903 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_1' library in 2.751 sec
+ggml_metal_library_compile_all: compiled 'fa_q8_0' library in 2.685 sec
+ggml_metal_library_compile_all: compiled 'fa_tensor' library in 0.109 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f16' library in 3.167 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f32' library in 2.999 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_0' library in 3.595 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_1' library in 3.159 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_0' library in 2.999 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_1' library in 2.806 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q8_0' library in 2.806 sec
+ggml_metal_library_compile_all: compiled 'mul_mv' library in 1.282 sec
+ggml_metal_library_compile_all: compiled 'mul_mv_mma' library in 3.046 sec
+ggml_metal_library_compile_all: compiled 'mul_mm' library in 1.668 sec
+ggml_metal_library_compile_all: compiled 'quantize' library in 0.446 sec
+ggml_metal_library_compile_all: compiled 'softmax' library in 0.446 sec
+ggml_metal_library_compile_all: compiled 'norm' library in 0.156 sec
+ggml_metal_library_compile_all: compiled 'unary' library in 0.484 sec
+ggml_metal_library_compile_all: compiled 'binbcast' library in 0.446 sec
+ggml_metal_library_compile_all: compiled 'reduce' library in 0.446 sec
+ggml_metal_library_compile_all: compiled 'tri' library in 0.446 sec
+ggml_metal_library_compile_all: compiled 'ssm' library in 0.144 sec
+ggml_metal_library_compile_all: compiled 'wkv' library in 0.446 sec
+ggml_metal_library_compile_all: compiled 'gated_delta_net' library in 0.129 sec
+ggml_metal_library_compile_all: compiled 'solve_tri' library in 0.114 sec
+ggml_metal_library_compile_all: compiled 'rope' library in 0.155 sec
+ggml_metal_library_compile_all: compiled 'conv' library in 0.445 sec
+ggml_metal_library_compile_all: compiled 'upscale' library in 0.121 sec
+ggml_metal_library_compile_all: compiled 'argsort' library in 0.445 sec
+ggml_metal_library_compile_all: compiled 'pool' library in 0.113 sec
+ggml_metal_library_compile_all: compiled 'misc' library in 0.445 sec
+ggml_metal_library_compile_all: loaded 36 libraries from embedded data in 3.595 sec (max single = 3.595 sec)
+ggml_metal_rsets_init: creating a residency set collection (keep_alive = 180 s)
+ggml_metal_device_init: GPU name:   MTL0 (Apple M5)
+ggml_metal_device_init: GPU family: MTLGPUFamilyApple10  (1010)
+ggml_metal_device_init: GPU family: MTLGPUFamilyMetal4  (5002)
+ggml_metal_device_init: simdgroup reduction   = true
+ggml_metal_device_init: simdgroup matrix mul. = true
+ggml_metal_device_init: has unified memory    = true
+ggml_metal_device_init: has bfloat            = true
+ggml_metal_device_init: has tensor            = false
+ggml_metal_device_init: use residency sets    = true
+ggml_metal_device_init: use shared buffers    = true
+ggml_metal_device_init: recommendedMaxWorkingSetSize  = 12713.12 MB
+[I] loading model from '<local-path>' --- diffusion_engine.cpp:731
+[I] load <local-path> using safetensors format --- model_loader.cpp:222
+[I] Version: SD 1.x  --- diffusion_engine.cpp:1016
+[I] auto-fit plan: --- backend_fit.cpp:323
+[I]   devices: --- backend_fit.cpp:324
+[I]     MTL0         Apple M5                         free  12123 MiB, budget  11611 MiB --- backend_fit.cpp:328
+[I]     RAM          free   9339 MiB, params budget   7291 MiB --- backend_fit.cpp:334
+[I]   compute-device weight cache priority: diffusion > te > vae --- backend_fit.cpp:336
+[I]   components (params: compute device -> RAM -> other GPU -> disk): --- backend_fit.cpp:337
+[I]     DiT          params   1639 MiB, compute reserve  2048 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I]     Conditioner  params    234 MiB, compute reserve  2048 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I]     VAE          params    159 MiB, compute reserve  1024 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I] auto-fit: --backend "diffusion=MTL0,te=MTL0,vae=MTL0" --- backend_fit.cpp:477
+[I] ggml: ggml_metal_init: allocating
+[I] ggml: ggml_metal_init: found device: Apple M5
+[I] ggml: ggml_metal_init: picking default device: Apple M5
+[I] ggml: ggml_metal_init: use fusion         = true
+[I] ggml: ggml_metal_init: use concurrency    = true
+[I] ggml: ggml_metal_init: use graph optimize = true
+[I] Weight type stat:                      f16: 1130 |     i32: 1     --- diffusion_engine.cpp:1641
+[I] Conditioner weight type stat:          f16: 196  |     i32: 1     --- diffusion_engine.cpp:1642
+[I] Diffusion model weight type stat:      f16: 686   --- diffusion_engine.cpp:1643
+[I] VAE weight type stat:                  f16: 248   --- diffusion_engine.cpp:1644
+[I] using VAE for encoding / decoding --- model_builders.cpp:657
+[I] vae decoder: ch = 128 --- auto_encoder_kl.hpp:529
+[I] flash attention auto: MTL0 -> off (probe: normal 3.131 ms, flash 2.987 ms) --- flash_attn.cpp:95
+[I] conv2d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] conv3d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] total params memory size = 2035.00MB (VRAM 2035.00MB, RAM 0.00MB): text_encoders 235.06MB(VRAM), diffusion_model 1640.25MB(VRAM), vae 159.68MB(VRAM), controlnet 0.00MB(N/A), extensions 0.00MB(N/A) --- diffusion_engine.cpp:1451
+[I] running in eps-prediction mode --- diffusion_engine.cpp:1561
+[I] generate_image 512x512 --- image.cpp:814
+[I] get_sigmas with discrete scheduler --- denoiser.hpp:1129
+[I] sampling using Euler method --- request.cpp:422
+[I] clip build cached graph cut plan done (taking 1 ms) --- ggml_graph_cut.cpp:1034
+
+  |####################################              | 140/196 - 536.04MB/s[K
+  |##################################################| 196/196 - 576.71MB/s[K
+[I] loading tensors completed, taking 0.41s (read: 0.30s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] get_learned_condition completed, taking 0.51s --- image.cpp:529
+[I] generating image: 1/1 - seed 123 --- image.cpp:866
+[I] unet build cached graph cut plan done (taking 2 ms) --- ggml_graph_cut.cpp:1034
+
+  |##########                                        | 136/686 - 743.95MB/s[K
+  |################                                  | 216/686 - 638.35MB/s[K
+  |###################                               | 254/686 - 676.97MB/s[K
+  |######################                            | 294/686 - 696.27MB/s[K
+  |########################                          | 320/686 - 663.16MB/s[K
+  |###############################                   | 412/686 - 677.52MB/s[K
+  |################################                  | 431/686 - 672.34MB/s[K
+  |###################################               | 473/686 - 726.83MB/s[K
+  |######################################            | 512/686 - 734.17MB/s[K
+  |#########################################         | 560/686 - 730.82MB/s[K
+  |##################################################| 686/686 - 737.81MB/s[K
+[I] loading tensors completed, taking 2.22s (read: 2.14s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.02s) --- model_loader.cpp:1401
+
+  |========>                                         | 1/6 - 5.42s/it[K
+  |================>                                 | 2/6 - 3.05s/it[K
+  |=========================>                        | 3/6 - 3.12s/it[K
+  |=================================>                | 4/6 - 3.15s/it[K
+  |=========================================>        | 5/6 - 3.20s/it[K
+  |==================================================| 6/6 - 3.11s/it[K
+[I] sampling completed, taking 21.05s --- image.cpp:899
+[I] generating 1 latent images completed, taking 21.05s --- image.cpp:913
+[I] decoding 1 latents --- image.cpp:554
+[I] vae build cached graph cut plan done (taking 0 ms) --- ggml_graph_cut.cpp:1034
+
+  |##################################################| 140/140 - 469.63MB/s[K
+[I] loading tensors completed, taking 0.20s (read: 0.13s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] latent 1 decoded, taking 2.90s --- image.cpp:620
+[I] decode_first_stage completed, taking 2.90s --- image.cpp:624
+[I] generate_image completed in 24.46s --- image.cpp:1050
+[I] ggml: ggml_metal_free: deallocating
+[I] save result image 0 to '<local-path>' (success) --- main.cpp:498
+[I] 1/1 images saved --- main.cpp:574
+ggml_metal_library_init: using embedded metal library
+ggml_metal_library_compile_all: compiled 'fa_aux' library in 0.004 sec
+ggml_metal_library_compile_all: compiled 'fa_f16' library in 0.022 sec
+ggml_metal_library_compile_all: compiled 'fa_f32' library in 0.024 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_0' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_1' library in 0.018 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_0' library in 0.009 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_1' library in 0.030 sec
+ggml_metal_library_compile_all: compiled 'fa_q8_0' library in 0.010 sec
+ggml_metal_library_compile_all: compiled 'fa_tensor' library in 0.003 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f16' library in 0.017 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f32' library in 0.004 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_0' library in 0.035 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_1' library in 0.033 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_0' library in 0.038 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_1' library in 0.041 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q8_0' library in 0.029 sec
+ggml_metal_library_compile_all: compiled 'mul_mv' library in 0.021 sec
+ggml_metal_library_compile_all: compiled 'mul_mv_mma' library in 0.014 sec
+ggml_metal_library_compile_all: compiled 'mul_mm' library in 0.008 sec
+ggml_metal_library_compile_all: compiled 'quantize' library in 0.023 sec
+ggml_metal_library_compile_all: compiled 'softmax' library in 0.023 sec
+ggml_metal_library_compile_all: compiled 'norm' library in 0.021 sec
+ggml_metal_library_compile_all: compiled 'unary' library in 0.021 sec
+ggml_metal_library_compile_all: compiled 'binbcast' library in 0.020 sec
+ggml_metal_library_compile_all: compiled 'reduce' library in 0.021 sec
+ggml_metal_library_compile_all: compiled 'tri' library in 0.021 sec
+ggml_metal_library_compile_all: compiled 'ssm' library in 0.020 sec
+ggml_metal_library_compile_all: compiled 'wkv' library in 0.019 sec
+ggml_metal_library_compile_all: compiled 'gated_delta_net' library in 0.022 sec
+ggml_metal_library_compile_all: compiled 'solve_tri' library in 0.021 sec
+ggml_metal_library_compile_all: compiled 'rope' library in 0.019 sec
+ggml_metal_library_compile_all: compiled 'conv' library in 0.019 sec
+ggml_metal_library_compile_all: compiled 'upscale' library in 0.019 sec
+ggml_metal_library_compile_all: compiled 'argsort' library in 0.013 sec
+ggml_metal_library_compile_all: compiled 'pool' library in 0.016 sec
+ggml_metal_library_compile_all: compiled 'misc' library in 0.011 sec
+ggml_metal_library_compile_all: loaded 36 libraries from embedded data in 0.041 sec (max single = 0.041 sec)
+ggml_metal_rsets_init: creating a residency set collection (keep_alive = 180 s)
+ggml_metal_device_init: GPU name:   MTL0 (Apple M5)
+ggml_metal_device_init: GPU family: MTLGPUFamilyApple10  (1010)
+ggml_metal_device_init: GPU family: MTLGPUFamilyMetal4  (5002)
+ggml_metal_device_init: simdgroup reduction   = true
+ggml_metal_device_init: simdgroup matrix mul. = true
+ggml_metal_device_init: has unified memory    = true
+ggml_metal_device_init: has bfloat            = true
+ggml_metal_device_init: has tensor            = false
+ggml_metal_device_init: use residency sets    = true
+ggml_metal_device_init: use shared buffers    = true
+ggml_metal_device_init: recommendedMaxWorkingSetSize  = 12713.12 MB
+[I] loading model from '<local-path>' --- diffusion_engine.cpp:731
+[I] load <local-path> using safetensors format --- model_loader.cpp:222
+[I] Version: SDXL  --- diffusion_engine.cpp:1016
+[I] auto-fit plan: --- backend_fit.cpp:323
+[I]   devices: --- backend_fit.cpp:324
+[I]     MTL0         Apple M5                         free  12123 MiB, budget  11611 MiB --- backend_fit.cpp:328
+[I]     RAM          free   7845 MiB, params budget   5797 MiB --- backend_fit.cpp:334
+[I]   compute-device weight cache priority: diffusion > te > vae --- backend_fit.cpp:336
+[I]   components (params: compute device -> RAM -> other GPU -> disk): --- backend_fit.cpp:337
+[I]     DiT          params   4897 MiB, compute reserve  2048 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I]     Conditioner  params   1559 MiB, compute reserve  2048 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I]     VAE          params    159 MiB, compute reserve  1024 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I] auto-fit: --backend "diffusion=MTL0,te=MTL0,vae=MTL0" --- backend_fit.cpp:477
+[I] ggml: ggml_metal_init: allocating
+[I] ggml: ggml_metal_init: found device: Apple M5
+[I] ggml: ggml_metal_init: picking default device: Apple M5
+[I] ggml: ggml_metal_init: use fusion         = true
+[I] ggml: ggml_metal_init: use concurrency    = true
+[I] ggml: ggml_metal_init: use graph optimize = true
+[I] Weight type stat:                      f16: 2515  --- diffusion_engine.cpp:1641
+[I] Conditioner weight type stat:          f16: 587   --- diffusion_engine.cpp:1642
+[I] Diffusion model weight type stat:      f16: 1680  --- diffusion_engine.cpp:1643
+[I] VAE weight type stat:                  f16: 248   --- diffusion_engine.cpp:1644
+[I] using VAE for encoding / decoding --- model_builders.cpp:657
+[I] vae decoder: ch = 128 --- auto_encoder_kl.hpp:529
+[W] No valid VAE specified with --vae or --force-sdxl-vae-conv-scale flag set, using Conv2D scale 0.031 --- model_builders.cpp:636
+[I] flash attention auto: MTL0 -> on (probe: normal 5.134 ms, flash 4.626 ms) --- flash_attn.cpp:95
+[I] conv2d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] conv3d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] total params memory size = 6624.11MB (VRAM 6624.11MB, RAM 0.00MB): text_encoders 1564.36MB(VRAM), diffusion_model 4900.07MB(VRAM), vae 159.68MB(VRAM), controlnet 0.00MB(N/A), extensions 0.00MB(N/A) --- diffusion_engine.cpp:1451
+[I] running in eps-prediction mode --- diffusion_engine.cpp:1561
+[I] generate_image 1024x1024 --- image.cpp:814
+[I] load <temporary-path> using safetensors format --- model_loader.cpp:222
+[I] apply lora immediately --- diffusion_engine.cpp:1807
+[I] apply_loras completed, taking 0.02s --- diffusion_engine.cpp:1955
+[I] get_sigmas with Karras scheduler --- denoiser.hpp:1133
+[I] sampling using DPM++ (2M) method --- request.cpp:422
+[I] clip build cached graph cut plan done (taking 0 ms) --- ggml_graph_cut.cpp:1034
+
+  |########################################          | 142/178 - 538.95MB/s[K
+  |##################################################| 178/178 - 542.15MB/s[K
+[I] loading tensors completed, taking 0.41s (read: 0.26s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] lora build cached graph cut plan done (taking 0 ms) --- ggml_graph_cut.cpp:1034
+<local-path> pre-allocated tensor (cond_stage_model.transformer.text_model.encoder.layers.0.mlp.fc1.weight (view)) in a buffer (MTL0) that cannot run the operation (ADD)
+WARNING: Using native backtrace. Set GGML_BACKTRACE_LLDB for more info.
+WARNING: GGML_BACKTRACE_LLDB may cause native MacOS Terminal.app to crash.
+See: https://github.com/ggml-org/llama.cpp/pull/17869
+0   sd-cli                              0x00000001032e5f88 ggml_print_backtrace + 276
+1   sd-cli                              0x0000000103353a30 ggml_abort + 156
+2   sd-cli                              0x00000001033023e8 _ZL38ggml_backend_sched_backend_id_from_curP18ggml_backend_schedP11ggml_tensor + 800
+3   sd-cli                              0x00000001032ff904 ggml_backend_sched_split_graph + 452
+4   sd-cli                              0x0000000103302e80 ggml_backend_sched_reserve_size + 232
+5   sd-cli                              0x0000000102e0a82c _ZN2sd16ComputeWorkspace7measureEP11ggml_cgraphmRKNSt3__18functionIFP12ggml_backendPK11ggml_tensorEEERKNS4_IFvP18ggml_backend_schedS2_EEE + 2372
+6   sd-cli                              0x0000000102e2b600 _ZN10GGMLRunner7measureEP11ggml_cgraphm + 96
+7   sd-cli                              0x0000000102e29684 _ZN10GGMLRunner13execute_graphEP11ggml_cgraphibRKNSt3__18functionIFbvEEE + 144
+8   sd-cli                              0x0000000102e2928c _ZN10GGMLRunner7computeENSt3__18functionIFP11ggml_cgraphvEEEibbRKNS1_IFbvEEE + 608
+9   sd-cli                              0x0000000102ec1914 _ZN9LoraModel5applyENSt3__13mapINS0_12basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEP11ggml_tensorNS0_4lessIS7_EENS5_INS0_4pairIKS7_S9_EEEEEERKNS0_3setIS7_SB_NS5_IS7_EEEE9SDVersionib + 160
+10  sd-cli                              0x0000000102ec0c34 _ZN12ModelManager21apply_loras_to_paramsERKNSt3__16vectorIPNS_11TensorStateENS0_9allocatorIS3_EEEE + 2356
+11  sd-cli                              0x0000000102ec4654 _ZN12ModelManager14prepare_paramsERKNSt3__16vectorIP11ggml_tensorNS0_9allocatorIS3_EEEE + 240
+12  sd-cli                              0x0000000102e3c590 _ZN2sd21SegmentWeightPipeline13segment_startEmRKNSt3__18functionIFbvEEE + 136
+13  sd-cli                              0x0000000102e29de8 _ZN10GGMLRunner13execute_graphEP11ggml_cgraphibRKNSt3__18functionIFbvEEE + 2036
+14  sd-cli                              0x0000000102e2928c _ZN10GGMLRunner7computeENSt3__18functionIFP11ggml_cgraphvEEEibbRKNS1_IFbvEEE + 608
+15  sd-cli                              0x0000000102e75170 _ZN19CLIPTextModelRunner7computeEiRKN2sd6TensorIiEEiPvmbib + 176
+16  sd-cli                              0x0000000102e7185c _ZN33FrozenCLIPEmbedderWithCustomWords28get_learned_condition_commonEiRNSt3__16vectorIiNS0_9allocatorIiEEEERNS1_IfNS2_IfEEEEiiib + 1756
+17  sd-cli                              0x0000000103140820 _ZN33FrozenCLIPEmbedderWithCustomWords21get_learned_conditionEiRK17ConditionerParams + 168
+18  sd-cli                              0x0000000102f6b278 _ZN2sd8pipeline14generate_imageEP19StableDiffusionGGMLPK19sd_img_gen_params_tPP10sd_image_tPi + 1524
+19  sd-cli                              0x00000001031ae6f4 generate_image + 116
+20  sd-cli                              0x0000000102dde77c main + 7404
+21  dyld                                0x000000018399be00 start + 6992
+ggml_metal_library_init: using embedded metal library
+ggml_metal_library_compile_all: compiled 'fa_aux' library in 0.001 sec
+ggml_metal_library_compile_all: compiled 'fa_f16' library in 0.002 sec
+ggml_metal_library_compile_all: compiled 'fa_f32' library in 0.013 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_0' library in 0.013 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_1' library in 0.004 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_0' library in 0.004 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_1' library in 0.003 sec
+ggml_metal_library_compile_all: compiled 'fa_q8_0' library in 0.010 sec
+ggml_metal_library_compile_all: compiled 'fa_tensor' library in 0.001 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f16' library in 0.003 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f32' library in 0.003 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_0' library in 0.009 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_1' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_0' library in 0.007 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_1' library in 0.013 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q8_0' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'mul_mv' library in 0.004 sec
+ggml_metal_library_compile_all: compiled 'mul_mv_mma' library in 0.011 sec
+ggml_metal_library_compile_all: compiled 'mul_mm' library in 0.010 sec
+ggml_metal_library_compile_all: compiled 'quantize' library in 0.012 sec
+ggml_metal_library_compile_all: compiled 'softmax' library in 0.003 sec
+ggml_metal_library_compile_all: compiled 'norm' library in 0.002 sec
+ggml_metal_library_compile_all: compiled 'unary' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'binbcast' library in 0.008 sec
+ggml_metal_library_compile_all: compiled 'reduce' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'tri' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'ssm' library in 0.008 sec
+ggml_metal_library_compile_all: compiled 'wkv' library in 0.008 sec
+ggml_metal_library_compile_all: compiled 'gated_delta_net' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'solve_tri' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'rope' library in 0.008 sec
+ggml_metal_library_compile_all: compiled 'conv' library in 0.008 sec
+ggml_metal_library_compile_all: compiled 'upscale' library in 0.008 sec
+ggml_metal_library_compile_all: compiled 'argsort' library in 0.003 sec
+ggml_metal_library_compile_all: compiled 'pool' library in 0.008 sec
+ggml_metal_library_compile_all: compiled 'misc' library in 0.003 sec
+ggml_metal_library_compile_all: loaded 36 libraries from embedded data in 0.014 sec (max single = 0.013 sec)
+ggml_metal_rsets_init: creating a residency set collection (keep_alive = 180 s)
+ggml_metal_device_init: GPU name:   MTL0 (Apple M5)
+ggml_metal_device_init: GPU family: MTLGPUFamilyApple10  (1010)
+ggml_metal_device_init: GPU family: MTLGPUFamilyMetal4  (5002)
+ggml_metal_device_init: simdgroup reduction   = true
+ggml_metal_device_init: simdgroup matrix mul. = true
+ggml_metal_device_init: has unified memory    = true
+ggml_metal_device_init: has bfloat            = true
+ggml_metal_device_init: has tensor            = false
+ggml_metal_device_init: use residency sets    = true
+ggml_metal_device_init: use shared buffers    = true
+ggml_metal_device_init: recommendedMaxWorkingSetSize  = 12713.12 MB
+[I] loading model from '<local-path>' --- diffusion_engine.cpp:731
+[I] load <local-path> using safetensors format --- model_loader.cpp:222
+[I] Version: SDXL  --- diffusion_engine.cpp:1016
+[I] auto-fit plan: --- backend_fit.cpp:323
+[I]   devices: --- backend_fit.cpp:324
+[I]     MTL0         Apple M5                         free  12123 MiB, budget  11611 MiB --- backend_fit.cpp:328
+[I]     RAM          free   7564 MiB, params budget   5516 MiB --- backend_fit.cpp:334
+[I]   compute-device weight cache priority: diffusion > te > vae --- backend_fit.cpp:336
+[I]   components (params: compute device -> RAM -> other GPU -> disk): --- backend_fit.cpp:337
+[I]     DiT          params   4897 MiB, compute reserve  2048 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I]     Conditioner  params   1559 MiB, compute reserve  2048 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I]     VAE          params    159 MiB, compute reserve  1024 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I] auto-fit: --backend "diffusion=MTL0,te=MTL0,vae=MTL0" --- backend_fit.cpp:477
+[I] ggml: ggml_metal_init: allocating
+[I] ggml: ggml_metal_init: found device: Apple M5
+[I] ggml: ggml_metal_init: picking default device: Apple M5
+[I] ggml: ggml_metal_init: use fusion         = true
+[I] ggml: ggml_metal_init: use concurrency    = true
+[I] ggml: ggml_metal_init: use graph optimize = true
+[I] Weight type stat:                      f16: 2515  --- diffusion_engine.cpp:1641
+[I] Conditioner weight type stat:          f16: 587   --- diffusion_engine.cpp:1642
+[I] Diffusion model weight type stat:      f16: 1680  --- diffusion_engine.cpp:1643
+[I] VAE weight type stat:                  f16: 248   --- diffusion_engine.cpp:1644
+[I] using VAE for encoding / decoding --- model_builders.cpp:657
+[I] vae decoder: ch = 128 --- auto_encoder_kl.hpp:529
+[W] No valid VAE specified with --vae or --force-sdxl-vae-conv-scale flag set, using Conv2D scale 0.031 --- model_builders.cpp:636
+[I] flash attention auto: MTL0 -> on (probe: normal 5.376 ms, flash 4.476 ms) --- flash_attn.cpp:95
+[I] conv2d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] conv3d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] total params memory size = 6624.11MB (VRAM 6624.11MB, RAM 0.00MB): text_encoders 1564.36MB(VRAM), diffusion_model 4900.07MB(VRAM), vae 159.68MB(VRAM), controlnet 0.00MB(N/A), extensions 0.00MB(N/A) --- diffusion_engine.cpp:1451
+[I] running in eps-prediction mode --- diffusion_engine.cpp:1561
+[I] generate_image 1024x1024 --- image.cpp:814
+[I] load <temporary-path> using safetensors format --- model_loader.cpp:222
+[I] apply lora immediately --- diffusion_engine.cpp:1807
+[I] apply_loras completed, taking 0.03s --- diffusion_engine.cpp:1955
+[I] get_sigmas with discrete scheduler --- denoiser.hpp:1129
+[I] sampling using Euler method --- request.cpp:422
+[I] clip build cached graph cut plan done (taking 0 ms) --- ggml_graph_cut.cpp:1034
+
+  |##################################################| 178/178 - 1.05GB/s[K
+[I] loading tensors completed, taking 0.21s (read: 0.02s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] lora build cached graph cut plan done (taking 0 ms) --- ggml_graph_cut.cpp:1034
+<local-path> pre-allocated tensor (cond_stage_model.transformer.text_model.encoder.layers.0.mlp.fc1.weight (view)) in a buffer (MTL0) that cannot run the operation (ADD)
+WARNING: Using native backtrace. Set GGML_BACKTRACE_LLDB for more info.
+WARNING: GGML_BACKTRACE_LLDB may cause native MacOS Terminal.app to crash.
+See: https://github.com/ggml-org/llama.cpp/pull/17869
+0   sd-cli                              0x0000000102c95f88 ggml_print_backtrace + 276
+1   sd-cli                              0x0000000102d03a30 ggml_abort + 156
+2   sd-cli                              0x0000000102cb23e8 _ZL38ggml_backend_sched_backend_id_from_curP18ggml_backend_schedP11ggml_tensor + 800
+3   sd-cli                              0x0000000102caf904 ggml_backend_sched_split_graph + 452
+4   sd-cli                              0x0000000102cb2e80 ggml_backend_sched_reserve_size + 232
+5   sd-cli                              0x00000001027ba82c _ZN2sd16ComputeWorkspace7measureEP11ggml_cgraphmRKNSt3__18functionIFP12ggml_backendPK11ggml_tensorEEERKNS4_IFvP18ggml_backend_schedS2_EEE + 2372
+6   sd-cli                              0x00000001027db600 _ZN10GGMLRunner7measureEP11ggml_cgraphm + 96
+7   sd-cli                              0x00000001027d9684 _ZN10GGMLRunner13execute_graphEP11ggml_cgraphibRKNSt3__18functionIFbvEEE + 144
+8   sd-cli                              0x00000001027d928c _ZN10GGMLRunner7computeENSt3__18functionIFP11ggml_cgraphvEEEibbRKNS1_IFbvEEE + 608
+9   sd-cli                              0x0000000102871914 _ZN9LoraModel5applyENSt3__13mapINS0_12basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEP11ggml_tensorNS0_4lessIS7_EENS5_INS0_4pairIKS7_S9_EEEEEERKNS0_3setIS7_SB_NS5_IS7_EEEE9SDVersionib + 160
+10  sd-cli                              0x0000000102870c34 _ZN12ModelManager21apply_loras_to_paramsERKNSt3__16vectorIPNS_11TensorStateENS0_9allocatorIS3_EEEE + 2356
+11  sd-cli                              0x0000000102874654 _ZN12ModelManager14prepare_paramsERKNSt3__16vectorIP11ggml_tensorNS0_9allocatorIS3_EEEE + 240
+12  sd-cli                              0x00000001027ec590 _ZN2sd21SegmentWeightPipeline13segment_startEmRKNSt3__18functionIFbvEEE + 136
+13  sd-cli                              0x00000001027d9de8 _ZN10GGMLRunner13execute_graphEP11ggml_cgraphibRKNSt3__18functionIFbvEEE + 2036
+14  sd-cli                              0x00000001027d928c _ZN10GGMLRunner7computeENSt3__18functionIFP11ggml_cgraphvEEEibbRKNS1_IFbvEEE + 608
+15  sd-cli                              0x0000000102825170 _ZN19CLIPTextModelRunner7computeEiRKN2sd6TensorIiEEiPvmbib + 176
+16  sd-cli                              0x000000010282185c _ZN33FrozenCLIPEmbedderWithCustomWords28get_learned_condition_commonEiRNSt3__16vectorIiNS0_9allocatorIiEEEERNS1_IfNS2_IfEEEEiiib + 1756
+17  sd-cli                              0x0000000102af0820 _ZN33FrozenCLIPEmbedderWithCustomWords21get_learned_conditionEiRK17ConditionerParams + 168
+18  sd-cli                              0x000000010291b278 _ZN2sd8pipeline14generate_imageEP19StableDiffusionGGMLPK19sd_img_gen_params_tPP10sd_image_tPi + 1524
+19  sd-cli                              0x0000000102b5e6f4 generate_image + 116
+20  sd-cli                              0x000000010278e77c main + 7404
+21  dyld                                0x000000018399be00 start + 6992
+ggml_metal_library_init: using embedded metal library
+ggml_metal_library_compile_all: compiled 'fa_aux' library in 0.001 sec
+ggml_metal_library_compile_all: compiled 'fa_f16' library in 0.002 sec
+ggml_metal_library_compile_all: compiled 'fa_f32' library in 0.003 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_0' library in 0.013 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_1' library in 0.001 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_0' library in 0.013 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_1' library in 0.002 sec
+ggml_metal_library_compile_all: compiled 'fa_q8_0' library in 0.001 sec
+ggml_metal_library_compile_all: compiled 'fa_tensor' library in 0.001 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f16' library in 0.014 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f32' library in 0.012 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_0' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_1' library in 0.004 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_0' library in 0.012 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_1' library in 0.010 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q8_0' library in 0.009 sec
+ggml_metal_library_compile_all: compiled 'mul_mv' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'mul_mv_mma' library in 0.008 sec
+ggml_metal_library_compile_all: compiled 'mul_mm' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'quantize' library in 0.007 sec
+ggml_metal_library_compile_all: compiled 'softmax' library in 0.002 sec
+ggml_metal_library_compile_all: compiled 'norm' library in 0.009 sec
+ggml_metal_library_compile_all: compiled 'unary' library in 0.010 sec
+ggml_metal_library_compile_all: compiled 'binbcast' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'reduce' library in 0.009 sec
+ggml_metal_library_compile_all: compiled 'tri' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'ssm' library in 0.004 sec
+ggml_metal_library_compile_all: compiled 'wkv' library in 0.004 sec
+ggml_metal_library_compile_all: compiled 'gated_delta_net' library in 0.008 sec
+ggml_metal_library_compile_all: compiled 'solve_tri' library in 0.009 sec
+ggml_metal_library_compile_all: compiled 'rope' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'conv' library in 0.004 sec
+ggml_metal_library_compile_all: compiled 'upscale' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'argsort' library in 0.008 sec
+ggml_metal_library_compile_all: compiled 'pool' library in 0.008 sec
+ggml_metal_library_compile_all: compiled 'misc' library in 0.004 sec
+ggml_metal_library_compile_all: loaded 36 libraries from embedded data in 0.014 sec (max single = 0.014 sec)
+ggml_metal_rsets_init: creating a residency set collection (keep_alive = 180 s)
+ggml_metal_device_init: GPU name:   MTL0 (Apple M5)
+ggml_metal_device_init: GPU family: MTLGPUFamilyApple10  (1010)
+ggml_metal_device_init: GPU family: MTLGPUFamilyMetal4  (5002)
+ggml_metal_device_init: simdgroup reduction   = true
+ggml_metal_device_init: simdgroup matrix mul. = true
+ggml_metal_device_init: has unified memory    = true
+ggml_metal_device_init: has bfloat            = true
+ggml_metal_device_init: has tensor            = false
+ggml_metal_device_init: use residency sets    = true
+ggml_metal_device_init: use shared buffers    = true
+ggml_metal_device_init: recommendedMaxWorkingSetSize  = 12713.12 MB
+[I] loading model from '<local-path>' --- diffusion_engine.cpp:731
+[I] load <local-path> using safetensors format --- model_loader.cpp:222
+[I] Version: SDXL  --- diffusion_engine.cpp:1016
+[I] auto-fit plan: --- backend_fit.cpp:323
+[I]   devices: --- backend_fit.cpp:324
+[I]     MTL0         Apple M5                         free  12123 MiB, budget  11611 MiB --- backend_fit.cpp:328
+[I]     RAM          free   7050 MiB, params budget   5002 MiB --- backend_fit.cpp:334
+[I]   compute-device weight cache priority: diffusion > te > vae --- backend_fit.cpp:336
+[I]   components (params: compute device -> RAM -> other GPU -> disk): --- backend_fit.cpp:337
+[I]     DiT          params   4897 MiB, compute reserve  2048 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I]     Conditioner  params   1559 MiB, compute reserve  2048 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I]     VAE          params    159 MiB, compute reserve  1024 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I] auto-fit: --backend "diffusion=MTL0,te=MTL0,vae=MTL0" --- backend_fit.cpp:477
+[I] ggml: ggml_metal_init: allocating
+[I] ggml: ggml_metal_init: found device: Apple M5
+[I] ggml: ggml_metal_init: picking default device: Apple M5
+[I] ggml: ggml_metal_init: use fusion         = true
+[I] ggml: ggml_metal_init: use concurrency    = true
+[I] ggml: ggml_metal_init: use graph optimize = true
+[I] Weight type stat:                      f16: 2515  --- diffusion_engine.cpp:1641
+[I] Conditioner weight type stat:          f16: 587   --- diffusion_engine.cpp:1642
+[I] Diffusion model weight type stat:      f16: 1680  --- diffusion_engine.cpp:1643
+[I] VAE weight type stat:                  f16: 248   --- diffusion_engine.cpp:1644
+[I] using VAE for encoding / decoding --- model_builders.cpp:657
+[I] vae decoder: ch = 128 --- auto_encoder_kl.hpp:529
+[W] No valid VAE specified with --vae or --force-sdxl-vae-conv-scale flag set, using Conv2D scale 0.031 --- model_builders.cpp:636
+[I] flash attention auto: MTL0 -> on (probe: normal 5.053 ms, flash 4.664 ms) --- flash_attn.cpp:95
+[I] conv2d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] conv3d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] total params memory size = 6624.11MB (VRAM 6624.11MB, RAM 0.00MB): text_encoders 1564.36MB(VRAM), diffusion_model 4900.07MB(VRAM), vae 159.68MB(VRAM), controlnet 0.00MB(N/A), extensions 0.00MB(N/A) --- diffusion_engine.cpp:1451
+[I] running in eps-prediction mode --- diffusion_engine.cpp:1561
+[I] generate_image 1024x1024 --- image.cpp:814
+[I] load <temporary-path> using safetensors format --- model_loader.cpp:222
+[I] apply lora immediately --- diffusion_engine.cpp:1807
+[I] apply_loras completed, taking 0.02s --- diffusion_engine.cpp:1955
+[I] get_sigmas with discrete scheduler --- denoiser.hpp:1129
+[I] sampling using Euler method --- request.cpp:422
+[I] clip build cached graph cut plan done (taking 0 ms) --- ggml_graph_cut.cpp:1034
+
+  |##################################################| 178/178 - 1.04GB/s[K
+[I] loading tensors completed, taking 0.21s (read: 0.02s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] lora build cached graph cut plan done (taking 1 ms) --- ggml_graph_cut.cpp:1034
+<local-path> pre-allocated tensor (cond_stage_model.transformer.text_model.encoder.layers.0.mlp.fc1.weight (view)) in a buffer (MTL0) that cannot run the operation (ADD)
+WARNING: Using native backtrace. Set GGML_BACKTRACE_LLDB for more info.
+WARNING: GGML_BACKTRACE_LLDB may cause native MacOS Terminal.app to crash.
+See: https://github.com/ggml-org/llama.cpp/pull/17869
+0   sd-cli                              0x000000010500df88 ggml_print_backtrace + 276
+1   sd-cli                              0x000000010507ba30 ggml_abort + 156
+2   sd-cli                              0x000000010502a3e8 _ZL38ggml_backend_sched_backend_id_from_curP18ggml_backend_schedP11ggml_tensor + 800
+3   sd-cli                              0x0000000105027904 ggml_backend_sched_split_graph + 452
+4   sd-cli                              0x000000010502ae80 ggml_backend_sched_reserve_size + 232
+5   sd-cli                              0x0000000104b3282c _ZN2sd16ComputeWorkspace7measureEP11ggml_cgraphmRKNSt3__18functionIFP12ggml_backendPK11ggml_tensorEEERKNS4_IFvP18ggml_backend_schedS2_EEE + 2372
+6   sd-cli                              0x0000000104b53600 _ZN10GGMLRunner7measureEP11ggml_cgraphm + 96
+7   sd-cli                              0x0000000104b51684 _ZN10GGMLRunner13execute_graphEP11ggml_cgraphibRKNSt3__18functionIFbvEEE + 144
+8   sd-cli                              0x0000000104b5128c _ZN10GGMLRunner7computeENSt3__18functionIFP11ggml_cgraphvEEEibbRKNS1_IFbvEEE + 608
+9   sd-cli                              0x0000000104be9914 _ZN9LoraModel5applyENSt3__13mapINS0_12basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEP11ggml_tensorNS0_4lessIS7_EENS5_INS0_4pairIKS7_S9_EEEEEERKNS0_3setIS7_SB_NS5_IS7_EEEE9SDVersionib + 160
+10  sd-cli                              0x0000000104be8c34 _ZN12ModelManager21apply_loras_to_paramsERKNSt3__16vectorIPNS_11TensorStateENS0_9allocatorIS3_EEEE + 2356
+11  sd-cli                              0x0000000104bec654 _ZN12ModelManager14prepare_paramsERKNSt3__16vectorIP11ggml_tensorNS0_9allocatorIS3_EEEE + 240
+12  sd-cli                              0x0000000104b64590 _ZN2sd21SegmentWeightPipeline13segment_startEmRKNSt3__18functionIFbvEEE + 136
+13  sd-cli                              0x0000000104b51de8 _ZN10GGMLRunner13execute_graphEP11ggml_cgraphibRKNSt3__18functionIFbvEEE + 2036
+14  sd-cli                              0x0000000104b5128c _ZN10GGMLRunner7computeENSt3__18functionIFP11ggml_cgraphvEEEibbRKNS1_IFbvEEE + 608
+15  sd-cli                              0x0000000104b9d170 _ZN19CLIPTextModelRunner7computeEiRKN2sd6TensorIiEEiPvmbib + 176
+16  sd-cli                              0x0000000104b9985c _ZN33FrozenCLIPEmbedderWithCustomWords28get_learned_condition_commonEiRNSt3__16vectorIiNS0_9allocatorIiEEEERNS1_IfNS2_IfEEEEiiib + 1756
+17  sd-cli                              0x0000000104e68820 _ZN33FrozenCLIPEmbedderWithCustomWords21get_learned_conditionEiRK17ConditionerParams + 168
+18  sd-cli                              0x0000000104c93278 _ZN2sd8pipeline14generate_imageEP19StableDiffusionGGMLPK19sd_img_gen_params_tPP10sd_image_tPi + 1524
+19  sd-cli                              0x0000000104ed66f4 generate_image + 116
+20  sd-cli                              0x0000000104b0677c main + 7404
+21  dyld                                0x000000018399be00 start + 6992
+ggml_metal_library_init: using embedded metal library
+ggml_metal_library_compile_all: compiled 'fa_aux' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'fa_f16' library in 0.035 sec
+ggml_metal_library_compile_all: compiled 'fa_f32' library in 0.032 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_0' library in 0.016 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_1' library in 0.032 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_0' library in 0.041 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_1' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'fa_q8_0' library in 0.033 sec
+ggml_metal_library_compile_all: compiled 'fa_tensor' library in 0.031 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f16' library in 0.009 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f32' library in 0.010 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_0' library in 0.040 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_1' library in 0.024 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_0' library in 0.015 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_1' library in 0.012 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q8_0' library in 0.027 sec
+ggml_metal_library_compile_all: compiled 'mul_mv' library in 0.021 sec
+ggml_metal_library_compile_all: compiled 'mul_mv_mma' library in 0.030 sec
+ggml_metal_library_compile_all: compiled 'mul_mm' library in 0.037 sec
+ggml_metal_library_compile_all: compiled 'quantize' library in 0.018 sec
+ggml_metal_library_compile_all: compiled 'softmax' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'norm' library in 0.004 sec
+ggml_metal_library_compile_all: compiled 'unary' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'binbcast' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'reduce' library in 0.004 sec
+ggml_metal_library_compile_all: compiled 'tri' library in 0.021 sec
+ggml_metal_library_compile_all: compiled 'ssm' library in 0.014 sec
+ggml_metal_library_compile_all: compiled 'wkv' library in 0.001 sec
+ggml_metal_library_compile_all: compiled 'gated_delta_net' library in 0.000 sec
+ggml_metal_library_compile_all: compiled 'solve_tri' library in 0.026 sec
+ggml_metal_library_compile_all: compiled 'rope' library in 0.025 sec
+ggml_metal_library_compile_all: compiled 'conv' library in 0.011 sec
+ggml_metal_library_compile_all: compiled 'upscale' library in 0.011 sec
+ggml_metal_library_compile_all: compiled 'argsort' library in 0.011 sec
+ggml_metal_library_compile_all: compiled 'pool' library in 0.025 sec
+ggml_metal_library_compile_all: compiled 'misc' library in 0.009 sec
+ggml_metal_library_compile_all: loaded 36 libraries from embedded data in 0.041 sec (max single = 0.041 sec)
+ggml_metal_rsets_init: creating a residency set collection (keep_alive = 180 s)
+ggml_metal_device_init: GPU name:   MTL0 (Apple M5)
+ggml_metal_device_init: GPU family: MTLGPUFamilyApple10  (1010)
+ggml_metal_device_init: GPU family: MTLGPUFamilyMetal4  (5002)
+ggml_metal_device_init: simdgroup reduction   = true
+ggml_metal_device_init: simdgroup matrix mul. = true
+ggml_metal_device_init: has unified memory    = true
+ggml_metal_device_init: has bfloat            = true
+ggml_metal_device_init: has tensor            = false
+ggml_metal_device_init: use residency sets    = true
+ggml_metal_device_init: use shared buffers    = true
+ggml_metal_device_init: recommendedMaxWorkingSetSize  = 12713.12 MB
+[I] loading model from '<local-path>' --- diffusion_engine.cpp:731
+[I] load <local-path> using safetensors format --- model_loader.cpp:222
+[I] Version: SDXL  --- diffusion_engine.cpp:1016
+[I] auto-fit plan: --- backend_fit.cpp:323
+[I]   devices: --- backend_fit.cpp:324
+[I]     MTL0         Apple M5                         free  12123 MiB, budget  11611 MiB --- backend_fit.cpp:328
+[I]     RAM          free   6169 MiB, params budget   4121 MiB --- backend_fit.cpp:334
+[I]   compute-device weight cache priority: diffusion > te > vae --- backend_fit.cpp:336
+[I]   components (params: compute device -> RAM -> other GPU -> disk): --- backend_fit.cpp:337
+[I]     DiT          params   4897 MiB, compute reserve  2048 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I]     Conditioner  params   1559 MiB, compute reserve  2048 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I]     VAE          params    159 MiB, compute reserve  1024 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I] auto-fit: --backend "diffusion=MTL0,te=MTL0,vae=MTL0" --- backend_fit.cpp:477
+[I] ggml: ggml_metal_init: allocating
+[I] ggml: ggml_metal_init: found device: Apple M5
+[I] ggml: ggml_metal_init: picking default device: Apple M5
+[I] ggml: ggml_metal_init: use fusion         = true
+[I] ggml: ggml_metal_init: use concurrency    = true
+[I] ggml: ggml_metal_init: use graph optimize = true
+[I] Weight type stat:                      f16: 2515  --- diffusion_engine.cpp:1641
+[I] Conditioner weight type stat:          f16: 587   --- diffusion_engine.cpp:1642
+[I] Diffusion model weight type stat:      f16: 1680  --- diffusion_engine.cpp:1643
+[I] VAE weight type stat:                  f16: 248   --- diffusion_engine.cpp:1644
+[I] using VAE for encoding / decoding --- model_builders.cpp:657
+[I] vae decoder: ch = 128 --- auto_encoder_kl.hpp:529
+[W] No valid VAE specified with --vae or --force-sdxl-vae-conv-scale flag set, using Conv2D scale 0.031 --- model_builders.cpp:636
+[I] flash attention auto: MTL0 -> on (probe: normal 5.209 ms, flash 4.458 ms) --- flash_attn.cpp:95
+[I] conv2d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] conv3d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] total params memory size = 6624.11MB (VRAM 6624.11MB, RAM 0.00MB): text_encoders 1564.36MB(VRAM), diffusion_model 4900.07MB(VRAM), vae 159.68MB(VRAM), controlnet 0.00MB(N/A), extensions 0.00MB(N/A) --- diffusion_engine.cpp:1451
+[I] running in eps-prediction mode --- diffusion_engine.cpp:1561
+[I] generate_image 1024x1024 --- image.cpp:814
+[I] get_sigmas with Karras scheduler --- denoiser.hpp:1133
+[I] sampling using DPM++ (2M) method --- request.cpp:422
+[I] clip build cached graph cut plan done (taking 0 ms) --- ggml_graph_cut.cpp:1034
+
+  |########################################          | 140/178 - 536.04MB/s[K
+  |##################################################| 178/178 - 543.48MB/s[K
+[I] loading tensors completed, taking 0.41s (read: 0.27s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] clip build cached graph cut plan done (taking 1 ms) --- ggml_graph_cut.cpp:1034
+
+  |######                                            | 40/374 - 430.35MB/s[K
+  |###########                                       | 76/374 - 493.56MB/s[K
+  |###############                                   | 112/374 - 513.08MB/s[K
+  |######################                            | 160/374 - 704.36MB/s[K
+  |#############################                     | 210/374 - 725.16MB/s[K
+  |###################################               | 258/374 - 728.16MB/s[K
+  |#########################################         | 306/374 - 728.76MB/s[K
+  |################################################  | 354/374 - 731.01MB/s[K
+  |##################################################| 374/374 - 704.50MB/s[K
+[I] loading tensors completed, taking 1.82s (read: 1.71s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.02s) --- model_loader.cpp:1401
+[I] clip build cached graph cut plan done (taking 1 ms) --- ggml_graph_cut.cpp:1034
+
+  |##################################################| 15/15 - 199.32MB/s[K
+[I] loading tensors completed, taking 0.20s (read: 0.05s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] clip build cached graph cut plan done (taking 1 ms) --- ggml_graph_cut.cpp:1034
+[I] get_learned_condition completed, taking 2.86s --- image.cpp:529
+[I] generating image: 1/1 - seed 3332629786 --- image.cpp:866
+[I] unet build cached graph cut plan done (taking 3 ms) --- ggml_graph_cut.cpp:1034
+
+  |#####                                             | 152/1680 - 593.81MB/s[K
+  |######                                            | 199/1680 - 609.98MB/s[K
+  |########                                          | 242/1680 - 668.25MB/s[K
+  |#########                                         | 286/1680 - 686.65MB/s[K
+  |##########                                        | 330/1680 - 688.51MB/s[K
+  |############                                      | 375/1680 - 676.08MB/s[K
+  |#############                                     | 417/1680 - 689.62MB/s[K
+  |##############                                    | 460/1680 - 704.74MB/s[K
+  |################                                  | 508/1680 - 713.34MB/s[K
+  |#################                                 | 555/1680 - 710.49MB/s[K
+  |##################                                | 598/1680 - 714.63MB/s[K
+  |####################                              | 639/1680 - 719.08MB/s[K
+  |#####################                             | 688/1680 - 725.13MB/s[K
+  |######################                            | 735/1680 - 721.49MB/s[K
+  |########################                          | 778/1680 - 726.17MB/s[K
+  |#########################                         | 818/1680 - 713.92MB/s[K
+  |##########################                        | 852/1680 - 714.48MB/s[K
+  |###########################                       | 895/1680 - 726.94MB/s[K
+  |############################                      | 940/1680 - 725.60MB/s[K
+  |##############################                    | 987/1680 - 723.39MB/s[K
+  |###############################                   | 1032/1680 - 721.12MB/s[K
+  |################################                  | 1065/1680 - 718.20MB/s[K
+  |#################################                 | 1107/1680 - 722.74MB/s[K
+  |###################################               | 1152/1680 - 728.98MB/s[K
+  |####################################              | 1198/1680 - 729.07MB/s[K
+  |######################################            | 1254/1680 - 732.16MB/s[K
+  |#######################################           | 1286/1680 - 725.53MB/s[K
+  |########################################          | 1330/1680 - 733.25MB/s[K
+  |#########################################         | 1376/1680 - 732.68MB/s[K
+  |###########################################       | 1423/1680 - 730.97MB/s[K
+  |############################################      | 1470/1680 - 732.69MB/s[K
+  |################################################  | 1582/1680 - 738.50MB/s[K
+  |##################################################| 1680/1680 - 731.56MB/s[K
+[I] loading tensors completed, taking 6.69s (read: 6.56s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.06s) --- model_loader.cpp:1401
+
+  |==>                                               | 1/20 - 13.09s/it[K
+  |=====>                                            | 2/20 - 5.56s/it[K
+  |=======>                                          | 3/20 - 5.60s/it[K
+  |==========>                                       | 4/20 - 5.62s/it[K
+  |============>                                     | 5/20 - 5.62s/it[K
+  |===============>                                  | 6/20 - 5.61s/it[K
+  |=================>                                | 7/20 - 5.75s/it[K
+  |====================>                             | 8/20 - 5.70s/it[K
+  |======================>                           | 9/20 - 5.65s/it[K
+  |=========================>                        | 10/20 - 5.73s/it[K
+  |===========================>                      | 11/20 - 5.68s/it[K
+  |==============================>                   | 12/20 - 5.75s/it[K
+  |================================>                 | 13/20 - 5.76s/it[K
+  |===================================>              | 14/20 - 5.71s/it[K
+  |=====================================>            | 15/20 - 5.60s/it[K
+  |========================================>         | 16/20 - 5.57s/it[K
+  |==========================================>       | 17/20 - 5.62s/it[K
+  |=============================================>    | 18/20 - 5.63s/it[K
+  |===============================================>  | 19/20 - 5.64s/it[K
+  |==================================================| 20/20 - 5.67s/it[K
+[I] sampling completed, taking 120.56s --- image.cpp:899
+[I] generating 1 latent images completed, taking 120.56s --- image.cpp:913
+[I] decoding 1 latents --- image.cpp:554
+[I] vae build cached graph cut plan done (taking 0 ms) --- ggml_graph_cut.cpp:1034
+
+  |##################################################| 140/140 - 465.00MB/s[K
+[I] loading tensors completed, taking 0.20s (read: 0.13s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] latent 1 decoded, taking 13.01s --- image.cpp:620
+[I] decode_first_stage completed, taking 13.01s --- image.cpp:624
+[I] generate_image completed in 136.43s --- image.cpp:1050
+[I] ggml: ggml_metal_free: deallocating
+[I] save result image 0 to '<local-path>' (success) --- main.cpp:498
+[I] 1/1 images saved --- main.cpp:574
+ggml_metal_library_init: using embedded metal library
+ggml_metal_library_compile_all: compiled 'fa_aux' library in 0.008 sec
+ggml_metal_library_compile_all: compiled 'fa_f16' library in 0.019 sec
+ggml_metal_library_compile_all: compiled 'fa_f32' library in 0.027 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_0' library in 0.039 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_1' library in 0.023 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_0' library in 0.036 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_1' library in 0.040 sec
+ggml_metal_library_compile_all: compiled 'fa_q8_0' library in 0.028 sec
+ggml_metal_library_compile_all: compiled 'fa_tensor' library in 0.004 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f16' library in 0.031 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f32' library in 0.031 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_0' library in 0.007 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_1' library in 0.038 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_0' library in 0.022 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_1' library in 0.026 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q8_0' library in 0.017 sec
+ggml_metal_library_compile_all: compiled 'mul_mv' library in 0.011 sec
+ggml_metal_library_compile_all: compiled 'mul_mv_mma' library in 0.015 sec
+ggml_metal_library_compile_all: compiled 'mul_mm' library in 0.034 sec
+ggml_metal_library_compile_all: compiled 'quantize' library in 0.035 sec
+ggml_metal_library_compile_all: compiled 'softmax' library in 0.031 sec
+ggml_metal_library_compile_all: compiled 'norm' library in 0.040 sec
+ggml_metal_library_compile_all: compiled 'unary' library in 0.021 sec
+ggml_metal_library_compile_all: compiled 'binbcast' library in 0.021 sec
+ggml_metal_library_compile_all: compiled 'reduce' library in 0.025 sec
+ggml_metal_library_compile_all: compiled 'tri' library in 0.026 sec
+ggml_metal_library_compile_all: compiled 'ssm' library in 0.007 sec
+ggml_metal_library_compile_all: compiled 'wkv' library in 0.035 sec
+ggml_metal_library_compile_all: compiled 'gated_delta_net' library in 0.007 sec
+ggml_metal_library_compile_all: compiled 'solve_tri' library in 0.038 sec
+ggml_metal_library_compile_all: compiled 'rope' library in 0.026 sec
+ggml_metal_library_compile_all: compiled 'conv' library in 0.003 sec
+ggml_metal_library_compile_all: compiled 'upscale' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'argsort' library in 0.007 sec
+ggml_metal_library_compile_all: compiled 'pool' library in 0.007 sec
+ggml_metal_library_compile_all: compiled 'misc' library in 0.006 sec
+ggml_metal_library_compile_all: loaded 36 libraries from embedded data in 0.040 sec (max single = 0.040 sec)
+ggml_metal_rsets_init: creating a residency set collection (keep_alive = 180 s)
+ggml_metal_device_init: GPU name:   MTL0 (Apple M5)
+ggml_metal_device_init: GPU family: MTLGPUFamilyApple10  (1010)
+ggml_metal_device_init: GPU family: MTLGPUFamilyMetal4  (5002)
+ggml_metal_device_init: simdgroup reduction   = true
+ggml_metal_device_init: simdgroup matrix mul. = true
+ggml_metal_device_init: has unified memory    = true
+ggml_metal_device_init: has bfloat            = true
+ggml_metal_device_init: has tensor            = false
+ggml_metal_device_init: use residency sets    = true
+ggml_metal_device_init: use shared buffers    = true
+ggml_metal_device_init: recommendedMaxWorkingSetSize  = 12713.12 MB
+[I] loading model from '<local-path>' --- diffusion_engine.cpp:731
+[I] load <local-path> using safetensors format --- model_loader.cpp:222
+[I] Version: SDXL  --- diffusion_engine.cpp:1016
+[I] auto-fit plan: --- backend_fit.cpp:323
+[I]   devices: --- backend_fit.cpp:324
+[I]     MTL0         Apple M5                         free  12123 MiB, budget  11611 MiB --- backend_fit.cpp:328
+[I]     RAM          free   6304 MiB, params budget   4256 MiB --- backend_fit.cpp:334
+[I]   compute-device weight cache priority: diffusion > te > vae --- backend_fit.cpp:336
+[I]   components (params: compute device -> RAM -> other GPU -> disk): --- backend_fit.cpp:337
+[I]     DiT          params   4897 MiB, compute reserve  2048 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I]     Conditioner  params   1559 MiB, compute reserve  2048 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I]     VAE          params    159 MiB, compute reserve  1024 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I] auto-fit: --backend "diffusion=MTL0,te=MTL0,vae=MTL0" --- backend_fit.cpp:477
+[I] ggml: ggml_metal_init: allocating
+[I] ggml: ggml_metal_init: found device: Apple M5
+[I] ggml: ggml_metal_init: picking default device: Apple M5
+[I] ggml: ggml_metal_init: use fusion         = true
+[I] ggml: ggml_metal_init: use concurrency    = true
+[I] ggml: ggml_metal_init: use graph optimize = true
+[I] Weight type stat:                      f16: 2515  --- diffusion_engine.cpp:1641
+[I] Conditioner weight type stat:          f16: 587   --- diffusion_engine.cpp:1642
+[I] Diffusion model weight type stat:      f16: 1680  --- diffusion_engine.cpp:1643
+[I] VAE weight type stat:                  f16: 248   --- diffusion_engine.cpp:1644
+[I] using VAE for encoding / decoding --- model_builders.cpp:657
+[I] vae decoder: ch = 128 --- auto_encoder_kl.hpp:529
+[W] No valid VAE specified with --vae or --force-sdxl-vae-conv-scale flag set, using Conv2D scale 0.031 --- model_builders.cpp:636
+[I] flash attention auto: MTL0 -> on (probe: normal 5.606 ms, flash 4.723 ms) --- flash_attn.cpp:95
+[I] conv2d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] conv3d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] total params memory size = 6624.11MB (VRAM 6624.11MB, RAM 0.00MB): text_encoders 1564.36MB(VRAM), diffusion_model 4900.07MB(VRAM), vae 159.68MB(VRAM), controlnet 0.00MB(N/A), extensions 0.00MB(N/A) --- diffusion_engine.cpp:1451
+[I] running in eps-prediction mode --- diffusion_engine.cpp:1561
+[W] align generation request up 600x800 to 640x832 (multiple=64) --- request.cpp:214
+[I] generate_image 640x832 --- image.cpp:814
+[I] load <temporary-path> using safetensors format --- model_loader.cpp:222
+[I] apply lora at runtime --- diffusion_engine.cpp:1830
+[I] apply_loras completed, taking 0.63s --- diffusion_engine.cpp:1955
+[I] get_sigmas with discrete scheduler --- denoiser.hpp:1129
+[I] sampling using Euler method --- request.cpp:422
+[I] clip build cached graph cut plan done (taking 1 ms) --- ggml_graph_cut.cpp:1034
+
+  |########################################          | 142/178 - 528.53MB/s[K
+  |##################################################| 178/178 - 536.89MB/s[K
+[I] loading tensors completed, taking 0.41s (read: 0.26s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] clip build cached graph cut plan done (taking 2 ms) --- ggml_graph_cut.cpp:1034
+
+  |######                                            | 40/374 - 434.61MB/s[K
+  |###########                                       | 76/374 - 492.35MB/s[K
+  |#################                                 | 122/374 - 568.54MB/s[K
+  |#######################                           | 168/374 - 720.98MB/s[K
+  |##############################                    | 218/374 - 735.53MB/s[K
+  |####################################              | 268/374 - 745.71MB/s[K
+  |###########################################       | 318/374 - 753.62MB/s[K
+  |################################################# | 364/374 - 745.08MB/s[K
+  |##################################################| 374/374 - 702.57MB/s[K
+[I] loading tensors completed, taking 1.83s (read: 1.66s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.02s) --- model_loader.cpp:1401
+[I] clip build cached graph cut plan done (taking 1 ms) --- ggml_graph_cut.cpp:1034
+
+  |##################################################| 15/15 - 197.39MB/s[K
+[I] loading tensors completed, taking 0.21s (read: 0.05s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] clip build cached graph cut plan done (taking 2 ms) --- ggml_graph_cut.cpp:1034
+[I] get_learned_condition completed, taking 3.79s --- image.cpp:529
+[I] generating image: 1/1 - seed 3168131728 --- image.cpp:866
+[I] unet build cached graph cut plan done (taking 6 ms) --- ggml_graph_cut.cpp:1034
+
+  |#####                                             | 161/1680 - 660.16MB/s[K
+  |#######                                           | 204/1680 - 691.05MB/s[K
+  |########                                          | 252/1680 - 722.42MB/s[K
+  |#########                                         | 299/1680 - 709.57MB/s[K
+  |###########                                       | 344/1680 - 734.20MB/s[K
+  |############                                      | 384/1680 - 712.87MB/s[K
+  |#############                                     | 435/1680 - 733.04MB/s[K
+  |###############                                   | 478/1680 - 740.36MB/s[K
+  |################                                  | 523/1680 - 743.86MB/s[K
+  |#################                                 | 568/1680 - 740.70MB/s[K
+  |###################                               | 615/1680 - 737.12MB/s[K
+  |####################                              | 660/1680 - 745.21MB/s[K
+  |######################                            | 708/1680 - 747.75MB/s[K
+  |#######################                           | 755/1680 - 743.54MB/s[K
+  |########################                          | 788/1680 - 735.87MB/s[K
+  |#########################                         | 818/1680 - 712.83MB/s[K
+  |##########################                        | 852/1680 - 714.07MB/s[K
+  |###########################                       | 895/1680 - 726.94MB/s[K
+  |############################                      | 936/1680 - 723.49MB/s[K
+  |##############################                    | 980/1680 - 721.62MB/s[K
+  |###############################                   | 1020/1680 - 718.70MB/s[K
+  |################################                  | 1065/1680 - 717.40MB/s[K
+  |#################################                 | 1090/1680 - 714.31MB/s[K
+  |##################################                | 1128/1680 - 710.62MB/s[K
+  |###################################               | 1158/1680 - 701.51MB/s[K
+  |####################################              | 1198/1680 - 699.52MB/s[K
+  |#####################################             | 1238/1680 - 697.67MB/s[K
+  |######################################            | 1271/1680 - 689.74MB/s[K
+  |#######################################           | 1310/1680 - 693.40MB/s[K
+  |#########################################         | 1351/1680 - 694.00MB/s[K
+  |##########################################        | 1391/1680 - 692.90MB/s[K
+  |###########################################       | 1436/1680 - 693.39MB/s[K
+  |############################################      | 1474/1680 - 689.07MB/s[K
+  |################################################  | 1590/1680 - 694.60MB/s[K
+  |##################################################| 1680/1680 - 688.95MB/s[K
+[I] loading tensors completed, taking 7.11s (read: 6.95s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.06s) --- model_loader.cpp:1401
+
+  |==>                                               | 1/20 - 13.78s/it[K
+  |=====>                                            | 2/20 - 5.67s/it[K
+  |=======>                                          | 3/20 - 5.47s/it[K
+  |==========>                                       | 4/20 - 5.51s/it[K
+  |============>                                     | 5/20 - 5.47s/it[K
+  |===============>                                  | 6/20 - 5.47s/it[K
+  |=================>                                | 7/20 - 5.46s/it[K
+  |====================>                             | 8/20 - 5.44s/it[K
+  |======================>                           | 9/20 - 5.46s/it[K
+  |=========================>                        | 10/20 - 5.45s/it[K
+  |===========================>                      | 11/20 - 5.57s/it[K
+  |==============================>                   | 12/20 - 5.47s/it[K
+  |================================>                 | 13/20 - 5.44s/it[K
+  |===================================>              | 14/20 - 5.54s/it[K
+  |=====================================>            | 15/20 - 5.51s/it[K
+  |========================================>         | 16/20 - 5.47s/it[K
+  |==========================================>       | 17/20 - 5.42s/it[K
+  |=============================================>    | 18/20 - 5.44s/it[K
+  |===============================================>  | 19/20 - 5.43s/it[K
+  |==================================================| 20/20 - 5.40s/it[K
+[I] sampling completed, taking 117.89s --- image.cpp:899
+[I] generating 1 latent images completed, taking 117.89s --- image.cpp:913
+[I] decoding 1 latents --- image.cpp:554
+[I] vae build cached graph cut plan done (taking 0 ms) --- ggml_graph_cut.cpp:1034
+
+  |##################################################| 140/140 - 467.30MB/s[K
+[I] loading tensors completed, taking 0.20s (read: 0.12s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] latent 1 decoded, taking 7.09s --- image.cpp:620
+[I] decode_first_stage completed, taking 7.09s --- image.cpp:624
+[I] runtime_lora_models: --- diffusion_engine.cpp:1895
+[W] unused lora tensor |lora.cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.q_proj.weight.lora_up| --- lora.hpp:988
+ (bf16): shape(32, 768, 1, 1)
+[W] unused lora tensor |lora.cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.v_proj.weight.lora_up| --- lora.hpp:988
+ (bf16): shape(32, 768, 1, 1)
+[W] unused lora tensor |lora.cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.q_proj.weight.alpha| --- lora.hpp:988
+ (f32): shape(1, 1, 1, 1)
+[W] unused lora tensor |lora.cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.v_proj.weight.alpha| --- lora.hpp:988
+ (f32): shape(1, 1, 1, 1)
+[W] unused lora tensor |lora.cond_stage_model.transformer.text_model.encoder.layers.11.mlp.fc1.weight.lora_down| --- lora.hpp:988
+ (bf16): shape(768, 32, 1, 1)
+[W] unused lora tensor |lora.cond_stage_model.transformer.text_model.encoder.layers.11.mlp.fc2.weight.lora_up| --- lora.hpp:988
+ (bf16): shape(32, 768, 1, 1)
+[W] unused lora tensor |lora.cond_stage_model.transformer.text_model.encoder.layers.11.mlp.fc2.weight.lora_down| --- lora.hpp:988
+ (bf16): shape(3072, 32, 1, 1)
+[W] unused lora tensor |lora.cond_stage_model.transformer.text_model.encoder.layers.11.mlp.fc2.weight.alpha| --- lora.hpp:988
+ (f32): shape(1, 1, 1, 1)
+[W] unused lora tensor |lora.cond_stage_model.transformer.text_model.encoder.layers.11.mlp.fc1.weight.alpha| --- lora.hpp:988
+ (f32): shape(1, 1, 1, 1)
+[W] unused lora tensor |lora.cond_stage_model.transformer.text_model.encoder.layers.11.mlp.fc1.weight.lora_up| --- lora.hpp:988
+ (bf16): shape(32, 3072, 1, 1)
+[W] unused lora tensor |lora.cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.q_proj.weight.lora_down| --- lora.hpp:988
+ (bf16): shape(768, 32, 1, 1)
+[W] unused lora tensor |lora.cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.k_proj.weight.lora_up| --- lora.hpp:988
+ (bf16): shape(32, 768, 1, 1)
+[W] unused lora tensor |lora.cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.out_proj.weight.lora_down| --- lora.hpp:988
+ (bf16): shape(768, 32, 1, 1)
+[W] unused lora tensor |lora.cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.out_proj.weight.alpha| --- lora.hpp:988
+ (f32): shape(1, 1, 1, 1)
+[W] unused lora tensor |lora.cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.k_proj.weight.lora_down| --- lora.hpp:988
+ (bf16): shape(768, 32, 1, 1)
+[W] unused lora tensor |lora.cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.out_proj.weight.lora_up| --- lora.hpp:988
+ (bf16): shape(32, 768, 1, 1)
+[W] unused lora tensor |lora.cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.v_proj.weight.lora_down| --- lora.hpp:988
+ (bf16): shape(768, 32, 1, 1)
+[W] unused lora tensor |lora.cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.k_proj.weight.alpha| --- lora.hpp:988
+ (f32): shape(1, 1, 1, 1)
+[W] Only (774 / 792) LoRA tensors have been applied, lora_file_path = <temporary-path> --- lora.hpp:1001
+[I] (2166 / 2166) LoRA tensors have been applied, lora_file_path = <temporary-path> --- lora.hpp:1004
+[I] generate_image completed in 129.40s --- image.cpp:1050
+[I] ggml: ggml_metal_free: deallocating
+[I] save result image 0 to '<local-path>' (success) --- main.cpp:498
+[I] 1/1 images saved --- main.cpp:574
+ggml_metal_library_init: using embedded metal library
+ggml_metal_library_compile_all: compiled 'fa_aux' library in 0.008 sec
+ggml_metal_library_compile_all: compiled 'fa_f16' library in 0.007 sec
+ggml_metal_library_compile_all: compiled 'fa_f32' library in 0.035 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_0' library in 0.028 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_1' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_0' library in 0.021 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_1' library in 0.017 sec
+ggml_metal_library_compile_all: compiled 'fa_q8_0' library in 0.028 sec
+ggml_metal_library_compile_all: compiled 'fa_tensor' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f16' library in 0.027 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f32' library in 0.024 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_0' library in 0.038 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_1' library in 0.016 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_0' library in 0.020 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_1' library in 0.031 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q8_0' library in 0.034 sec
+ggml_metal_library_compile_all: compiled 'mul_mv' library in 0.011 sec
+ggml_metal_library_compile_all: compiled 'mul_mv_mma' library in 0.041 sec
+ggml_metal_library_compile_all: compiled 'mul_mm' library in 0.023 sec
+ggml_metal_library_compile_all: compiled 'quantize' library in 0.013 sec
+ggml_metal_library_compile_all: compiled 'softmax' library in 0.008 sec
+ggml_metal_library_compile_all: compiled 'norm' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'unary' library in 0.007 sec
+ggml_metal_library_compile_all: compiled 'binbcast' library in 0.003 sec
+ggml_metal_library_compile_all: compiled 'reduce' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'tri' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'ssm' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'wkv' library in 0.008 sec
+ggml_metal_library_compile_all: compiled 'gated_delta_net' library in 0.011 sec
+ggml_metal_library_compile_all: compiled 'solve_tri' library in 0.009 sec
+ggml_metal_library_compile_all: compiled 'rope' library in 0.009 sec
+ggml_metal_library_compile_all: compiled 'conv' library in 0.028 sec
+ggml_metal_library_compile_all: compiled 'upscale' library in 0.012 sec
+ggml_metal_library_compile_all: compiled 'argsort' library in 0.011 sec
+ggml_metal_library_compile_all: compiled 'pool' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'misc' library in 0.003 sec
+ggml_metal_library_compile_all: loaded 36 libraries from embedded data in 0.041 sec (max single = 0.041 sec)
+ggml_metal_rsets_init: creating a residency set collection (keep_alive = 180 s)
+ggml_metal_device_init: GPU name:   MTL0 (Apple M5)
+ggml_metal_device_init: GPU family: MTLGPUFamilyApple10  (1010)
+ggml_metal_device_init: GPU family: MTLGPUFamilyMetal4  (5002)
+ggml_metal_device_init: simdgroup reduction   = true
+ggml_metal_device_init: simdgroup matrix mul. = true
+ggml_metal_device_init: has unified memory    = true
+ggml_metal_device_init: has bfloat            = true
+ggml_metal_device_init: has tensor            = false
+ggml_metal_device_init: use residency sets    = true
+ggml_metal_device_init: use shared buffers    = true
+ggml_metal_device_init: recommendedMaxWorkingSetSize  = 12713.12 MB
+[I] loading model from '<local-path>' --- diffusion_engine.cpp:731
+[I] load <local-path> using safetensors format --- model_loader.cpp:222
+[I] Version: SDXL  --- diffusion_engine.cpp:1016
+[I] auto-fit plan: --- backend_fit.cpp:323
+[I]   devices: --- backend_fit.cpp:324
+[I]     MTL0         Apple M5                         free  12123 MiB, budget  11611 MiB --- backend_fit.cpp:328
+[I]     RAM          free   7419 MiB, params budget   5371 MiB --- backend_fit.cpp:334
+[I]   compute-device weight cache priority: diffusion > te > vae --- backend_fit.cpp:336
+[I]   components (params: compute device -> RAM -> other GPU -> disk): --- backend_fit.cpp:337
+[I]     DiT          params   4897 MiB, compute reserve  2048 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I]     Conditioner  params   1559 MiB, compute reserve  2048 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I]     VAE          params    159 MiB, compute reserve  1024 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I] auto-fit: --backend "diffusion=MTL0,te=MTL0,vae=MTL0" --- backend_fit.cpp:477
+[I] ggml: ggml_metal_init: allocating
+[I] ggml: ggml_metal_init: found device: Apple M5
+[I] ggml: ggml_metal_init: picking default device: Apple M5
+[I] ggml: ggml_metal_init: use fusion         = true
+[I] ggml: ggml_metal_init: use concurrency    = true
+[I] ggml: ggml_metal_init: use graph optimize = true
+[I] Weight type stat:                      f16: 2515  --- diffusion_engine.cpp:1641
+[I] Conditioner weight type stat:          f16: 587   --- diffusion_engine.cpp:1642
+[I] Diffusion model weight type stat:      f16: 1680  --- diffusion_engine.cpp:1643
+[I] VAE weight type stat:                  f16: 248   --- diffusion_engine.cpp:1644
+[I] using VAE for encoding / decoding --- model_builders.cpp:657
+[I] vae decoder: ch = 128 --- auto_encoder_kl.hpp:529
+[W] No valid VAE specified with --vae or --force-sdxl-vae-conv-scale flag set, using Conv2D scale 0.031 --- model_builders.cpp:636
+[I] flash attention auto: MTL0 -> off (probe: normal 3.726 ms, flash 3.585 ms) --- flash_attn.cpp:95
+[I] conv2d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] conv3d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] total params memory size = 6624.11MB (VRAM 6624.11MB, RAM 0.00MB): text_encoders 1564.36MB(VRAM), diffusion_model 4900.07MB(VRAM), vae 159.68MB(VRAM), controlnet 0.00MB(N/A), extensions 0.00MB(N/A) --- diffusion_engine.cpp:1451
+[I] running in eps-prediction mode --- diffusion_engine.cpp:1561
+[I] generate_image 512x512 --- image.cpp:814
+[I] get_sigmas with discrete scheduler --- denoiser.hpp:1129
+[I] sampling using Euler method --- request.cpp:422
+[I] clip build cached graph cut plan done (taking 0 ms) --- ggml_graph_cut.cpp:1034
+
+  |########################################          | 142/178 - 536.31MB/s[K
+  |##################################################| 178/178 - 540.82MB/s[K
+[I] loading tensors completed, taking 0.41s (read: 0.26s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] clip build cached graph cut plan done (taking 1 ms) --- ggml_graph_cut.cpp:1034
+
+  |######                                            | 40/374 - 424.11MB/s[K
+  |###########                                       | 76/374 - 486.37MB/s[K
+  |###############                                   | 112/374 - 510.57MB/s[K
+  |#######################                           | 168/374 - 719.22MB/s[K
+  |#############################                     | 216/374 - 723.98MB/s[K
+  |####################################              | 266/374 - 735.60MB/s[K
+  |##########################################        | 312/374 - 728.41MB/s[K
+  |################################################# | 360/374 - 728.91MB/s[K
+  |##################################################| 374/374 - 699.89MB/s[K
+[I] loading tensors completed, taking 1.84s (read: 1.69s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.02s) --- model_loader.cpp:1401
+[I] clip build cached graph cut plan done (taking 1 ms) --- ggml_graph_cut.cpp:1034
+
+  |##################################################| 15/15 - 197.39MB/s[K
+[I] loading tensors completed, taking 0.21s (read: 0.05s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] clip build cached graph cut plan done (taking 2 ms) --- ggml_graph_cut.cpp:1034
+[I] get_learned_condition completed, taking 2.77s --- image.cpp:529
+[I] generating image: 1/1 - seed 20261017 --- image.cpp:866
+[I] unet build cached graph cut plan done (taking 5 ms) --- ggml_graph_cut.cpp:1034
+
+  |#####                                             | 159/1680 - 648.12MB/s[K
+  |#######                                           | 202/1680 - 675.77MB/s[K
+  |########                                          | 247/1680 - 702.85MB/s[K
+  |#########                                         | 292/1680 - 706.89MB/s[K
+  |###########                                       | 339/1680 - 701.77MB/s[K
+  |############                                      | 379/1680 - 702.25MB/s[K
+  |#############                                     | 419/1680 - 709.42MB/s[K
+  |##############                                    | 464/1680 - 717.17MB/s[K
+  |################                                  | 508/1680 - 715.30MB/s[K
+  |#################                                 | 558/1680 - 725.79MB/s[K
+  |##################                                | 602/1680 - 719.48MB/s[K
+  |####################                              | 643/1680 - 726.80MB/s[K
+  |#####################                             | 688/1680 - 725.95MB/s[K
+  |######################                            | 738/1680 - 732.43MB/s[K
+  |########################                          | 783/1680 - 735.06MB/s[K
+  |#########################                         | 824/1680 - 732.63MB/s[K
+  |##########################                        | 858/1680 - 735.57MB/s[K
+  |###########################                       | 900/1680 - 731.83MB/s[K
+  |#############################                     | 947/1680 - 729.55MB/s[K
+  |##############################                    | 990/1680 - 732.49MB/s[K
+  |###############################                   | 1038/1680 - 731.30MB/s[K
+  |################################                  | 1068/1680 - 720.89MB/s[K
+  |##################################                | 1110/1680 - 730.69MB/s[K
+  |###################################               | 1158/1680 - 732.69MB/s[K
+  |####################################              | 1205/1680 - 730.78MB/s[K
+  |######################################            | 1254/1680 - 733.27MB/s[K
+  |#######################################           | 1286/1680 - 726.32MB/s[K
+  |########################################          | 1331/1680 - 734.32MB/s[K
+  |#########################################         | 1376/1680 - 733.31MB/s[K
+  |###########################################       | 1423/1680 - 731.21MB/s[K
+  |############################################      | 1470/1680 - 732.80MB/s[K
+  |###############################################   | 1574/1680 - 738.23MB/s[K
+  |##################################################| 1680/1680 - 731.78MB/s[K
+[I] loading tensors completed, taking 6.69s (read: 6.53s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.06s) --- model_loader.cpp:1401
+
+  |============>                                     | 1/4 - 8.64s/it[K
+  |=========================>                        | 2/4 - 1.40s/it[K
+  |=====================================>            | 3/4 - 1.39s/it[K
+  |==================================================| 4/4 - 1.40s/it[K
+[I] sampling completed, taking 12.82s --- image.cpp:899
+[I] generating 1 latent images completed, taking 12.82s --- image.cpp:913
+[I] decoding 1 latents --- image.cpp:554
+[I] vae build cached graph cut plan done (taking 0 ms) --- ggml_graph_cut.cpp:1034
+
+  |##################################################| 140/140 - 465.00MB/s[K
+[I] loading tensors completed, taking 0.20s (read: 0.13s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] latent 1 decoded, taking 3.24s --- image.cpp:620
+[I] decode_first_stage completed, taking 3.24s --- image.cpp:624
+[I] generate_image completed in 18.83s --- image.cpp:1050
+[I] ggml: ggml_metal_free: deallocating
+[I] save result image 0 to '<local-path>' (success) --- main.cpp:498
+[I] 1/1 images saved --- main.cpp:574
+ggml_metal_library_init: using embedded metal library
+ggml_metal_library_compile_all: compiled 'fa_aux' library in 0.029 sec
+ggml_metal_library_compile_all: compiled 'fa_f16' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'fa_f32' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_0' library in 0.033 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_1' library in 0.008 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_0' library in 0.007 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_1' library in 0.021 sec
+ggml_metal_library_compile_all: compiled 'fa_q8_0' library in 0.029 sec
+ggml_metal_library_compile_all: compiled 'fa_tensor' library in 0.002 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f16' library in 0.025 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f32' library in 0.022 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_0' library in 0.032 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_1' library in 0.040 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_0' library in 0.037 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_1' library in 0.020 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q8_0' library in 0.028 sec
+ggml_metal_library_compile_all: compiled 'mul_mv' library in 0.017 sec
+ggml_metal_library_compile_all: compiled 'mul_mv_mma' library in 0.014 sec
+ggml_metal_library_compile_all: compiled 'mul_mm' library in 0.010 sec
+ggml_metal_library_compile_all: compiled 'quantize' library in 0.034 sec
+ggml_metal_library_compile_all: compiled 'softmax' library in 0.003 sec
+ggml_metal_library_compile_all: compiled 'norm' library in 0.005 sec
+ggml_metal_library_compile_all: compiled 'unary' library in 0.020 sec
+ggml_metal_library_compile_all: compiled 'binbcast' library in 0.018 sec
+ggml_metal_library_compile_all: compiled 'reduce' library in 0.022 sec
+ggml_metal_library_compile_all: compiled 'tri' library in 0.037 sec
+ggml_metal_library_compile_all: compiled 'ssm' library in 0.018 sec
+ggml_metal_library_compile_all: compiled 'wkv' library in 0.033 sec
+ggml_metal_library_compile_all: compiled 'gated_delta_net' library in 0.037 sec
+ggml_metal_library_compile_all: compiled 'solve_tri' library in 0.018 sec
+ggml_metal_library_compile_all: compiled 'rope' library in 0.018 sec
+ggml_metal_library_compile_all: compiled 'conv' library in 0.037 sec
+ggml_metal_library_compile_all: compiled 'upscale' library in 0.033 sec
+ggml_metal_library_compile_all: compiled 'argsort' library in 0.013 sec
+ggml_metal_library_compile_all: compiled 'pool' library in 0.033 sec
+ggml_metal_library_compile_all: compiled 'misc' library in 0.014 sec
+ggml_metal_library_compile_all: loaded 36 libraries from embedded data in 0.040 sec (max single = 0.040 sec)
+ggml_metal_rsets_init: creating a residency set collection (keep_alive = 180 s)
+ggml_metal_device_init: GPU name:   MTL0 (Apple M5)
+ggml_metal_device_init: GPU family: MTLGPUFamilyApple10  (1010)
+ggml_metal_device_init: GPU family: MTLGPUFamilyMetal4  (5002)
+ggml_metal_device_init: simdgroup reduction   = true
+ggml_metal_device_init: simdgroup matrix mul. = true
+ggml_metal_device_init: has unified memory    = true
+ggml_metal_device_init: has bfloat            = true
+ggml_metal_device_init: has tensor            = false
+ggml_metal_device_init: use residency sets    = true
+ggml_metal_device_init: use shared buffers    = true
+ggml_metal_device_init: recommendedMaxWorkingSetSize  = 12713.12 MB
+[I] loading model from '<local-path>' --- diffusion_engine.cpp:731
+[I] load <local-path> using safetensors format --- model_loader.cpp:222
+[I] Version: SDXL  --- diffusion_engine.cpp:1016
+[I] auto-fit plan: --- backend_fit.cpp:323
+[I]   devices: --- backend_fit.cpp:324
+[I]     MTL0         Apple M5                         free  12123 MiB, budget  11611 MiB --- backend_fit.cpp:328
+[I]     BLAS         Accelerate                       free      0 MiB, budget      0 MiB --- backend_fit.cpp:328
+[I]     RAM          free   9595 MiB, params budget   7547 MiB --- backend_fit.cpp:334
+[I]   compute-device weight cache priority: diffusion > te > vae --- backend_fit.cpp:336
+[I]   components (params: compute device -> RAM -> other GPU -> disk): --- backend_fit.cpp:337
+[I]     DiT          params   4897 MiB, compute reserve  2048 MiB -> compute CPU, params cpu --- backend_fit.cpp:348
+[I]     Conditioner  params   1559 MiB, compute reserve  2048 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I]     VAE          params    159 MiB, compute reserve  1024 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I] auto-fit: --backend "diffusion=cpu,te=MTL0,vae=MTL0" --params-backend "diffusion=cpu" --- backend_fit.cpp:477
+[I] Weight type stat:                      f16: 2515  --- diffusion_engine.cpp:1641
+[I] Conditioner weight type stat:          f16: 587   --- diffusion_engine.cpp:1642
+[I] Diffusion model weight type stat:      f16: 1680  --- diffusion_engine.cpp:1643
+[I] VAE weight type stat:                  f16: 248   --- diffusion_engine.cpp:1644
+[I] ggml: ggml_metal_init: allocating
+[I] ggml: ggml_metal_init: found device: Apple M5
+[I] ggml: ggml_metal_init: picking default device: Apple M5
+[I] ggml: ggml_metal_init: use fusion         = true
+[I] ggml: ggml_metal_init: use concurrency    = true
+[I] ggml: ggml_metal_init: use graph optimize = true
+[I] using VAE for encoding / decoding --- model_builders.cpp:657
+[I] vae decoder: ch = 128 --- auto_encoder_kl.hpp:529
+[W] No valid VAE specified with --vae or --force-sdxl-vae-conv-scale flag set, using Conv2D scale 0.031 --- model_builders.cpp:636
+[I] flash attention auto: MTL0 -> on (probe: normal 3.833 ms, flash 3.253 ms) --- flash_attn.cpp:95
+[I] flash attention auto: CPU -> on (CPU) --- flash_attn.cpp:66
+[I] conv2d direct auto: CPU -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] conv3d direct auto: CPU -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] conv2d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] conv3d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] total params memory size = 6624.11MB (VRAM 1724.04MB, RAM 4900.07MB): text_encoders 1564.36MB(VRAM), diffusion_model 4900.07MB(RAM), vae 159.68MB(VRAM), controlnet 0.00MB(N/A), extensions 0.00MB(N/A) --- diffusion_engine.cpp:1451
+[I] running in eps-prediction mode --- diffusion_engine.cpp:1561
+[I] generate_image 512x512 --- image.cpp:814
+[I] get_sigmas with discrete scheduler --- denoiser.hpp:1129
+[I] sampling using Euler method --- request.cpp:422
+[I] clip build cached graph cut plan done (taking 0 ms) --- ggml_graph_cut.cpp:1034
+
+  |########################################          | 142/178 - 541.62MB/s[K
+  |##################################################| 178/178 - 543.48MB/s[K
+[I] loading tensors completed, taking 0.41s (read: 0.26s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] clip build cached graph cut plan done (taking 2 ms) --- ggml_graph_cut.cpp:1034
+
+  |######                                            | 40/374 - 424.11MB/s[K
+  |###########                                       | 76/374 - 486.37MB/s[K
+  |################                                  | 117/374 - 542.73MB/s[K
+  |#######################                           | 168/374 - 716.58MB/s[K
+  |#############################                     | 216/374 - 723.26MB/s[K
+  |####################################              | 266/374 - 735.00MB/s[K
+  |###########################################       | 318/374 - 750.98MB/s[K
+  |################################################# | 364/374 - 741.43MB/s[K
+  |##################################################| 374/374 - 699.51MB/s[K
+[I] loading tensors completed, taking 1.84s (read: 1.68s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.01s) --- model_loader.cpp:1401
+[I] clip build cached graph cut plan done (taking 1 ms) --- ggml_graph_cut.cpp:1034
+
+  |##################################################| 15/15 - 197.39MB/s[K
+[I] loading tensors completed, taking 0.21s (read: 0.05s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] clip build cached graph cut plan done (taking 1 ms) --- ggml_graph_cut.cpp:1034
+[I] get_learned_condition completed, taking 2.71s --- image.cpp:529
+[I] generating image: 1/1 - seed 20261017 --- image.cpp:866
+[I] unet build cached graph cut plan done (taking 4 ms) --- ggml_graph_cut.cpp:1034
+
+  |#####                                             | 161/1680 - 663.38MB/s[K
+  |#######                                           | 207/1680 - 731.04MB/s[K
+  |########                                          | 259/1680 - 733.01MB/s[K
+  |#########                                         | 299/1680 - 712.18MB/s[K
+  |###########                                       | 343/1680 - 731.84MB/s[K
+  |############                                      | 384/1680 - 713.45MB/s[K
+  |#############                                     | 435/1680 - 732.01MB/s[K
+  |###############                                   | 480/1680 - 743.29MB/s[K
+  |################                                  | 528/1680 - 747.17MB/s[K
+  |##################                                | 576/1680 - 740.98MB/s[K
+  |###################                               | 619/1680 - 751.84MB/s[K
+  |####################                              | 663/1680 - 750.69MB/s[K
+  |######################                            | 708/1680 - 747.47MB/s[K
+  |#######################                           | 758/1680 - 752.38MB/s[K
+  |#########################                         | 810/1680 - 749.88MB/s[K
+  |#########################                         | 835/1680 - 737.23MB/s[K
+  |###########################                       | 880/1680 - 751.38MB/s[K
+  |############################                      | 927/1680 - 747.72MB/s[K
+  |#############################                     | 970/1680 - 750.61MB/s[K
+  |###############################                   | 1014/1680 - 750.72MB/s[K
+  |################################                  | 1052/1680 - 741.14MB/s[K
+  |#################################                 | 1092/1680 - 747.47MB/s[K
+  |##################################                | 1136/1680 - 748.27MB/s[K
+  |####################################              | 1178/1680 - 744.95MB/s[K
+  |#####################################             | 1228/1680 - 747.51MB/s[K
+  |######################################            | 1267/1680 - 742.11MB/s[K
+  |#######################################           | 1308/1680 - 745.78MB/s[K
+  |#########################################         | 1352/1680 - 746.03MB/s[K
+  |##########################################        | 1396/1680 - 744.09MB/s[K
+  |###########################################       | 1443/1680 - 741.75MB/s[K
+  |#############################################     | 1491/1680 - 740.90MB/s[K
+  |################################################# | 1626/1680 - 746.39MB/s[K
+  |##################################################| 1680/1680 - 731.78MB/s[K
+[I] loading tensors completed, taking 6.69s (read: 6.55s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+
+  |============>                                     | 1/4 - 17.91s/it[K
+  |=========================>                        | 2/4 - 11.84s/it[K
+  |=====================================>            | 3/4 - 12.62s/it[K
+  |==================================================| 4/4 - 13.12s/it[K
+[I] sampling completed, taking 55.50s --- image.cpp:899
+[I] generating 1 latent images completed, taking 55.50s --- image.cpp:913
+[I] decoding 1 latents --- image.cpp:554
+[I] vae build cached graph cut plan done (taking 0 ms) --- ggml_graph_cut.cpp:1034
+
+  |##################################################| 140/140 - 460.46MB/s[K
+[I] loading tensors completed, taking 0.20s (read: 0.13s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] latent 1 decoded, taking 3.79s --- image.cpp:620
+[I] decode_first_stage completed, taking 3.79s --- image.cpp:624
+[I] generate_image completed in 62.00s --- image.cpp:1050
+[I] ggml: ggml_metal_free: deallocating
+[I] save result image 0 to '<local-path>' (success) --- main.cpp:498
+[I] 1/1 images saved --- main.cpp:574
+ggml_metal_library_init: using embedded metal library
+ggml_metal_library_compile_all: compiled 'fa_aux' library in 0.003 sec
+ggml_metal_library_compile_all: compiled 'fa_f16' library in 0.016 sec
+ggml_metal_library_compile_all: compiled 'fa_f32' library in 0.004 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_0' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'fa_q4_1' library in 0.014 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_0' library in 0.014 sec
+ggml_metal_library_compile_all: compiled 'fa_q5_1' library in 0.009 sec
+ggml_metal_library_compile_all: compiled 'fa_q8_0' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'fa_tensor' library in 0.004 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f16' library in 0.012 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_f32' library in 0.008 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_0' library in 0.009 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q4_1' library in 0.008 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_0' library in 0.013 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q5_1' library in 0.011 sec
+ggml_metal_library_compile_all: compiled 'fa_vec_q8_0' library in 0.015 sec
+ggml_metal_library_compile_all: compiled 'mul_mv' library in 0.013 sec
+ggml_metal_library_compile_all: compiled 'mul_mv_mma' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'mul_mm' library in 0.010 sec
+ggml_metal_library_compile_all: compiled 'quantize' library in 0.004 sec
+ggml_metal_library_compile_all: compiled 'softmax' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'norm' library in 0.003 sec
+ggml_metal_library_compile_all: compiled 'unary' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'binbcast' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'reduce' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'tri' library in 0.002 sec
+ggml_metal_library_compile_all: compiled 'ssm' library in 0.013 sec
+ggml_metal_library_compile_all: compiled 'wkv' library in 0.001 sec
+ggml_metal_library_compile_all: compiled 'gated_delta_net' library in 0.001 sec
+ggml_metal_library_compile_all: compiled 'solve_tri' library in 0.006 sec
+ggml_metal_library_compile_all: compiled 'rope' library in 0.010 sec
+ggml_metal_library_compile_all: compiled 'conv' library in 0.003 sec
+ggml_metal_library_compile_all: compiled 'upscale' library in 0.010 sec
+ggml_metal_library_compile_all: compiled 'argsort' library in 0.003 sec
+ggml_metal_library_compile_all: compiled 'pool' library in 0.010 sec
+ggml_metal_library_compile_all: compiled 'misc' library in 0.001 sec
+ggml_metal_library_compile_all: loaded 36 libraries from embedded data in 0.016 sec (max single = 0.016 sec)
+ggml_metal_rsets_init: creating a residency set collection (keep_alive = 180 s)
+ggml_metal_device_init: GPU name:   MTL0 (Apple M5)
+ggml_metal_device_init: GPU family: MTLGPUFamilyApple10  (1010)
+ggml_metal_device_init: GPU family: MTLGPUFamilyMetal4  (5002)
+ggml_metal_device_init: simdgroup reduction   = true
+ggml_metal_device_init: simdgroup matrix mul. = true
+ggml_metal_device_init: has unified memory    = true
+ggml_metal_device_init: has bfloat            = true
+ggml_metal_device_init: has tensor            = false
+ggml_metal_device_init: use residency sets    = true
+ggml_metal_device_init: use shared buffers    = true
+ggml_metal_device_init: recommendedMaxWorkingSetSize  = 12713.12 MB
+[I] loading model from '<local-path>' --- diffusion_engine.cpp:731
+[I] load <local-path> using safetensors format --- model_loader.cpp:222
+[I] Version: SDXL  --- diffusion_engine.cpp:1016
+[I] auto-fit plan: --- backend_fit.cpp:323
+[I]   devices: --- backend_fit.cpp:324
+[I]     MTL0         Apple M5                         free  12123 MiB, budget  11611 MiB --- backend_fit.cpp:328
+[I]     BLAS         Accelerate                       free      0 MiB, budget      0 MiB --- backend_fit.cpp:328
+[I]     RAM          free   7412 MiB, params budget   5364 MiB --- backend_fit.cpp:334
+[I]   compute-device weight cache priority: diffusion > te > vae --- backend_fit.cpp:336
+[I]   components (params: compute device -> RAM -> other GPU -> disk): --- backend_fit.cpp:337
+[I]     DiT          params   4897 MiB, compute reserve  2048 MiB -> compute CPU, params cpu --- backend_fit.cpp:348
+[I]     Conditioner  params   1559 MiB, compute reserve  2048 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I]     VAE          params    159 MiB, compute reserve  1024 MiB -> compute MTL0, params MTL0 --- backend_fit.cpp:348
+[I] auto-fit: --backend "diffusion=cpu,te=MTL0,vae=MTL0" --params-backend "diffusion=cpu" --- backend_fit.cpp:477
+[I] Weight type stat:                      f16: 2515  --- diffusion_engine.cpp:1641
+[I] Conditioner weight type stat:          f16: 587   --- diffusion_engine.cpp:1642
+[I] Diffusion model weight type stat:      f16: 1680  --- diffusion_engine.cpp:1643
+[I] VAE weight type stat:                  f16: 248   --- diffusion_engine.cpp:1644
+[I] ggml: ggml_metal_init: allocating
+[I] ggml: ggml_metal_init: found device: Apple M5
+[I] ggml: ggml_metal_init: picking default device: Apple M5
+[I] ggml: ggml_metal_init: use fusion         = true
+[I] ggml: ggml_metal_init: use concurrency    = true
+[I] ggml: ggml_metal_init: use graph optimize = true
+[I] using VAE for encoding / decoding --- model_builders.cpp:657
+[I] vae decoder: ch = 128 --- auto_encoder_kl.hpp:529
+[W] No valid VAE specified with --vae or --force-sdxl-vae-conv-scale flag set, using Conv2D scale 0.031 --- model_builders.cpp:636
+[I] flash attention auto: MTL0 -> off (probe: normal 3.245 ms, flash 3.092 ms) --- flash_attn.cpp:95
+[I] flash attention auto: CPU -> on (CPU) --- flash_attn.cpp:66
+[I] conv2d direct auto: CPU -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] conv3d direct auto: CPU -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] conv2d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] conv3d direct auto: MTL0 -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] total params memory size = 6624.11MB (VRAM 1724.04MB, RAM 4900.07MB): text_encoders 1564.36MB(VRAM), diffusion_model 4900.07MB(RAM), vae 159.68MB(VRAM), controlnet 0.00MB(N/A), extensions 0.00MB(N/A) --- diffusion_engine.cpp:1451
+[I] running in eps-prediction mode --- diffusion_engine.cpp:1561
+[W] align generation request up 600x800 to 640x832 (multiple=64) --- request.cpp:214
+[I] generate_image 640x832 --- image.cpp:814
+[I] load <temporary-path> using safetensors format --- model_loader.cpp:222
+[I] apply lora at runtime --- diffusion_engine.cpp:1830
+[I] apply_loras completed, taking 0.62s --- diffusion_engine.cpp:1955
+[I] get_sigmas with discrete scheduler --- denoiser.hpp:1129
+[I] sampling using Euler method --- request.cpp:422
+[I] clip build cached graph cut plan done (taking 0 ms) --- ggml_graph_cut.cpp:1034
+
+  |#########################################         | 144/178 - 541.83MB/s[K
+  |##################################################| 178/178 - 540.82MB/s[K
+[I] loading tensors completed, taking 0.41s (read: 0.25s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] clip build cached graph cut plan done (taking 2 ms) --- ggml_graph_cut.cpp:1034
+
+  |######                                            | 40/374 - 432.47MB/s[K
+  |###########                                       | 76/374 - 493.56MB/s[K
+  |###############                                   | 112/374 - 515.62MB/s[K
+  |#######################                           | 168/374 - 723.65MB/s[K
+  |#############################                     | 216/374 - 726.83MB/s[K
+  |####################################              | 266/374 - 738.62MB/s[K
+  |##########################################        | 312/374 - 729.44MB/s[K
+  |################################################# | 360/374 - 729.80MB/s[K
+  |##################################################| 374/374 - 701.04MB/s[K
+[I] loading tensors completed, taking 1.83s (read: 1.70s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.01s) --- model_loader.cpp:1401
+[I] clip build cached graph cut plan done (taking 2 ms) --- ggml_graph_cut.cpp:1034
+
+  |##################################################| 15/15 - 201.30MB/s[K
+[I] loading tensors completed, taking 0.20s (read: 0.05s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+[I] clip build cached graph cut plan done (taking 3 ms) --- ggml_graph_cut.cpp:1034
+[I] get_learned_condition completed, taking 3.69s --- image.cpp:529
+[I] generating image: 1/1 - seed 3791400451 --- image.cpp:866
+[I] unet build cached graph cut plan done (taking 8 ms) --- ggml_graph_cut.cpp:1034
+
+  |#####                                             | 161/1680 - 660.16MB/s[K
+  |#######                                           | 204/1680 - 694.44MB/s[K
+  |########                                          | 252/1680 - 725.98MB/s[K
+  |#########                                         | 292/1680 - 709.51MB/s[K
+  |###########                                       | 342/1680 - 733.10MB/s[K
+  |############                                      | 382/1680 - 712.05MB/s[K
+  |#############                                     | 424/1680 - 727.37MB/s[K
+  |###############                                   | 475/1680 - 726.19MB/s[K
+  |################                                  | 518/1680 - 734.29MB/s[K
+  |#################                                 | 560/1680 - 729.96MB/s[K
+  |##################                                | 602/1680 - 720.13MB/s[K
+  |####################                              | 648/1680 - 732.65MB/s[K
+  |#####################                             | 698/1680 - 738.84MB/s[K
+  |#######################                           | 743/1680 - 739.89MB/s[K
+  |########################                          | 788/1680 - 738.05MB/s[K
+  |#########################                         | 824/1680 - 731.50MB/s[K
+  |##########################                        | 860/1680 - 735.84MB/s[K
+  |############################                      | 910/1680 - 740.32MB/s[K
+  |#############################                     | 952/1680 - 736.96MB/s[K
+  |##############################                    | 995/1680 - 736.98MB/s[K
+  |################################                  | 1042/1680 - 732.60MB/s[K
+  |################################                  | 1073/1680 - 726.23MB/s[K
+  |##################################                | 1110/1680 - 731.01MB/s[K
+  |###################################               | 1153/1680 - 731.42MB/s[K
+  |####################################              | 1185/1680 - 718.67MB/s[K
+  |####################################              | 1205/1680 - 703.40MB/s[K
+  |######################################            | 1254/1680 - 706.42MB/s[K
+  |#######################################           | 1285/1680 - 700.26MB/s[K
+  |########################################          | 1325/1680 - 701.68MB/s[K
+  |#########################################         | 1366/1680 - 704.17MB/s[K
+  |##########################################        | 1403/1680 - 697.82MB/s[K
+  |###########################################       | 1436/1680 - 695.53MB/s[K
+  |############################################      | 1476/1680 - 692.18MB/s[K
+  |################################################  | 1582/1680 - 696.43MB/s[K
+  |##################################################| 1680/1680 - 691.38MB/s[K
+[I] loading tensors completed, taking 7.08s (read: 7.02s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1401
+
+  |==>                                               | 1/20 - 40.73s/it[K
+  |=====>                                            | 2/20 - 34.93s/it[K
+  |=======>                                          | 3/20 - 34.37s/it[K
+  |==========>                                       | 4/20 - 34.06s/it[K
+  |============>                                     | 5/20 - 34.19s/it[K
+  |===============>                                  | 6/20 - 35.03s/it[K
+  |=================>                                | 7/20 - 36.07s/it[K[I] loading model from '<mounted-model-path>' --- diffusion_engine.cpp:731
+[I] load <mounted-model-path> using safetensors format --- model_loader.cpp:222
+[I] Version: SDXL  --- diffusion_engine.cpp:1016
+[W] auto-fit: no GPU devices; using the default backend --- backend_fit.cpp:444
+[I] Weight type stat:                      f16: 2515  --- diffusion_engine.cpp:1641
+[I] Conditioner weight type stat:          f16: 587   --- diffusion_engine.cpp:1642
+[I] Diffusion model weight type stat:      f16: 1680  --- diffusion_engine.cpp:1643
+[I] VAE weight type stat:                  f16: 248   --- diffusion_engine.cpp:1644
+[I] using VAE for encoding / decoding --- model_builders.cpp:657
+[I] vae decoder: ch = 128 --- auto_encoder_kl.hpp:529
+[W] No valid VAE specified with --vae or --force-sdxl-vae-conv-scale flag set, using Conv2D scale 0.031 --- model_builders.cpp:633
+[I] flash attention auto: CPU -> on (CPU) --- flash_attn.cpp:66
+[I] conv2d direct auto: CPU -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] conv3d direct auto: CPU -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] total params memory size = 6624.11MB (VRAM 0.00MB, RAM 6624.11MB): text_encoders 1564.36MB(RAM), diffusion_model 4900.07MB(RAM), vae 159.68MB(RAM), controlnet 0.00MB(N/A), extensions 0.00MB(N/A) --- diffusion_engine.cpp:1436
+[I] running in eps-prediction mode --- diffusion_engine.cpp:1561
+[I] generate_image 256x256 --- image.cpp:814
+[I] get_sigmas with discrete scheduler --- denoiser.hpp:1129
+[I] sampling using Euler method --- request.cpp:422
+[I] clip build cached graph cut plan done (taking 0 ms) --- ggml_graph_cut.cpp:1032
+
+  |####################################              | 126/178 - 462.25MB/s[K
+  |##################################################| 178/178 - 529.18MB/s[K
+[I] loading tensors completed, taking 0.42s (read: 0.31s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1396
+[I] clip build cached graph cut plan done (taking 1 ms) --- ggml_graph_cut.cpp:1032
+
+  |#######                                           | 48/374 - 450.19MB/s[K
+  |############                                      | 86/374 - 533.42MB/s[K
+  |#################                                 | 124/374 - 562.93MB/s[K
+  |#######################                           | 168/374 - 721.58MB/s[K
+  |############################                      | 206/374 - 690.50MB/s[K
+  |#################################                 | 244/374 - 678.67MB/s[K
+  |########################################          | 292/374 - 681.61MB/s[K
+  |############################################      | 326/374 - 656.97MB/s[K
+  |###############################################   | 350/374 - 625.60MB/s[K
+  |##################################################| 374/374 - 626.79MB/s[K
+[I] loading tensors completed, taking 2.05s (read: 1.95s, memcpy: 0.00s, convert: 0.02s, copy_to_backend: 0.00s) --- model_loader.cpp:1396
+[I] clip build cached graph cut plan done (taking 1 ms) --- ggml_graph_cut.cpp:1032
+
+  |##################################################| 15/15 - 201.30MB/s[K
+[I] loading tensors completed, taking 0.20s (read: 0.05s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1396
+[I] clip build cached graph cut plan done (taking 2 ms) --- ggml_graph_cut.cpp:1032
+[I] get_learned_condition completed, taking 5.31s --- image.cpp:529
+[I] generating image: 1/1 - seed 20261017 --- image.cpp:866
+[I] unet build cached graph cut plan done (taking 5 ms) --- ggml_graph_cut.cpp:1032
+
+  |#####                                             | 150/1680 - 550.54MB/s[K
+  |######                                            | 192/1680 - 531.16MB/s[K
+  |########                                          | 242/1680 - 631.53MB/s[K
+  |#########                                         | 284/1680 - 645.44MB/s[K
+  |##########                                        | 327/1680 - 675.41MB/s[K
+  |###########                                       | 365/1680 - 643.40MB/s[K
+  |############                                      | 388/1680 - 616.99MB/s[K
+  |#############                                     | 420/1680 - 609.14MB/s[K
+  |##############                                    | 443/1680 - 592.12MB/s[K
+  |###############                                   | 480/1680 - 584.07MB/s[K
+  |################                                  | 520/1680 - 590.62MB/s[K
+  |#################                                 | 555/1680 - 589.92MB/s[K
+  |##################                                | 595/1680 - 591.94MB/s[K
+  |###################                               | 617/1680 - 570.57MB/s[K
+  |####################                              | 660/1680 - 588.20MB/s[K
+  |#####################                             | 699/1680 - 591.30MB/s[K
+  |######################                            | 738/1680 - 593.85MB/s[K
+  |########################                          | 783/1680 - 606.72MB/s[K
+  |#########################                         | 824/1680 - 607.38MB/s[K
+  |##########################                        | 863/1680 - 611.36MB/s[K
+  |############################                      | 912/1680 - 628.90MB/s[K
+  |#############################                     | 960/1680 - 640.50MB/s[K
+  |###############################                   | 1009/1680 - 642.93MB/s[K
+  |################################                  | 1053/1680 - 649.02MB/s[K
+  |#################################                 | 1090/1680 - 657.32MB/s[K
+  |##################################                | 1134/1680 - 660.84MB/s[K
+  |####################################              | 1178/1680 - 662.04MB/s[K
+  |####################################              | 1208/1680 - 651.92MB/s[K
+  |######################################            | 1254/1680 - 651.96MB/s[K
+  |#######################################           | 1289/1680 - 653.69MB/s[K
+  |#########################################         | 1345/1680 - 663.91MB/s[K
+  |##########################################        | 1391/1680 - 669.44MB/s[K
+  |###########################################       | 1436/1680 - 672.23MB/s[K
+  |############################################      | 1470/1680 - 663.47MB/s[K
+  |##############################################    | 1516/1680 - 660.80MB/s[K
+  |################################################  | 1603/1680 - 657.71MB/s[K
+  |##################################################| 1680/1680 - 650.94MB/s[K
+[I] loading tensors completed, taking 7.52s (read: 7.43s, memcpy: 0.00s, convert: 0.02s, copy_to_backend: 0.00s) --- model_loader.cpp:1396
+
+  |=========================>                        | 1/2 - 16.67s/it[K
+  |==================================================| 2/2 - 6.73s/it[K
+[I] sampling completed, taking 23.41s --- image.cpp:899
+[I] generating 1 latent images completed, taking 23.42s --- image.cpp:911
+[I] decoding 1 latents --- image.cpp:554
+[I] vae build cached graph cut plan done (taking 1 ms) --- ggml_graph_cut.cpp:1032
+
+  |######################################            | 104/140 - 154.54MB/s[K
+  |##################################################| 140/140 - 228.01MB/s[K
+[I] loading tensors completed, taking 0.41s (read: 0.23s, memcpy: 0.00s, convert: 0.00s, copy_to_backend: 0.00s) --- model_loader.cpp:1396
+[I] latent 1 decoded, taking 5.60s --- image.cpp:620
+[I] decode_first_stage completed, taking 5.60s --- image.cpp:624
+[I] generate_image completed in 34.33s --- image.cpp:1050
+[I] save result image 0 to '<container-path>' (success) --- main.cpp:498
+[I] 1/1 images saved --- main.cpp:574
+[I] loading model from '<mounted-model-path>' --- diffusion_engine.cpp:731
+[I] load <mounted-model-path> using safetensors format --- model_loader.cpp:222
+[I] Version: SDXL  --- diffusion_engine.cpp:1016
+[W] auto-fit: no GPU devices; using the default backend --- backend_fit.cpp:444
+[I] Weight type stat:                      f16: 2515  --- diffusion_engine.cpp:1641
+[I] Conditioner weight type stat:          f16: 587   --- diffusion_engine.cpp:1642
+[I] Diffusion model weight type stat:      f16: 1680  --- diffusion_engine.cpp:1643
+[I] VAE weight type stat:                  f16: 248   --- diffusion_engine.cpp:1644
+[I] using VAE for encoding / decoding --- model_builders.cpp:657
+[I] vae decoder: ch = 128 --- auto_encoder_kl.hpp:529
+[W] No valid VAE specified with --vae or --force-sdxl-vae-conv-scale flag set, using Conv2D scale 0.031 --- model_builders.cpp:633
+[I] flash attention auto: CPU -> on (CPU) --- flash_attn.cpp:66
+[I] conv2d direct auto: CPU -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] conv3d direct auto: CPU -> off (no implicit GEMM path) --- conv_direct.cpp:90
+[I] total params memory size = 6624.11MB (VRAM 0.00MB, RAM 6624.11MB): text_encoders 1564.36MB(RAM), diffusion_model 4900.07MB(RAM), vae 159.68MB(RAM), controlnet 0.00MB(N/A), extensions 0.00MB(N/A) --- diffusion_engine.cpp:1436
+[I] running in eps-prediction mode --- diffusion_engine.cpp:1561
+[W] align generation request up 600x800 to 640x832 (multiple=64) --- request.cpp:208
+[I] generate_image 640x832 --- image.cpp:814
+[I] get_sigmas with discrete scheduler --- denoiser.hpp:1129
+[I] sampling using Euler method --- request.cpp:422
+[I] clip build cached graph cut plan done (taking 1 ms) --- ggml_graph_cut.cpp:1032
+
+  |########################################          | 142/178 - 536.05MB/s[K
+  |##################################################| 178/178 - 540.82MB/s[K
+[I] loading tensors completed, taking 0.41s (read: 0.26s, memcpy: 0.00s, convert: 0.01s, copy_to_backend: 0.00s) --- model_loader.cpp:1396
+[I] clip build cached graph cut plan done (taking 1 ms) --- ggml_graph_cut.cpp:1032
+
+  |#######                                           | 50/374 - 512.08MB/s[K
+  |###########                                       | 76/374 - 466.22MB/s[K
+  |##############                                    | 102/374 - 455.29MB/s[K
+  |###################                               | 141/374 - 484.73MB/s[K
+  |#########################                         | 186/374 - 641.81MB/s[K
+  |################################                  | 234/374 - 659.29MB/s[K
+  |######################################            | 279/374 - 664.66MB/s[K
+  |############################################      | 324/374 - 659.40MB/s[K
+  |################################################# | 362/374 - 655.29MB/s[K
+  |##################################################| 374/374 - 635.79MB/s[K
+[I] loading tensors completed, taking 2.02s (read: 1.84s, memcpy: 0.00s, convert: 0.04s, copy_to_backend: 0.00s) --- model_loader.cpp:1396
+[I] clip build cached graph cut plan done (taking 1 ms) --- ggml_graph_cut.cpp:1032
+
+  |##################################################| 15/15 - 200.30MB/s[K
+[I] loading tensors completed, taking 0.20s (read: 0.05s, memcpy: 0.00s, convert: 0.01s, copy_to_backend: 0.00s) --- model_loader.cpp:1396
+[I] clip build cached graph cut plan done (taking 0 ms) --- ggml_graph_cut.cpp:1032
+[I] get_learned_condition completed, taking 5.16s --- image.cpp:529
+[I] generating image: 1/1 - seed 878494775 --- image.cpp:866
+[I] unet build cached graph cut plan done (taking 4 ms) --- ggml_graph_cut.cpp:1032
+
+  |####                                              | 133/1680 - 494.36MB/s[K
+  |######                                            | 181/1680 - 449.31MB/s[K
+  |#######                                           | 219/1680 - 509.97MB/s[K
+  |########                                          | 252/1680 - 503.84MB/s[K
+  |#########                                         | 286/1680 - 518.16MB/s[K
+  |##########                                        | 326/1680 - 541.10MB/s[K
+  |############                                      | 372/1680 - 568.53MB/s[K
+  |############                                      | 386/1680 - 535.92MB/s[K
+  |#############                                     | 418/1680 - 537.26MB/s[K
+  |##############                                    | 438/1680 - 516.41MB/s[K
+  |###############                                   | 476/1680 - 527.93MB/s[K
+  |################                                  | 515/1680 - 536.55MB/s[K
+  |#################                                 | 559/1680 - 549.61MB/s[K
+  |##################                                | 600/1680 - 554.81MB/s[K
+  |###################                               | 619/1680 - 552.27MB/s[K
+  |####################                              | 640/1680 - 539.09MB/s[K
+  |#####################                             | 682/1680 - 540.53MB/s[K
+  |#####################                             | 700/1680 - 527.75MB/s[K
+  |######################                            | 718/1680 - 514.58MB/s[K
+  |######################                            | 725/1680 - 500.54MB/s[K
+  |#######################                           | 748/1680 - 490.67MB/s[K
+  |#######################                           | 764/1680 - 483.39MB/s[K
+  |#########################                         | 814/1680 - 488.76MB/s[K
+  |#########################                         | 829/1680 - 487.64MB/s[K
+  |##########################                        | 867/1680 - 488.20MB/s[K
+  |###########################                       | 907/1680 - 504.32MB/s[K
+  |############################                      | 936/1680 - 507.86MB/s[K
+  |##############################                    | 978/1680 - 513.60MB/s[K
+  |###############################                   | 1028/1680 - 519.87MB/s[K
+  |################################                  | 1069/1680 - 526.57MB/s[K
+  |##################################                | 1112/1680 - 540.16MB/s[K
+  |###################################               | 1165/1680 - 547.91MB/s[K
+  |####################################              | 1208/1680 - 552.31MB/s[K
+  |######################################            | 1260/1680 - 560.79MB/s[K
+  |#######################################           | 1296/1680 - 563.02MB/s[K
+  |#########################################         | 1346/1680 - 572.49MB/s[K
+  |##########################################        | 1388/1680 - 575.58MB/s[K
+  |###########################################       | 1443/1680 - 584.50MB/s[K
+  |############################################      | 1474/1680 - 581.87MB/s[K
+  |###############################################   | 1549/1680 - 584.44MB/s[K
+  |##################################################| 1680/1680 - 587.95MB/s[K
+[I] loading tensors completed, taking 8.33s (read: 8.19s, memcpy: 0.00s, convert: 0.11s, copy_to_backend: 0.00s) --- model_loader.cpp:1396
+
+  |==>                                               | 1/20 - 51.34s/it[K
+  |=====>                                            | 2/20 - 42.88s/it[K
+  |=======>                                          | 3/20 - 42.77s/it[K
+  |==========>                                       | 4/20 - 43.25s/it[K
+  |============>                                     | 5/20 - 43.30s/it[K
+  |===============>                                  | 6/20 - 45.29s/it[K
+  |=================>                                | 7/20 - 43.54s/it[K
+  |====================>                             | 8/20 - 43.25s/it[K
+  |======================>                           | 9/20 - 43.38s/it[K
+  |=========================>                        | 10/20 - 43.50s/it[K
+  |===========================>                      | 11/20 - 43.56s/it[K
+  |==============================>                   | 12/20 - 43.64s/it[K
+  |================================>                 | 13/20 - 45.69s/it[K
+  |===================================>              | 14/20 - 45.54s/it[K
+  |=====================================>            | 15/20 - 46.26s/it[K
+  |========================================>         | 16/20 - 44.17s/it[K

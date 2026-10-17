@@ -1,0 +1,24 @@
+services:
+  ai-command-center:
+    build:
+      context: .
+    image: ai-command-center:local
+    container_name: ai-command-center
+    init: true
+    restart: unless-stopped
+    user: "${AICC_UID:-501}:${AICC_GID:-20}"
+    ports:
+      - "127.0.0.1:8765:8765"
+    environment:
+      AICC_HOST: 0.0.0.0
+      AICC_PORT: 8765
+      AICC_DOCKER: "1"
+      AICC_LM_STUDIO_MODELS: /models/lmstudio
+      AICC_CHECKPOINT_DIRS: /models/comfy-shared/checkpoints:/models/comfy-install/checkpoints
+      AICC_LORA_DIRS: /models/comfy-install/loras
+    volumes:
+      - ./app:/opt/command-center/app
+      - ${HOME}/.lmstudio/models:/models/lmstudio:ro
+      - ${HOME}/ComfyUI-Shared/models/checkpoints:/models/comfy-shared/checkpoints:ro
+      - ${HOME}/ComfyUI-Installs/test/ComfyUI/models/checkpoints:/models/comfy-install/checkpoints:ro
+      - ${HOME}/ComfyUI-Installs/test/ComfyUI/models/loras:/models/comfy-install/loras:ro

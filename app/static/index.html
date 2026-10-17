@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101114" />
+    <title>AI Command Center</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/images.css" />
+    <link rel="stylesheet" href="/library.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-lockup">
+          <div class="brand-mark"><span></span><span></span><span></span></div>
+          <div><strong>Command</strong><span>AI workspace</span></div>
+        </div>
+
+        <button class="new-chat" data-action="new-chat"><span>＋</span> New conversation <kbd>⌘ K</kbd></button>
+
+        <div class="nav-label">WORKSPACE</div>
+        <nav class="primary-nav" aria-label="Workspace">
+          <button class="nav-item active" data-view="chat"><span class="nav-icon">◉</span><span>Chat</span><span class="nav-shortcut">⌘ 1</span></button>
+          <button class="nav-item" data-view="code"><span class="nav-icon">⌘</span><span>Code</span><span class="nav-shortcut">⌘ 2</span></button>
+          <button class="nav-item" data-view="models"><span class="nav-icon">◈</span><span>Models</span><span class="nav-shortcut">⌘ 3</span></button>
+          <button class="nav-item" data-view="images"><span class="nav-icon">▧</span><span>Images</span><span class="nav-shortcut">⌘ 4</span></button>
+          <button class="nav-item" data-view="library"><span class="nav-icon">▤</span><span>Library</span><span class="nav-shortcut">⌘ 5</span></button>
+          <button class="nav-item" data-view="tools"><span class="nav-icon">⛭</span><span>Tools</span><span class="nav-shortcut">⌘ 6</span></button>
+          <button class="nav-item" data-view="automations"><span class="nav-icon">↗</span><span>Automations</span><span class="nav-shortcut">⌘ 7</span></button>
+        </nav>
+
+        <div class="sidebar-spacer"></div>
+        <div class="recent-label">RECENT</div>
+        <div class="recent-list" id="recent-list"><button class="recent-item selected"><span class="recent-dot"></span> Loading sessions…</button></div>
+        <button class="profile-row" data-view="settings">
+          <span class="avatar">A</span><span class="profile-copy"><strong>Local workspace</strong><small>Private on this Mac</small></span><span class="profile-menu">···</span>
+        </button>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <div class="breadcrumbs"><span>Workspace</span><span class="crumb-separator">/</span><strong id="page-name">Chat</strong></div>
+          <div class="topbar-actions">
+            <div class="connection-pill" id="connection-pill"><span class="status-light"></span><span id="connection-label">Checking local models</span></div>
+            <button class="icon-button" aria-label="Settings" data-view="settings">⚙</button>
+          </div>
+        </header>
+
+        <section class="view active" id="view-chat" aria-labelledby="chat-title">
+          <div class="chat-layout">
+            <div class="chat-column">
+              <div class="welcome-block" id="welcome-block">
+                <div class="welcome-orb"><i></i><i></i><i></i></div>
+                <div class="eyebrow"><span class="eyebrow-line"></span> YOUR LOCAL AI WORKSPACE</div>
+                <h1 id="chat-title">What can I help<br /><em>you build today?</em></h1>
+                <p class="welcome-subtitle">One calm place for your models, code, tools, and automations.</p>
+                <div class="suggestion-grid">
+                  <button class="suggestion-card" data-prompt="Help me plan a new project"><span class="suggestion-icon violet">✳</span><span><strong>Plan a project</strong><small>Turn an idea into clear steps</small></span><span class="suggestion-arrow">↗</span></button>
+                  <button class="suggestion-card" data-prompt="Explain how this AI Command Center is structured"><span class="suggestion-icon blue">⌘</span><span><strong>Explore the workspace</strong><small>See how the pieces fit together</small></span><span class="suggestion-arrow">↗</span></button>
+                  <button class="suggestion-card" data-prompt="What can I do with a local model?"><span class="suggestion-icon amber">◈</span><span><strong>Try a local model</strong><small>Keep a conversation on this Mac</small></span><span class="suggestion-arrow">↗</span></button>
+                  <button class="suggestion-card" data-view="code"><span class="suggestion-icon green">{ }</span><span><strong>Open Code workspace</strong><small>Build with a project-aware agent</small></span><span class="suggestion-arrow">↗</span></button>
+                </div>
+              </div>
+              <div class="message-list" id="message-list" aria-live="polite"></div>
+              <form class="composer" id="chat-form">
+                <textarea id="chat-input" rows="1" placeholder="Message your assistant…" aria-label="Message your assistant"></textarea>
+                <div class="composer-footer">
+                  <div class="composer-tools">
+                    <label class="model-select-wrap" for="model-select"><span class="model-icon">◈</span><select id="model-select" aria-label="Choose a local model"><option value="">No local model</option></select><span class="select-chevron">⌄</span></label>
+                    <button type="button" class="composer-chip" data-view="tools"><span>＋</span> Tools</button>
+                  </div>
+                  <div class="composer-submit"><span class="send-hint">Enter to send</span><button class="send-button" type="submit" aria-label="Send message">↑</button></div>
+                </div>
+              </form>
+              <p class="privacy-note"><span>◉</span> Local conversations stay on this device. Model availability depends on your local runtime.</p>
+            </div>
+            <aside class="chat-context">
+              <div class="context-heading"><span>SESSION</span><button class="subtle-action" aria-label="More options">···</button></div>
+              <div class="context-card context-model-card">
+                <div class="context-card-label">ACTIVE MODEL</div>
+                <div class="active-model-row"><span class="model-emblem">◈</span><span><strong id="active-model-name">Choose a model</strong><small id="active-model-provider">Local runtime</small></span></div>
+                <button class="text-link" data-view="models">Manage models <span>↗</span></button>
+              </div>
+              <div class="context-card">
+                <div class="context-card-label">TOOLS IN THIS CHAT</div>
+                <p class="chat-tools-help">Choose what this conversation can use.</p>
+                <div class="chat-tools-options">
+                  <label><input type="checkbox" data-chat-tool="create_pdf"><span><strong>Create PDF</strong><small>Turn a request into a saved document</small></span></label>
+                  <label><input type="checkbox" data-chat-tool="read_pdf"><span><strong>Read PDF</strong><small>Find and summarize library documents</small></span></label>
+                  <label><input type="checkbox" data-chat-tool="edit_pdf"><span><strong>Edit PDF</strong><small>Save a revised copy with notes or title</small></span></label>
+                </div>
+                <button class="text-link" data-view="tools">Open tool workspace <span>↗</span></button>
+              </div>
+              <div class="context-card context-note">
+                <span class="note-icon">✦</span><div><strong>A thoughtful start</strong><p>Your workspace is local-first. Connect a model when you’re ready; the rest of the structure is here to grow with you.</p></div>
+              </div>
+              <div class="context-footer"><span class="footer-shield">⬡</span> Local-first by design</div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="view-library">
+          <div class="page-content">
+            <div class="page-intro split-intro"><div><div class="eyebrow"><span class="eyebrow-line"></span> YOUR LOCAL OUTPUTS</div><h1>File <em>library</em></h1><p>Generated images, PDFs, and files you add are collected here on this Mac.</p></div><button class="secondary-button" id="refresh-library">↻ Refresh</button></div>
+            <div class="library-toolbar"><label class="library-search"><span>⌕</span><input id="library-search" type="search" placeholder="Find a file…" aria-label="Search library files"></label><label class="secondary-button library-upload-button" for="library-upload">＋ Add files</label><input id="library-upload" type="file" accept=".pdf,.txt,.md,.html,.csv,.json,.png,.jpg,.jpeg,.webp" multiple hidden><span class="count-badge" id="library-count">0 files</span></div>
+            <div class="library-grid" id="library-grid"><div class="empty-card">Looking for saved files…</div></div>
+          </div>
+        </section>
+
+        <section class="view" id="view-code">
+          <div class="page-content">
+            <div class="page-intro"><div class="eyebrow"><span class="eyebrow-line"></span> BUILD WITH CONTEXT</div><h1>Code <em>workspace</em></h1><p>A focused place for your projects, coding agent, and reviewable changes.</p></div>
+            <div class="code-empty-state">
+              <div class="code-window-icon"><span>‹/›</span></div><div class="status-tag planned"><span></span> LOCAL CODING MODEL AVAILABLE</div>
+              <h2>Try the Qwen coder.</h2><p>Qwen2.5-Coder-14B is loaded from this Mac. Its first small app, Daylight, is ready to try and saved in your Library. Project folders, direct file edits, and the scoped terminal are the next coding-workspace steps.</p>
+              <button class="primary-button" id="use-coder-model" type="button">Open Qwen Coder in chat <span>↗</span></button>
+              <a class="primary-button" href="/daylight.html" target="_blank" rel="noreferrer">Open Daylight app <span>↗</span></a>
+              <div class="code-capabilities"><div><span>01</span><strong>Project-aware skills</strong><small>Detect languages, frameworks, CMSs, and project rules.</small></div><div><span>02</span><strong>Review every change</strong><small>Inspect a diff before accepting edits or running commands.</small></div><div><span>03</span><strong>Scoped execution</strong><small>Keep file access and terminal actions within the project.</small></div></div>
+              <div class="prototype-note">Folder access and the coding agent are not connected in this first preview.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-models">
+          <div class="page-content">
+            <div class="page-intro split-intro"><div><div class="eyebrow"><span class="eyebrow-line"></span> YOUR INFERENCE CONTROL ROOM</div><h1>Model <em>center</em></h1><p>Choose a local model for chat, coding, and other app features.</p></div><button class="secondary-button" id="refresh-models">↻ Refresh</button></div>
+            <div class="runtime-banner" id="runtime-banner"><div class="runtime-symbol">◈</div><div><strong id="runtime-title">Checking the in-app model engine…</strong><p id="runtime-copy">Looking for supported local models and the in-app engine.</p></div><span class="runtime-state" id="runtime-state">CHECKING</span></div>
+            <div class="section-heading"><div><h2>Models in this app</h2><p>Selected models load directly from their existing files.</p></div><span class="count-badge" id="model-count">0 models</span></div>
+            <div class="model-grid" id="model-grid"><div class="empty-card">Checking for installed models…</div></div>
+            <div class="section-heading import-heading"><div><h2>Local GGUF models</h2><p>Models in LM Studio and this app’s model folder appear here.</p></div></div>
+            <div class="model-grid" id="import-grid"><div class="empty-card">Looking for local GGUF files…</div></div>
+            <div class="model-ingest-grid">
+              <section class="model-ingest-card">
+                <div class="ingest-eyebrow">PUBLIC HUGGING FACE REPOSITORY</div><h2>Get a model</h2>
+                <p>Choose a single-file GGUF quantization. For a 7B model on this 16 GB Mac, start with a Q4 quant around 4–5 GB. Standard Safetensors files are not supported by this chat engine yet.</p>
+                <label class="field-label" for="hf-repo">Repository</label><input class="model-text-input" id="hf-repo" value="bartowski/Qwen2.5-7B-Instruct-GGUF" autocomplete="off">
+                <button class="secondary-button" id="hf-list-files" type="button">Find GGUF files</button>
+                <label class="field-label model-file-label" for="hf-file">Model file</label><select class="model-text-input" id="hf-file" disabled><option value="">Find files in a repository first</option></select>
+                <button class="primary-button" id="hf-download" type="button" disabled>Download to this app <span>↓</span></button>
+                <div class="model-download-status" id="model-download-status" role="status"></div>
+              </section>
+              <section class="model-ingest-card">
+                <div class="ingest-eyebrow">ALREADY DOWNLOADED</div><h2>Add a GGUF file</h2>
+                <p>Bring in a GGUF file from Downloads or another folder. The app makes a local copy, so allow enough free disk space.</p>
+                <input id="gguf-file" type="file" accept=".gguf,application/octet-stream" hidden>
+                <button class="secondary-button" id="gguf-choose" type="button">Choose a GGUF file</button>
+                <div class="model-upload-name" id="gguf-file-name">No file selected</div>
+                <button class="primary-button" id="gguf-add" type="button" disabled>Add model to app <span>↗</span></button>
+              </section>
+            </div>
+            <div class="section-heading import-heading"><div><h2>Model workshop</h2><p>A home for adapting a base model to your own data.</p></div><span class="status-tag planned"><span></span> NEXT PHASE</span></div>
+            <section class="model-ingest-card workshop-card"><div><div class="ingest-eyebrow">CUSTOM MODEL TRAINING</div><h2>Fine-tune your own assistant</h2><p>Training a foundation model from scratch takes far more data and compute than this laptop provides. A practical first version is LoRA or QLoRA fine-tuning: choose a base model, add example conversations or task data, train an adapter, compare its answers, then use the adapter in chat. Training controls, dataset checks, and evaluation are not connected yet.</p><a class="model-doc-link" href="https://github.com/ml-explore/mlx-lm/blob/main/mlx_lm/LORA.md" target="_blank" rel="noreferrer">See Apple MLX fine-tuning guide ↗</a></div><div class="workshop-steps"><span>01 · Base model</span><span>02 · Training examples</span><span>03 · Fine-tune & evaluate</span><span>04 · Add to chat</span></div></section>
+            <div class="feature-callout"><div class="callout-icon">✦</div><div><strong>Local GGUF and Apple MLX models run inside this app.</strong><p>Compatible LM Studio models are read from their existing folders. GGUF models added through this page are kept in the app’s local model folder.</p></div></div>
+          </div>
+        </section>
+
+        <section class="view" id="view-images">
+          <div class="page-content">
+            <div class="page-intro split-intro"><div><div class="eyebrow"><span class="eyebrow-line"></span> LOCAL IMAGE WORKSPACE</div><h1>Image <em>studio</em></h1><p>Generate locally with the app-managed image engine, models, and LoRAs.</p></div><button class="secondary-button" id="refresh-image-catalog">↻ Refresh</button></div>
+            <div class="runtime-banner" id="image-runtime-banner"><div class="runtime-symbol">▧</div><div><strong id="image-runtime-title">Finding your image models…</strong><p id="image-runtime-copy">Reading image models and LoRAs from local model folders.</p></div><span class="runtime-state" id="image-runtime-state">CHECKING</span></div>
+            <div class="image-workspace">
+              <form id="image-form" class="image-form">
+                <label class="field-label" for="image-checkpoint">Image model</label><select id="image-checkpoint" required><option value="">Finding image models…</option></select>
+                <div class="section-heading lora-heading"><div><h2>LoRAs</h2><p>Choose any LoRAs for this image.</p></div><span class="count-badge" id="lora-count">0 found</span></div>
+                <div id="image-lora-list" class="lora-list"><div class="empty-card">Looking for LoRAs…</div></div>
+                <label class="field-label strength-label" for="lora-strength">LoRA strength <output id="lora-strength-value">0.80</output></label><input id="lora-strength" class="strength-slider" type="range" min="0" max="2" step="0.05" value="0.8">
+                <label class="field-label" for="image-prompt">Describe your image</label><textarea id="image-prompt" maxlength="5000" rows="4" placeholder="A quiet greenhouse at dawn, warm sunlight through glass…" required></textarea>
+                <label class="field-label" for="image-negative">Avoid (optional)</label><textarea id="image-negative" maxlength="3000" rows="2" placeholder="blurry, distorted details…"></textarea>
+                <details class="generation-settings" open><summary>Generation settings</summary><div class="settings-grid">
+                  <label><span>Seed mode</span><select id="seed-mode"><option value="random">Random each time</option><option value="fixed">Fixed seed</option><option value="increment">Increment seed</option></select></label>
+                  <label><span>Seed</span><input id="image-seed" type="number" min="0" max="4294967295" step="1" value="1"></label>
+                  <label><span>Width</span><input id="image-width" type="number" min="256" max="1536" step="8" value="1024"></label>
+                  <label><span>Height</span><input id="image-height" type="number" min="256" max="1536" step="8" value="1024"></label>
+                  <label><span>Steps</span><input id="image-steps" type="number" min="1" max="100" step="1" value="24"></label>
+                  <label><span>Guidance scale</span><input id="image-cfg" type="number" min="1" max="30" step="0.5" value="7"></label>
+                  <label><span>Sampler</span><select id="image-sampler"><option value="euler">Euler</option><option value="euler_a">Euler ancestral</option><option value="heun">Heun</option><option value="dpm++2m">DPM++ 2M</option><option value="dpm++2s_a">DPM++ 2S ancestral</option><option value="ddim_trailing">DDIM trailing</option><option value="lcm">LCM</option></select></label>
+                  <label><span>Scheduler</span><select id="image-scheduler"><option value="model">Model default</option><option value="discrete">Discrete</option><option value="karras">Karras</option><option value="exponential">Exponential</option><option value="ays">AYS</option><option value="sgm_uniform">SGM uniform</option></select></label>
+                  <label><span>Images per run</span><select id="image-count"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label>
+                </div><small class="settings-note">Width and height must be multiples of 8. The current image engine caps output at 1536 × 1536.</small></details>
+                <div class="image-form-footer"><small id="image-run-summary">Image settings are saved with this session.</small><button class="primary-button" id="generate-image" type="submit">Generate image <span>↗</span></button></div>
+              </form>
+              <div><div class="image-result" id="image-result"><div class="image-result-placeholder"><span>▧</span><strong>Your image will appear here</strong><p>Choose an image model and enter a prompt to begin.</p></div></div><div class="image-history" id="image-history"></div></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-tools">
+          <div class="page-content">
+            <div class="page-intro"><div class="eyebrow"><span class="eyebrow-line"></span> EXTEND YOUR ASSISTANT</div><h1>Tools & <em>skills</em></h1><p>Give each assistant a clear set of abilities and project-specific knowledge.</p></div>
+            <div class="pdf-workspace">
+              <div class="section-heading"><div><h2>PDF studio</h2><p>Create, read, and revise documents. Every result is saved in your Library.</p></div><span class="status-tag ready"><span></span> READY</span></div>
+              <div class="pdf-tool-grid">
+                <form class="pdf-tool-card" id="pdf-create-form"><div class="tool-row-icon violet">＋</div><h3>Create a PDF</h3><label for="pdf-title">Document title</label><input id="pdf-title" maxlength="180" placeholder="A note for today" required><label for="pdf-body">Text</label><textarea id="pdf-body" maxlength="100000" rows="7" placeholder="Write or paste the document text…" required></textarea><button class="primary-button" type="submit">Create PDF <span>↗</span></button></form>
+                <section class="pdf-tool-card"><div class="tool-row-icon blue">⌕</div><h3>Read a PDF</h3><label for="pdf-source">Saved PDF</label><select id="pdf-source"><option value="">Choose from Library…</option></select><button class="secondary-button" id="pdf-read" type="button">Read text</button><div class="pdf-read-result" id="pdf-read-result" role="status">Extracted document text appears here.</div></section>
+                <form class="pdf-tool-card" id="pdf-edit-form"><div class="tool-row-icon green">✎</div><h3>Edit a PDF</h3><label for="pdf-edit-source">Original PDF</label><select id="pdf-edit-source"><option value="">Choose from Library…</option></select><label for="pdf-edit-title">New title (optional)</label><input id="pdf-edit-title" maxlength="180" placeholder="Update document title"><label for="pdf-edit-note">Append a note page (optional)</label><textarea id="pdf-edit-note" maxlength="20000" rows="4" placeholder="Add context or a revision note…"></textarea><button class="primary-button" type="submit">Save revised copy <span>↗</span></button><small>The original stays in your Library.</small></form>
+              </div>
+            </div>
+            <div class="section-heading"><div><h2>Your toolbox</h2><p>Start with a small, understandable set. Add capabilities when you need them.</p></div><button class="secondary-button" disabled>＋ Add tool</button></div>
+            <div class="tool-list">
+              <article class="tool-row"><span class="tool-row-icon blue">⌕</span><div><strong>Project search</strong><p>Find files and symbols inside an approved workspace.</p></div><span class="status-tag upcoming"><span></span> PLANNED</span></article>
+              <article class="tool-row"><span class="tool-row-icon violet">▤</span><div><strong>Skill library</strong><p>Reusable playbooks for languages, CMSs, frameworks, and workflows.</p></div><span class="status-tag upcoming"><span></span> PLANNED</span></article>
+              <article class="tool-row"><span class="tool-row-icon amber">⛓</span><div><strong>MCP connections</strong><p>Connect this assistant to compatible local or remote tool servers.</p></div><span class="status-tag upcoming"><span></span> PLANNED</span></article>
+              <article class="tool-row"><span class="tool-row-icon green">⌘</span><div><strong>Scoped terminal</strong><p>Run approved commands in an isolated project workspace.</p></div><span class="status-tag upcoming"><span></span> PLANNED</span></article>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-automations">
+          <div class="page-content">
+            <div class="page-intro"><div class="eyebrow"><span class="eyebrow-line"></span> WORKFLOWS THAT RUN FOR YOU</div><h1>Auto <em>mations</em></h1><p>Connect your local automation instance and bring its workflows into your workspace.</p></div>
+            <div class="automation-card"><div class="automation-art"><span class="orbit orbit-one"></span><span class="orbit orbit-two"></span><span class="orbit-core">↗</span></div><div class="status-tag upcoming"><span></span> NOT CONNECTED</div><h2>Make your workflows feel at home.</h2><p>Connect a local n8n instance to browse workflows, trigger runs, and see results here. The workflow engine stays independently managed.</p><button class="secondary-button" disabled>Connect n8n <span>↗</span></button><small>Integration is planned for a later step.</small></div>
+          </div>
+        </section>
+
+        <section class="view" id="view-settings">
+          <div class="page-content">
+            <div class="page-intro"><div class="eyebrow"><span class="eyebrow-line"></span> YOUR SPACE, YOUR RULES</div><h1>Settings</h1><p>Local workspace preferences and connection status.</p></div>
+            <div class="settings-list"><div class="setting-row"><div><strong>Workspace location</strong><small>This app is served from your Mac and bound to localhost.</small></div><span class="setting-value">This device</span></div><div class="setting-row"><div><strong>Local model service</strong><small>Used to discover models and send local chat messages.</small></div><span class="setting-value" id="settings-runtime">Checking…</span></div><div class="setting-row"><div><strong>Session storage</strong><small>Chats, selected models, image prompts, and image history are saved locally.</small></div><span class="setting-value">On this Mac</span></div></div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+    <script src="/app.js" defer></script>
+  </body>
+</html>
