@@ -17,6 +17,7 @@ def _connect() -> sqlite3.Connection:
     connection = sqlite3.connect(DB_PATH, timeout=15)
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA journal_mode=WAL")
+    connection.execute("PRAGMA foreign_keys=ON")
     connection.execute("""CREATE TABLE IF NOT EXISTS sessions (
         id TEXT PRIMARY KEY,
         title TEXT NOT NULL,
@@ -71,6 +72,9 @@ def _connect() -> sqlite3.Connection:
         args TEXT NOT NULL,
         created_at TEXT NOT NULL
     )""")
+    session_columns = {row[1] for row in connection.execute("PRAGMA table_info(sessions)")}
+    if "archived" not in session_columns:
+        connection.execute("ALTER TABLE sessions ADD COLUMN archived INTEGER NOT NULL DEFAULT 0")
     return connection
 
 
@@ -86,10 +90,63 @@ def create_session() -> dict:
     return {"id": session_id, "title": "New conversation", "created_at": now, "updated_at": now}
 
 
-def list_sessions() -> list[dict]:
+def list_sessions(include_archived: bool = False) -> list[dict]:
     with _connect() as db:
-        rows = db.execute("SELECT id, title, created_at, updated_at FROM sessions ORDER BY updated_at DESC LIMIT 50").fetchall()
+        if include_archived:
+            rows = db.execute(
+                "SELECT id, title, created_at, updated_at, COALESCE(archived, 0) AS archived FROM sessions ORDER BY updated_at DESC LIMIT 100"
+            ).fetchall()
+        else:
+            rows = db.execute(
+                "SELECT id, title, created_at, updated_at, COALESCE(archived, 0) AS archived FROM sessions WHERE COALESCE(archived, 0) = 0 ORDER BY updated_at DESC LIMIT 50"
+            ).fetchall()
     return [dict(row) for row in rows]
+
+
+def rename_session(session_id: str, title: str) -> dict | None:
+    title = (title or "").strip()[:120] or "Untitled"
+    with _connect() as db:
+        db.execute("UPDATE sessions SET title = ?, updated_at = ? WHERE id = ?", (title, _now(), session_id))
+        row = db.execute(
+            "SELECT id, title, created_at, updated_at, COALESCE(archived, 0) AS archived FROM sessions WHERE id = ?",
+            (session_id,),
+        ).fetchone()
+    return dict(row) if row else None
+
+
+def archive_session(session_id: str, archived: bool = True) -> dict | None:
+    with _connect() as db:
+        db.execute(
+            "UPDATE sessions SET archived = ?, updated_at = ? WHERE id = ?",
+            (1 if archived else 0, _now(), session_id),
+        )
+        row = db.execute(
+            "SELECT id, title, created_at, updated_at, COALESCE(archived, 0) AS archived FROM sessions WHERE id = ?",
+            (session_id,),
+        ).fetchone()
+    return dict(row) if row else None
+
+
+def delete_session(session_id: str) -> bool:
+    with _connect() as db:
+        cursor = db.execute("DELETE FROM sessions WHERE id = ?", (session_id,))
+    return cursor.rowcount > 0
+
+
+def export_session(session_id: str) -> dict | None:
+    session = get_session(session_id)
+    if not session:
+        return None
+    return {
+        "id": session["id"],
+        "title": session["title"],
+        "created_at": session["created_at"],
+        "updated_at": session["updated_at"],
+        "messages": session.get("messages") or [],
+        "images": session.get("images") or [],
+        "state": session.get("state") or {},
+        "exported_at": _now(),
+    }
 
 
 def get_session(session_id: str) -> dict | None:

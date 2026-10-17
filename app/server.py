@@ -584,12 +584,11 @@ def generate_image(payload: dict) -> dict:
         return image_pytorch.generate_image(payload)
     if engine in ("sd", "sd_cpp", "sd-cpp", "cpp"):
         return image_runtime.generate_image(payload)
-    # Auto prefers PyTorch only when Apple MPS is available. CPU fallback can
-    # be extremely slow for image generation, so leave it as an explicit choice.
+    # auto: prefer PyTorch only when Metal is actually available; otherwise use sd.cpp.
     try:
         import image_pytorch
         status = image_pytorch.engine_status()
-        if status.get("mps_available") and not status.get("docker"):
+        if status.get("available") and status.get("mps_available") and not status.get("docker"):
             try:
                 result = image_pytorch.generate_image(payload)
                 result.setdefault("engine", "pytorch-mps" if status.get("device") == "mps" else "pytorch")
@@ -664,11 +663,18 @@ class AppHandler(BaseHTTPRequestHandler):
             except (OSError, RuntimeError, ValueError) as error:
                 self.send_json(502, {"error": str(error)})
             return
-        if self.path == "/api/sessions":
-            self.send_json(200, {"sessions": storage.list_sessions()})
+        if self.path == "/api/sessions" or self.path.startswith("/api/sessions?"):
+            qs = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+            include = (qs.get("archived") or ["0"])[0] in ("1", "true", "yes")
+            self.send_json(200, {"sessions": storage.list_sessions(include_archived=include)})
+            return
+        if self.path.startswith("/api/sessions/") and self.path.endswith("/export"):
+            session_id = self.path.removeprefix("/api/sessions/").removesuffix("/export").strip("/")
+            exported = storage.export_session(session_id)
+            self.send_json(200 if exported else 404, exported or {"error": "Session not found."})
             return
         if self.path.startswith("/api/sessions/"):
-            session_id = self.path.removeprefix("/api/sessions/")
+            session_id = self.path.removeprefix("/api/sessions/").split("?")[0]
             session = storage.get_session(session_id)
             self.send_json(200 if session else 404, session or {"error": "Session not found."})
             return
@@ -825,6 +831,25 @@ class AppHandler(BaseHTTPRequestHandler):
         if self.path == "/api/sessions":
             self.send_json(201, storage.create_session())
             return
+        if self.path.startswith("/api/sessions/") and self.path.endswith("/rename"):
+            session_id = self.path.removeprefix("/api/sessions/").removesuffix("/rename").strip("/")
+            try:
+                body = self.read_json()
+                session = storage.rename_session(session_id, str(body.get("title", "")))
+                self.send_json(200 if session else 404, session or {"error": "Session not found."})
+            except Exception as error:
+                self.send_json(400, {"error": str(error)})
+            return
+        if self.path.startswith("/api/sessions/") and self.path.endswith("/archive"):
+            session_id = self.path.removeprefix("/api/sessions/").removesuffix("/archive").strip("/")
+            try:
+                body = self.read_json()
+                archived = body.get("archived", True)
+                session = storage.archive_session(session_id, bool(archived))
+                self.send_json(200 if session else 404, session or {"error": "Session not found."})
+            except Exception as error:
+                self.send_json(400, {"error": str(error)})
+            return
 
         if self.path == "/api/coding/project":
             try:
@@ -864,7 +889,7 @@ class AppHandler(BaseHTTPRequestHandler):
                     "content": (
                         "You are the coding agent for AI Command Center. "
                         "You can call tools: list_dir, read_file, write_file, run_command, add_lesson. "
-                        "Keep file-tool paths inside the project folder. Terminal commands start there but are not OS-sandboxed and have the current macOS user's permissions. Read before write. Prefer small diffs.\n\n"
+                        "File tools are restricted to the selected project folder. The run_command tool executes with the macOS user's permissions and is not OS-sandboxed; do not claim otherwise. Read before write. Prefer small diffs.\n\n"
                         + ctx.get("context", "")
                     ),
                 }
@@ -1096,6 +1121,11 @@ class AppHandler(BaseHTTPRequestHandler):
             self.send_json(400, {"error": str(error)})
 
     def do_DELETE(self) -> None:  # noqa: N802
+        if self.path.startswith("/api/sessions/"):
+            session_id = self.path.removeprefix("/api/sessions/").strip("/")
+            removed = storage.delete_session(session_id)
+            self.send_json(200 if removed else 404, {"ok": removed})
+            return
         if self.path.startswith("/api/local-tools/"):
             name = urllib.parse.unquote(self.path.removeprefix("/api/local-tools/").strip("/"))
             removed = local_tools.delete_local_tool(name)

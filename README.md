@@ -8,7 +8,9 @@ A local-first AI workspace for chat, image generation, coding, tools, and automa
 
 Requires macOS on Apple Silicon, Python 3.11+, Git, and CMake. Double-click `run.command` to set up the app-managed runtimes the first time and open the app at <http://127.0.0.1:8765>.
 
-The app binds to localhost. Local models and session data stay on this Mac. Model files already stored by LM Studio are read in place; the app does not launch or call LM Studio.
+The app binds to localhost. Local models and session data stay on this Mac. Model files already stored by LM Studio are read in place; the app does not launch or call LM Studio. Coding file tools are restricted to the selected project folder. Terminal commands run with your macOS account permissions and are not isolated by an OS sandbox.
+
+The Models page discovers MLX folders and GGUF files in the LM Studio model directory. This Mac currently has Qwen3 4B MLX, Qwen2.5 Coder 14B MLX, and Qwen2.5 0.5B GGUF registered for selection. Model weights stay in their existing folders and load into the app-managed runtime when you send a message.
 
 **Preferred engines on native macOS**
 - Chat / coding: Apple **MLX first** (models listed first in the UI), then llama.cpp (GGUF + Metal).
@@ -49,18 +51,20 @@ Stop Docker before using native mode: `docker compose --env-file .env.docker dow
 
 - Chat with local **MLX** models (preferred, listed first) and GGUF models through the app-managed engines.
 - Recommended model links on the Models page for manual download.
-- **Image Studio engines:** Auto / PyTorch MPS / stable-diffusion.cpp (select in UI). Optional: `pip install torch torchvision diffusers transformers accelerate safetensors` in `.venv`.
-- **Code workspace (MVP):** set a project folder, browse the tree, select context files, and chat with coding agent tools (`list_dir`, `read_file`, `write_file`, `run_command`, `add_lesson`). File tools enforce the selected folder boundary. Terminal commands start there but run with this Mac user's permissions.
-- **Local tool create/review (MVP):** Tools page → describe tool → generate → review/edit source → test → approve. Tools stored under `app/data/tools/`.
+- **Image Studio engines:** Auto / PyTorch MPS / stable-diffusion.cpp (select in UI). PyTorch path uses attention/VAE slicing and sequential CPU offload to lower peak memory (slower is OK). Optional: `pip install torch torchvision diffusers transformers accelerate safetensors` in `.venv`.
+- **Code workspace (MVP):** set a project folder, browse tree, select context files, chat with coding agent tools (`list_dir`, `read_file`, `write_file`, `run_command`, `add_lesson`).
+- **Sessions:** rename, archive and restore, export JSON, delete from the recent list menu (⋯). Session data cascades when deleted.
+- **IRIS hybrid workspace (early UI):** live model/image/code/tool status, an orbital overview, and navigable Chat/Code/Images/Tools/Email/Voice nodes. Email and Voice are visual placeholders; their integrations remain to be built.
+- **Local tool create/review (MVP):** Tools page → describe tool → generate → review/edit source → test a draft → approve. Draft tests do not register or save the tool. Approved tools are stored under `app/data/tools/`.
 - PDF create/read/edit tools; Library; custom HTTP tools; MCP stdio config.
 
 ## Still to build
 
-- Coding workspace polish: diff preview UI, OS-level terminal sandbox and command approval, richer playbook.
+- Coding workspace polish: diff preview UI, stronger sandbox, richer playbook.
 - Local tools: expose approved tools as per-chat LLM tools; better schema editor.
-- Blank-frame detection for sd.cpp; PyTorch LoRA support.
+- Blank-frame detection for sd.cpp; stronger image runtime diagnostics.
 - Model Center hardware controls; Model Workshop (LoRA training).
-- MCP lifecycle controls; Automations (n8n); Jarvis voice; session management.
+- MCP lifecycle controls; Automations (n8n); Jarvis voice; coding diff review and an OS-level terminal sandbox.
 - Native macOS packaging (beyond `run.command`).
 
 ## App layout

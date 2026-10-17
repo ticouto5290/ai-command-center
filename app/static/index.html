@@ -28,10 +28,12 @@
           <button class="nav-item" data-view="library"><span class="nav-icon">▤</span><span>Library</span><span class="nav-shortcut">⌘ 5</span></button>
           <button class="nav-item" data-view="tools"><span class="nav-icon">⛭</span><span>Tools</span><span class="nav-shortcut">⌘ 6</span></button>
           <button class="nav-item" data-view="automations"><span class="nav-icon">↗</span><span>Automations</span><span class="nav-shortcut">⌘ 7</span></button>
+          <button class="nav-item" data-view="iris"><span class="nav-icon">◎</span><span>IRIS</span><span class="nav-shortcut">⌘ 8</span></button>
         </nav>
 
         <div class="sidebar-spacer"></div>
         <div class="recent-label">RECENT</div>
+        <button class="subtle-action" id="toggle-archived-sessions" type="button">Show archived sessions</button>
         <div class="recent-list" id="recent-list"><button class="recent-item selected"><span class="recent-dot"></span> Loading sessions…</button></div>
         <button class="profile-row" data-view="settings">
           <span class="avatar">A</span><span class="profile-copy"><strong>Local workspace</strong><small>Private on this Mac</small></span><span class="profile-menu">···</span>
@@ -110,8 +112,8 @@
 
                 <section class="view" id="view-code">
           <div class="page-content">
-            <div class="page-intro"><div class="eyebrow"><span class="eyebrow-line"></span> BUILD WITH CONTEXT</div><h1>Code <em>workspace</em></h1><p>Project-aware agent with folder-scoped file tools, a terminal opened in your project, and a growing playbook.</p></div>
-            <div class="runtime-banner"><div class="runtime-symbol">{ }</div><div><strong id="code-project-title">No project folder selected</strong><p id="code-project-copy">Choose a folder. File tools stay inside it; terminal commands run with your macOS account permissions.</p></div><span class="runtime-state" id="code-project-state">IDLE</span></div>
+            <div class="page-intro"><div class="eyebrow"><span class="eyebrow-line"></span> BUILD WITH CONTEXT</div><h1>Code <em>workspace</em></h1><p>Project-aware agent with project-scoped file tools, a terminal, and a playbook that grows with you.</p></div>
+            <div class="runtime-banner"><div class="runtime-symbol">{ }</div><div><strong id="code-project-title">No project folder selected</strong><p id="code-project-copy">Choose a folder on this Mac. File tools are scoped to it; terminal commands run with your macOS user permissions.</p></div><span class="runtime-state" id="code-project-state">IDLE</span></div>
             <div class="model-ingest-grid" style="margin-bottom:20px;">
               <section class="model-ingest-card">
                 <div class="ingest-eyebrow">PROJECT</div>
@@ -128,7 +130,7 @@
                 <small>Click files to add them to agent context (max 40).</small>
               </section>
             </div>
-            <div class="section-heading"><div><h2>Coding agent</h2><p>Uses your selected chat model with project-scoped file tools and a terminal that starts in this folder.</p></div></div>
+            <div class="section-heading"><div><h2>Coding agent</h2><p>Uses the selected chat model with list/read/write/run tools scoped to the project.</p></div></div>
             <div class="image-workspace">
               <div id="code-chat-log" class="pdf-read-result" style="min-height:180px;max-height:320px;overflow:auto;margin-bottom:12px;">Messages appear here.</div>
               <label class="field-label" for="code-input">Message</label>
@@ -292,12 +294,143 @@
               <article class="tool-row"><span class="tool-row-icon blue">⌕</span><div><strong>Project search</strong><p>Find files and symbols inside an approved workspace.</p></div><span class="status-tag upcoming"><span></span> PLANNED</span></article>
               <article class="tool-row"><span class="tool-row-icon violet">▤</span><div><strong>Skill library</strong><p>Reusable playbooks for languages, CMSs, frameworks, and workflows.</p></div><span class="status-tag upcoming"><span></span> PLANNED</span></article>
               <article class="tool-row"><span class="tool-row-icon amber">⛓</span><div><strong>MCP connections</strong><p>Connect this assistant to compatible local or remote tool servers.</p></div><span class="status-tag upcoming"><span></span> PLANNED</span></article>
-              <article class="tool-row"><span class="tool-row-icon green">⌘</span><div><strong>Terminal isolation</strong><p>Add OS-level limits and command approval for project commands.</p></div><span class="status-tag upcoming"><span></span> PLANNED</span></article>
+              <article class="tool-row"><span class="tool-row-icon green">⌘</span><div><strong>Project terminal</strong><p>Run commands from the selected project with your macOS user permissions.</p></div><span class="status-tag upcoming"><span></span> PLANNED</span></article>
             </div>
           </div>
         </section>
 
-        <section class="view" id="view-automations">
+
+        <section class="view" id="view-iris">
+          <div class="iris-shell">
+            <!-- HOME: orbital HUD -->
+            <div id="iris-home" class="iris-home">
+              <header class="iris-topbar">
+                <div class="iris-brand"><span class="iris-mark">IR</span><div><strong>IRIS</strong><small>INTELLIGENT · LOCAL · ADAPTIVE</small></div></div>
+                <div class="iris-top-status"><span class="iris-dot ok"></span> SECURE · LOCALHOST</div>
+              </header>
+              <div class="iris-grid">
+                <aside class="iris-col">
+                  <div class="iris-panel">
+                    <h3>SYSTEM OVERVIEW</h3>
+                    <div class="iris-stat">MLX <span id="iris-mlx-status">checking…</span></div>
+                    <div class="iris-row"><span>Image engine</span><span id="iris-img-status">—</span></div>
+                    <div class="iris-row"><span>Coding project</span><span id="iris-code-status">—</span></div>
+                    <div class="iris-row"><span>Local tools</span><span id="iris-tools-status">—</span></div>
+                  </div>
+                  <div class="iris-panel">
+                    <h3>ACTIVE MISSION</h3>
+                    <p class="iris-muted" id="iris-mission-title">No active session focus</p>
+                    <div class="iris-row"><span>Model</span><span id="iris-mission-model">—</span></div>
+                  </div>
+                </aside>
+                <main class="iris-center">
+                  <h1 class="iris-title">IRIS</h1>
+                  <p class="iris-tagline">COMMAND CENTER</p>
+                  <div class="iris-orb-wrap">
+                    <div class="iris-ring r1"></div>
+                    <div class="iris-ring r2"></div>
+                    <div class="iris-ring r3"></div>
+                    <button type="button" class="iris-node n-chat" data-iris-node="chat"><span class="iris-hex">◉</span>CHAT</button>
+                    <button type="button" class="iris-node n-code" data-iris-node="code"><span class="iris-hex">{ }</span>CODE</button>
+                    <button type="button" class="iris-node n-images" data-iris-node="images"><span class="iris-hex">▧</span>IMAGES</button>
+                    <button type="button" class="iris-node n-tools" data-iris-node="tools"><span class="iris-hex">⛭</span>TOOLS</button>
+                    <button type="button" class="iris-node n-email" data-iris-node="email"><span class="iris-hex">✉</span>EMAIL</button>
+                    <button type="button" class="iris-node n-voice" data-iris-node="voice"><span class="iris-hex">◎</span>VOICE</button>
+                    <div class="iris-orb"><div class="iris-orb-core">IRIS</div></div>
+                  </div>
+                  <div class="iris-pedestal"></div>
+                  <div class="iris-secure"><span class="iris-dot ok"></span> SYSTEM STATUS · HYBRID NAV</div>
+                </main>
+                <aside class="iris-col">
+                  <div class="iris-panel">
+                    <h3>APPROVALS</h3>
+                    <p class="iris-stat" id="iris-approval-count">0</p>
+                    <p class="iris-muted">Awaiting your review</p>
+                    <div id="iris-approval-list" class="iris-muted">No pending approvals</div>
+                  </div>
+                  <div class="iris-panel">
+                    <h3>ALERTS</h3>
+                    <div id="iris-alerts" class="iris-alerts">
+                      <div class="iris-alert"><span class="iris-dot info"></span>Local engines only · no cloud</div>
+                    </div>
+                  </div>
+                </aside>
+              </div>
+              <footer class="iris-footer">
+                <div class="iris-cap"><strong>MLX</strong>Chat &amp; code</div>
+                <div class="iris-cap"><strong>IMAGES</strong>MPS / sd.cpp</div>
+                <div class="iris-cap"><strong>AUTOMATION</strong>Review-before-act</div>
+                <div class="iris-cap"><strong>PRIVACY</strong>On-device</div>
+              </footer>
+            </div>
+
+            <!-- NODE OPEN: split bridge -->
+            <div id="iris-node-view" class="iris-node-view" hidden>
+              <header class="iris-topbar iris-node-top">
+                <div class="iris-brand"><span class="iris-mark">IR</span><strong>IRIS</strong></div>
+                <nav class="iris-node-nav">
+                  <button type="button" data-iris-node="chat">Chat</button>
+                  <button type="button" data-iris-node="code">Code</button>
+                  <button type="button" data-iris-node="images">Images</button>
+                  <button type="button" data-iris-node="tools">Tools</button>
+                  <button type="button" data-iris-node="email">Email</button>
+                  <button type="button" data-iris-node="voice">Voice</button>
+                </nav>
+                <button type="button" class="iris-overview-btn" id="iris-back-home">← Overview</button>
+              </header>
+              <div class="iris-split">
+                <aside class="iris-voice-rail">
+                  <h3>VOICE</h3>
+                  <div class="iris-mini-orb" id="iris-voice-orb">IRIS</div>
+                  <p class="iris-voice-state" id="iris-voice-state">Idle · push-to-talk later</p>
+                  <div class="iris-wave"></div>
+                  <p class="iris-muted">Local STT/TTS will attach here. Mic stays on-device.</p>
+                  <div class="iris-panel" style="margin-top:16px;">
+                    <h3>CONTEXT</h3>
+                    <div class="iris-row"><span>Node</span><span id="iris-active-node">—</span></div>
+                    <div class="iris-row"><span>Model</span><span id="iris-node-model">—</span></div>
+                  </div>
+                </aside>
+                <section class="iris-workspace">
+                  <div id="iris-ws-chat" class="iris-ws" hidden>
+                    <h3>CHAT WORKSPACE</h3>
+                    <p class="iris-muted">Opens the full chat surface with hybrid chrome.</p>
+                    <button type="button" class="primary-button" data-view="chat">Open Chat <span>↗</span></button>
+                  </div>
+                  <div id="iris-ws-code" class="iris-ws" hidden>
+                    <h3>CODE WORKSPACE</h3>
+                    <p class="iris-muted">Project-aware agent, file tools, playbook.</p>
+                    <button type="button" class="primary-button" data-view="code">Open Code <span>↗</span></button>
+                  </div>
+                  <div id="iris-ws-images" class="iris-ws" hidden>
+                    <h3>IMAGE STUDIO</h3>
+                    <p class="iris-muted">PyTorch MPS / sd.cpp, LoRAs, library saves.</p>
+                    <button type="button" class="primary-button" data-view="images">Open Images <span>↗</span></button>
+                  </div>
+                  <div id="iris-ws-tools" class="iris-ws" hidden>
+                    <h3>TOOLS</h3>
+                    <p class="iris-muted">PDF studio, local tool create/review, HTTP tools.</p>
+                    <button type="button" class="primary-button" data-view="tools">Open Tools <span>↗</span></button>
+                  </div>
+                  <div id="iris-ws-email" class="iris-ws" hidden>
+                    <h3>EMAIL NODE</h3>
+                    <p class="iris-muted">Review-before-act: drafts only until you approve send. Connector wiring is next.</p>
+                    <div class="iris-panel">
+                      <strong>Pattern</strong>
+                      <p class="iris-muted">Read → draft → save draft → you review → Send on click only.</p>
+                    </div>
+                  </div>
+                  <div id="iris-ws-voice" class="iris-ws" hidden>
+                    <h3>VOICE NODE</h3>
+                    <p class="iris-muted">Always-on presence for IRIS. STT/TTS hooks will live in the left rail.</p>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+        </section>
+
+<section class="view" id="view-automations">
           <div class="page-content">
             <div class="page-intro"><div class="eyebrow"><span class="eyebrow-line"></span> WORKFLOWS THAT RUN FOR YOU</div><h1>Auto <em>mations</em></h1><p>Connect your local automation instance and bring its workflows into your workspace.</p></div>
             <div class="automation-card"><div class="automation-art"><span class="orbit orbit-one"></span><span class="orbit orbit-two"></span><span class="orbit-core">↗</span></div><div class="status-tag upcoming"><span></span> NOT CONNECTED</div><h2>Make your workflows feel at home.</h2><p>Connect a local n8n instance to browse workflows, trigger runs, and see results here. The workflow engine stays independently managed.</p><button class="secondary-button" disabled>Connect n8n <span>↗</span></button><small>Integration is planned for a later step.</small></div>

@@ -1,3 +1,3 @@
 # Runtime log snapshots
 
-These are diagnostic snapshots from local model, image, and MLX runtime sessions. Local filesystem paths and a personal LoRA filename have been redacted before sharing. Runtime logs can include engine warnings and performance timings.
+Latest available diagnostic snapshots from the local MLX, llama.cpp, stable-diffusion.cpp, and PyTorch image runtimes. Logs are included to help diagnose model and image generation. Local filesystem paths, prompt text, and the personal LoRA filename have been redacted. These snapshots may still contain model names, engine warnings, and performance timings.

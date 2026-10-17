@@ -1,0 +1,22 @@
+
+--- 2026-10-17 14:54:27 ---
+checkpoint=[local-path]
+device=mps
+size=1024x1024
+steps=20 cfg=7.0 seed=1269361573
+prompt=[redacted]
+1girl, red head woman, huge breast,
+croptop,
+revealing breast, nipples, sleeping, lyi
+saved=image-44282d659592.png count=1
+
+--- 2026-10-17 14:58:01 ---
+checkpoint=[local-path]
+device=mps
+size=1024x1024
+steps=20 cfg=7.0 seed=1857451779
+prompt=[redacted]
+1girl, red head woman, huge breast,
+croptop,
+revealing breast, nipples, sleeping, lyi
+saved=image-1d69a87769bd.png count=1

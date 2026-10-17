@@ -1,10 +1,11 @@
-const views = ["chat", "code", "models", "images", "library", "tools", "automations", "settings"];
+const views = ["chat", "code", "models", "images", "library", "tools", "automations", "settings", "iris"];
 const conversation = [];
 let toastTimer;
 let activeSessionId = null;
 let sessionImages = [];
 let sessionState = {};
 let libraryFiles = [];
+let showArchivedSessions = false;
 
 const elements = {
   connectionPill: document.querySelector("#connection-pill"),
@@ -51,6 +52,7 @@ function switchView(name) {
   if (name === "images") refreshImageCatalog();
   if (name === "library") refreshLibrary();
   if (name === "tools") refreshLibrary();
+  if (name === "iris") irisShowHome();
 }
 
 document.querySelectorAll("[data-view]").forEach((button) => {
@@ -119,28 +121,31 @@ async function refreshImageCatalog() {
     document.querySelector("#image-runtime-title").textContent = checkpoints.length ? "Local image models found" : "No compatible image models found";
     const pytorch = data.pytorch || {};
     const engines = data.engines || {};
+    const mpsReady = !!(engines.pytorch && engines.pytorch.ready && pytorch.mps_available);
     const pytorchReady = !!(engines.pytorch && engines.pytorch.ready);
-    const mpsReady = !!pytorch.mps_available;
     const sdReady = !!(engines.sd_cpp && engines.sd_cpp.ready) || !!data.sd_cpp_ready;
     let engineNote = "";
     if (mpsReady) engineNote = " PyTorch MPS is available (preferred for reliability).";
-    else if (pytorch.torch_installed) engineNote = " PyTorch is using CPU; this can be slow. Auto will use stable-diffusion.cpp.";
+    else if (pytorchReady) engineNote = " PyTorch CPU is available; generation may be slow.";
     else if (pytorch.message) engineNote = ` ${pytorch.message}`;
+    if (pytorch.hint) engineNote += ` ${pytorch.hint}`;
     if (sdReady) engineNote += " stable-diffusion.cpp is available.";
     document.querySelector("#image-runtime-copy").textContent = ready
       ? `${checkpoints.length} checkpoints and ${loras.length} LoRAs are available.${engineNote} ${dockerCpu ? "Docker uses CPU image generation; start with a smaller image and fewer steps. " : ""}Image runs unload the chat model to free memory; the next chat message reloads it.`
       : "No image engine is ready yet. On native macOS install PyTorch (see README) or finish sd.cpp setup with run.command.";
-    document.querySelector("#image-runtime-state").textContent = ready ? (mpsReady ? "PYTORCH MPS" : "READY") : "SETTING UP";
+    document.querySelector("#image-runtime-state").textContent = ready ? (mpsReady ? "MPS READY" : pytorchReady ? "CPU READY" : "READY") : "SETTING UP";
     if (elements.imageEngine) {
       const autoOpt = elements.imageEngine.querySelector('option[value="auto"]');
       const ptOpt = elements.imageEngine.querySelector('option[value="pytorch"]');
       const sdOpt = elements.imageEngine.querySelector('option[value="sd_cpp"]');
-      if (ptOpt) ptOpt.textContent = mpsReady ? "PyTorch MPS (preferred / modern models)" : (pytorchReady ? "PyTorch CPU (slow)" : "PyTorch (not installed)");
-      if (ptOpt) ptOpt.disabled = !pytorchReady;
+      if (ptOpt) {
+        ptOpt.disabled = !pytorchReady;
+        ptOpt.textContent = mpsReady ? "PyTorch MPS" : "PyTorch CPU (slow)";
+      }
       if (sdOpt) sdOpt.disabled = !sdReady;
       if (autoOpt) autoOpt.textContent = mpsReady
-        ? "Auto (prefer PyTorch MPS)"
-        : (sdReady ? "Auto (stable-diffusion.cpp; MPS unavailable)" : (pytorchReady ? "Auto (PyTorch CPU; slow)" : "Auto (no image engine ready)"));
+        ? "Auto (prefer PyTorch MPS when available)"
+        : "Auto (sd.cpp — install PyTorch for MPS)";
     }
     banner.classList.toggle("is-connected", ready);
     elements.imageCheckpoint.innerHTML = checkpoints.length
@@ -426,15 +431,91 @@ function clearConversationView() {
 
 function renderSessionList(sessions) {
   const list = document.querySelector("#recent-list");
-  list.innerHTML = sessions.length ? sessions.map((session) => `<button class="recent-item ${session.id === activeSessionId ? "selected" : ""}" data-session-id="${escapeHtml(session.id)}" title="${escapeHtml(session.title)}"><span class="recent-dot"></span><span>${escapeHtml(session.title)}</span></button>`).join("") : '<div class="recent-item"><span class="recent-dot"></span><span>No saved sessions</span></div>';
+  if (!sessions.length) {
+    list.innerHTML = '<div class="recent-item"><span class="recent-dot"></span><span>No saved sessions</span></div>';
+    return;
+  }
+  list.innerHTML = sessions.map((session) => `
+    <div class="recent-item-row" style="display:flex;align-items:center;gap:4px;">
+      <button class="recent-item ${session.id === activeSessionId ? "selected" : ""}" data-session-id="${escapeHtml(session.id)}" title="${escapeHtml(session.title)}" style="flex:1;text-align:left;">
+        <span class="recent-dot"></span><span>${escapeHtml(session.title)}</span>
+      </button>
+      <button type="button" class="icon-button session-menu-btn" data-session-menu="${escapeHtml(session.id)}" title="Session actions" aria-label="Session actions">⋯</button>
+    </div>`).join("");
   list.querySelectorAll("[data-session-id]").forEach((button) => button.addEventListener("click", () => openSession(button.dataset.sessionId)));
+  list.querySelectorAll("[data-session-menu]").forEach((button) => button.addEventListener("click", (e) => {
+    e.stopPropagation();
+    openSessionMenu(button.dataset.sessionMenu, sessions.find((s) => s.id === button.dataset.sessionMenu));
+  }));
+}
+
+async function openSessionMenu(sessionId, session) {
+  const title = session?.title || "Session";
+  const actions = session?.archived ? "restore\n  export\n  delete" : "rename\n  archive\n  export\n  delete";
+  const choice = window.prompt(
+    `Session: ${title}\n\nType one action:\n  ${actions}`,
+    session?.archived ? "restore" : "rename"
+  );
+  if (!choice) return;
+  const action = choice.trim().toLowerCase();
+  try {
+    if (action === "rename") {
+      const next = window.prompt("New title", title);
+      if (!next) return;
+      const res = await fetch(`/api/sessions/${encodeURIComponent(sessionId)}/rename`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: next }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Rename failed");
+    } else if (action === "archive" || action === "restore") {
+      const res = await fetch(`/api/sessions/${encodeURIComponent(sessionId)}/archive`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ archived: action === "archive" }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Session update failed");
+      if (action === "archive" && activeSessionId === sessionId) await startNewSession();
+    } else if (action === "export") {
+      const res = await fetch(`/api/sessions/${encodeURIComponent(sessionId)}/export`, { cache: "no-store" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Export failed");
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `session-${(data.title || "export").replace(/[^a-z0-9-_]+/gi, "_").slice(0, 40)}.json`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    } else if (action === "delete") {
+      if (!window.confirm(`Delete session “${title}”? This cannot be undone.`)) return;
+      const res = await fetch(`/api/sessions/${encodeURIComponent(sessionId)}`, { method: "DELETE" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Delete failed");
+      if (activeSessionId === sessionId) await startNewSession();
+    } else {
+      window.alert("Unknown action. Use rename, archive, export, or delete.");
+      return;
+    }
+    await refreshSessionList();
+  } catch (err) {
+    window.alert(err.message || "Session action failed");
+  }
 }
 
 async function refreshSessionList() {
-  const response = await fetch("/api/sessions", { cache: "no-store" });
+  const button = document.querySelector("#toggle-archived-sessions");
+  if (button) button.textContent = showArchivedSessions ? "Show recent sessions" : "Show archived sessions";
+  const response = await fetch(`/api/sessions${showArchivedSessions ? "?archived=1" : ""}`, { cache: "no-store" });
   const data = await response.json();
-  renderSessionList(data.sessions || []);
+  renderSessionList((data.sessions || []).filter((session) => showArchivedSessions ? Boolean(session.archived) : !session.archived));
 }
+
+document.querySelector("#toggle-archived-sessions")?.addEventListener("click", async () => {
+  showArchivedSessions = !showArchivedSessions;
+  await refreshSessionList();
+});
 
 function renderSessionImages(images) {
   sessionImages = images || [];
@@ -594,6 +675,7 @@ async function openSession(sessionId) {
 }
 
 async function startNewSession() {
+  showArchivedSessions = false;
   const response = await fetch("/api/sessions", { method: "POST" });
   const session = await response.json();
   activeSessionId = session.id;
@@ -825,8 +907,8 @@ async function refreshCodeProject() {
     if (pathInput && prefs.project_root) pathInput.value = prefs.project_root;
     document.querySelector("#code-project-title").textContent = prefs.project_root || "No project folder selected";
     document.querySelector("#code-project-copy").textContent = prefs.project_root
-      ? "File tools are scoped to this folder. Terminal commands start here with your macOS account permissions."
-      : "Choose a folder. File tools stay inside it; terminal commands run with your macOS account permissions.";
+      ? "File tools are scoped to this folder. Terminal commands run with your macOS user permissions."
+      : "Choose a folder on this Mac. File tools are scoped to it; terminal commands run with your macOS user permissions.";
     document.querySelector("#code-project-state").textContent = prefs.project_root ? "READY" : "IDLE";
     if (prefs.project_root) await refreshCodeTree();
   } catch (e) {
@@ -1032,17 +1114,30 @@ document.querySelector("#tool-generate")?.addEventListener("click", async () => 
 
 document.querySelector("#tool-test")?.addEventListener("click", async () => {
   const status = document.querySelector("#tool-review-status");
-  // Test the draft without registering it; approval is a separate action.
+  // Save temp then run — or run from form by saving first
   try {
-    const args = JSON.parse(document.querySelector("#tool-args").value || "{}");
-    const run = await fetch("/api/local-tools/test", {
+    const body = {
+      name: document.querySelector("#tool-name").value.trim() || "temp_tool",
+      description: document.querySelector("#tool-description").value.trim(),
+      source: document.querySelector("#tool-source").value,
+    };
+    const save = await fetch("/api/local-tools", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ source: document.querySelector("#tool-source").value, arguments: args }),
+      body: JSON.stringify(body),
+    });
+    const saved = await save.json();
+    if (!save.ok) throw new Error(saved.error || "Save failed for test");
+    let args = {};
+    try { args = JSON.parse(document.querySelector("#tool-args").value || "{}"); } catch (_) {}
+    const run = await fetch("/api/local-tools/run", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: body.name, arguments: args }),
     });
     const result = await run.json();
-    if (!run.ok) throw new Error(result.error || "Draft test failed");
     status.textContent = JSON.stringify(result).slice(0, 800);
+    refreshLocalTools();
   } catch (e) {
     status.textContent = e.message || "Test failed";
   }
@@ -1080,3 +1175,79 @@ document.querySelectorAll("[data-view='code']").forEach((el) => {
 document.querySelectorAll("[data-view='tools']").forEach((el) => {
   el.addEventListener("click", () => setTimeout(refreshLocalTools, 50));
 });
+
+
+/* —— IRIS hybrid navigation —— */
+function irisShowHome() {
+  const home = document.querySelector("#iris-home");
+  const node = document.querySelector("#iris-node-view");
+  if (home) home.hidden = false;
+  if (node) node.hidden = true;
+  refreshIrisStatus();
+}
+
+function openIrisNode(name) {
+  const home = document.querySelector("#iris-home");
+  const node = document.querySelector("#iris-node-view");
+  if (home) home.hidden = true;
+  if (node) node.hidden = false;
+  document.querySelectorAll(".iris-node-nav button").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.irisNode === name);
+  });
+  document.querySelectorAll(".iris-ws").forEach((ws) => { ws.hidden = true; });
+  const panel = document.querySelector("#iris-ws-" + name);
+  if (panel) panel.hidden = false;
+  const label = document.querySelector("#iris-active-node");
+  if (label) label.textContent = name;
+  const model = document.querySelector("#iris-node-model");
+  if (model && elements.modelSelect) model.textContent = elements.modelSelect.value || "—";
+}
+
+async function refreshIrisStatus() {
+  try {
+    const models = await fetch("/api/models", { cache: "no-store" }).then((r) => r.json()).catch(() => ({}));
+    const mlx = document.querySelector("#iris-mlx-status");
+    if (mlx) {
+      const list = models.models || models || [];
+      const hasMlx = Array.isArray(list) && list.some((m) => m.backend === "mlx");
+      mlx.textContent = hasMlx ? "ready" : "—";
+      mlx.style.color = hasMlx ? "#3dffb0" : "#7a93b0";
+    }
+  } catch (_) {}
+  try {
+    const cat = await fetch("/api/image-catalog", { cache: "no-store" }).then((r) => r.json());
+    const el = document.querySelector("#iris-img-status");
+    if (el) {
+      const pt = cat.pytorch || {};
+      if (pt.device === "mps" && pt.mps_available) el.textContent = "PyTorch MPS";
+      else if (cat.sd_cpp_ready || cat.engine_ready) el.textContent = "sd.cpp";
+      else el.textContent = "setup";
+    }
+  } catch (_) {}
+  try {
+    const prefs = await fetch("/api/coding/prefs", { cache: "no-store" }).then((r) => r.json());
+    const el = document.querySelector("#iris-code-status");
+    if (el) el.textContent = prefs.project_root ? "linked" : "none";
+  } catch (_) {}
+  try {
+    const tools = await fetch("/api/local-tools", { cache: "no-store" }).then((r) => r.json());
+    const el = document.querySelector("#iris-tools-status");
+    if (el) el.textContent = String((tools.tools || []).length);
+  } catch (_) {}
+  const mission = document.querySelector("#iris-mission-title");
+  const missionModel = document.querySelector("#iris-mission-model");
+  if (mission) mission.textContent = activeSessionId ? "Session active" : "No active session focus";
+  if (missionModel && elements.modelSelect) missionModel.textContent = elements.modelSelect.value || "—";
+}
+
+document.querySelectorAll("[data-iris-node]").forEach((btn) => {
+  btn.addEventListener("click", () => openIrisNode(btn.dataset.irisNode));
+});
+document.querySelector("#iris-back-home")?.addEventListener("click", irisShowHome);
+
+// When switching to IRIS view, show home
+document.querySelectorAll("[data-view='iris']").forEach((el) => {
+  el.addEventListener("click", () => setTimeout(irisShowHome, 30));
+});
+
+// Workspace buttons inside node view use existing data-view handlers

@@ -26,30 +26,70 @@ def engine_status() -> dict:
         "available": False,
         "torch_installed": False,
         "mps_available": False,
+        "mps_built": False,
+        "torch_version": "",
         "device": "cpu",
         "message": "PyTorch is not installed yet.",
         "docker": os.environ.get("AICC_DOCKER") == "1",
+        "hint": "",
     }
     if status["docker"]:
         status["message"] = "PyTorch MPS is native macOS only. Docker stays on the CPU engine."
+        status["hint"] = "Stop Docker and launch with run.command on the Mac desktop."
         return status
     try:
         import torch  # noqa: F401
         status["torch_installed"] = True
+        status["torch_version"] = getattr(torch, "__version__", "")
     except ImportError:
-        status["message"] = "Install PyTorch for Apple Silicon to enable this engine (see Models / README)."
+        status["message"] = "Install PyTorch for Apple Silicon to enable this engine (see README)."
+        status["hint"] = ".venv/bin/pip install torch torchvision diffusers transformers accelerate safetensors"
         return status
     try:
         import torch
-        if torch.backends.mps.is_available() and torch.backends.mps.is_built():
-            status["mps_available"] = True
+        built = bool(torch.backends.mps.is_built())
+        available = bool(torch.backends.mps.is_available())
+        status["mps_built"] = built
+        status["mps_available"] = available
+        probe_ok = False
+        probe_error = ""
+        if available:
+            try:
+                t = torch.zeros(1, device="mps")
+                _ = t + 1
+                del t
+                if hasattr(torch, "mps"):
+                    try:
+                        torch.mps.empty_cache()
+                    except Exception:
+                        pass
+                probe_ok = True
+            except Exception as exc:
+                probe_error = str(exc)[:240]
+                available = False
+                status["mps_available"] = False
+        if built and available and probe_ok:
             status["available"] = True
             status["device"] = "mps"
-            status["message"] = "PyTorch MPS ready."
+            status["message"] = f"PyTorch MPS ready (torch {status['torch_version']})."
+        elif built and not available:
+            status["available"] = True  # CPU fallback still possible
+            status["device"] = "cpu"
+            status["message"] = (
+                f"PyTorch {status['torch_version']} is installed and MPS is built, "
+                "but this process cannot access Metal (mps.is_available() is False)."
+            )
+            status["hint"] = (
+                "Launch with run.command from Terminal or Finder (not Docker, not a sandbox). "
+                "Re-check with: .venv/bin/python -c 'import torch; print(torch.backends.mps.is_available())'. "
+                "On very new chips (e.g. M5), try a torch nightly or use the sd.cpp engine for now."
+            )
         else:
             status["available"] = True
             status["device"] = "cpu"
-            status["message"] = "PyTorch is installed but MPS is not available; will use CPU (slow)."
+            status["message"] = f"PyTorch {status['torch_version']} loaded; MPS not built or not usable."
+            if probe_error:
+                status["hint"] = probe_error
     except Exception as exc:  # pragma: no cover
         status["message"] = f"PyTorch check failed: {exc}"
     return status
@@ -79,12 +119,33 @@ def _load_pipeline(checkpoint: Path, device: str):
                 str(checkpoint), torch_dtype=dtype, local_files_only=True
             )
     pipe = pipe.to(device)
+    # Prefer lower peak memory even if generation is slower (20–30s tradeoff OK).
+    for enabler in (
+        "enable_attention_slicing",
+        "enable_vae_slicing",
+        "enable_vae_tiling",
+    ):
+        fn = getattr(pipe, enabler, None)
+        if callable(fn):
+            try:
+                fn()
+            except Exception:
+                pass
     if device == "mps":
-        # Recommended for memory stability on Apple Silicon.
-        try:
-            pipe.enable_attention_slicing()
-        except Exception:
-            pass
+        # Sequential offload keeps more weights on CPU and moves modules as needed.
+        # Slightly slower; much lower peak unified memory on Apple Silicon.
+        for offload in ("enable_sequential_cpu_offload", "enable_model_cpu_offload"):
+            fn = getattr(pipe, offload, None)
+            if callable(fn):
+                try:
+                    # sequential_cpu_offload expects device index on some versions
+                    try:
+                        fn(0)
+                    except TypeError:
+                        fn()
+                    break
+                except Exception:
+                    pass
     return pipe
 
 
@@ -111,12 +172,8 @@ def generate_image(payload: dict) -> dict:
     selected_loras = payload.get("loras", [])
     if not isinstance(selected_loras, list) or len(selected_loras) > 12:
         raise ValueError("Choose up to 12 LoRAs.")
-    # LoRA loading via diffusers is left for a follow-up; report clearly for now.
-    if selected_loras:
-        raise RuntimeError(
-            "LoRAs in the PyTorch engine are not wired yet. "
-            "Switch to the stable-diffusion.cpp engine for LoRA runs, or generate without LoRAs."
-        )
+    loras = [image_runtime._allowed_model_path(path, image_runtime.LORA_ROOTS) for path in selected_loras]
+    lora_strength = image_runtime._bounded_number(payload, "lora_strength", 0.8, 0, 2)
 
     device = status["device"]
     IMAGE_DIR.mkdir(parents=True, exist_ok=True)
@@ -139,6 +196,48 @@ def generate_image(payload: dict) -> dict:
             f"Could not load checkpoint with PyTorch: {exc}. "
             "Try a standard SD 1.5 or SDXL safetensors file, or switch engine to sd.cpp."
         ) from exc
+
+    applied_loras = []
+    for lora_path in loras:
+        try:
+            # diffusers accepts a directory or a single weight file for many LoRA formats
+            weight_name = lora_path.name if lora_path.is_file() else None
+            load_kwargs = {"weight_name": weight_name} if weight_name else {}
+            # Prefer adapter API when available (diffusers >= 0.27 style)
+            if hasattr(pipe, "load_lora_weights"):
+                try:
+                    pipe.load_lora_weights(
+                        str(lora_path.parent if lora_path.is_file() else lora_path),
+                        **({} if not weight_name else {"weight_name": weight_name}),
+                    )
+                except TypeError:
+                    pipe.load_lora_weights(str(lora_path))
+                if hasattr(pipe, "fuse_lora"):
+                    try:
+                        pipe.fuse_lora(lora_scale=float(lora_strength))
+                    except TypeError:
+                        try:
+                            pipe.fuse_lora(scale=float(lora_strength))
+                        except Exception:
+                            pass
+                elif hasattr(pipe, "set_adapters"):
+                    try:
+                        pipe.set_adapters(pipe.get_active_adapters(), adapter_weights=[float(lora_strength)])
+                    except Exception:
+                        pass
+                applied_loras.append(lora_path.name)
+                with LOG_PATH.open("a", encoding="utf-8") as log:
+                    log.write(f"lora_loaded={lora_path.name} strength={lora_strength}\n")
+            else:
+                with LOG_PATH.open("a", encoding="utf-8") as log:
+                    log.write(f"lora_skip={lora_path.name} reason=no_load_lora_weights\n")
+        except Exception as lora_exc:
+            with LOG_PATH.open("a", encoding="utf-8") as log:
+                log.write(f"lora_error={lora_path.name} err={lora_exc}\n")
+            raise RuntimeError(
+                f"Could not load LoRA '{lora_path.name}' with PyTorch: {lora_exc}. "
+                "Try the sd.cpp engine for this LoRA, or generate without it."
+            ) from lora_exc
 
     generator = torch.Generator(device=device if device != "mps" else "cpu")
     # MPS generators can be flaky; seed on CPU generator is widely used.
@@ -197,7 +296,8 @@ def generate_image(payload: dict) -> dict:
         "cfg": settings["cfg"],
         "sampler": settings.get("sampler", "pytorch"),
         "scheduler": settings.get("scheduler", "default"),
-        "loras": [],
+        "loras": applied_loras,
+        "lora_strength": lora_strength if applied_loras else None,
         "engine": "pytorch-mps" if device == "mps" else "pytorch-cpu",
         "generated_at": time.time(),
     }
