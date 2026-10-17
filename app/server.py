@@ -22,6 +22,8 @@ from urllib.request import Request, urlopen
 import storage
 import image_runtime
 import pdf_tools
+import coding_tools
+import local_tools
 
 
 ROOT = Path(__file__).resolve().parent
@@ -582,7 +584,8 @@ def generate_image(payload: dict) -> dict:
         return image_pytorch.generate_image(payload)
     if engine in ("sd", "sd_cpp", "sd-cpp", "cpp"):
         return image_runtime.generate_image(payload)
-    # auto: prefer PyTorch only when Apple MPS is available; CPU fallback is slow.
+    # Auto prefers PyTorch only when Apple MPS is available. CPU fallback can
+    # be extremely slow for image generation, so leave it as an explicit choice.
     try:
         import image_pytorch
         status = image_pytorch.engine_status()
@@ -692,6 +695,28 @@ class AppHandler(BaseHTTPRequestHandler):
         if self.path == "/api/status":
             self.send_json(200, self.local_status())
             return
+
+        if self.path == "/api/coding/prefs":
+            self.send_json(200, coding_tools.get_prefs())
+            return
+        if self.path == "/api/coding/context":
+            try:
+                self.send_json(200, coding_tools.project_context())
+            except ValueError as error:
+                self.send_json(400, {"error": str(error)})
+            return
+        if self.path == "/api/coding/tree":
+            try:
+                qs = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+                # path may be only /api/coding/tree without query when using full path parse wrong
+                self.send_json(200, coding_tools.list_dir(".", 2))
+            except ValueError as error:
+                self.send_json(400, {"error": str(error)})
+            return
+        if self.path == "/api/local-tools":
+            self.send_json(200, {"tools": local_tools.list_local_tools()})
+            return
+
         if self.path == "/api/models":
             runtime_installed = LLAMA_CPU_SERVER.is_file() or LLAMA_METAL_SERVER.is_file() or MLX_PYTHON.is_file()
             models = registered_models()
@@ -800,6 +825,159 @@ class AppHandler(BaseHTTPRequestHandler):
         if self.path == "/api/sessions":
             self.send_json(201, storage.create_session())
             return
+
+        if self.path == "/api/coding/project":
+            try:
+                body = self.read_json()
+                self.send_json(200, coding_tools.set_project_root(str(body.get("path", ""))))
+            except ValueError as error:
+                self.send_json(400, {"error": str(error)})
+            except Exception as error:
+                self.send_json(500, {"error": str(error)})
+            return
+        if self.path == "/api/coding/select-files":
+            try:
+                body = self.read_json()
+                self.send_json(200, coding_tools.set_selected_files(body.get("files") or []))
+            except ValueError as error:
+                self.send_json(400, {"error": str(error)})
+            return
+        if self.path == "/api/coding/tool":
+            try:
+                body = self.read_json()
+                name = str(body.get("name", ""))
+                result = coding_tools.run_coding_tool(name, body.get("arguments") or {})
+                self.send_json(200, {"result": result})
+            except ValueError as error:
+                self.send_json(400, {"error": str(error)})
+            except Exception as error:
+                self.send_json(500, {"error": str(error)})
+            return
+        if self.path == "/api/coding/chat":
+            try:
+                body = self.read_json()
+                messages = body.get("messages") or []
+                model_name = str(body.get("model") or "")
+                ctx = coding_tools.project_context()
+                system = {
+                    "role": "system",
+                    "content": (
+                        "You are the coding agent for AI Command Center. "
+                        "You can call tools: list_dir, read_file, write_file, run_command, add_lesson. "
+                        "Always stay inside the project folder. Read before write. Prefer small diffs.\n\n"
+                        + ctx.get("context", "")
+                    ),
+                }
+                working = [system] + [m for m in messages if isinstance(m, dict)]
+                # Resolve model backend
+                models = registered_models()
+                chosen = next((m for m in models if m.get("name") == model_name), None)
+                if chosen is None and models:
+                    chosen = models[0]
+                backend = "mlx" if chosen and chosen.get("backend") == "mlx" else "llama.cpp"
+                if chosen:
+                    if backend == "mlx":
+                        get_mlx_model(chosen["path"])
+                    else:
+                        # ensure llama runtime for path if needed
+                        try:
+                            get_local_model(chosen["path"])
+                        except Exception:
+                            pass
+                # Tool loop (limited)
+                for _ in range(6):
+                    result = model_chat(working, backend, coding_tools.CODING_TOOL_SCHEMAS)
+                    try:
+                        assistant = result["choices"][0]["message"]
+                    except (KeyError, IndexError, TypeError):
+                        assistant = result.get("message") or {"role": "assistant", "content": str(result)[:4000]}
+                    if not isinstance(assistant, dict):
+                        assistant = {"role": "assistant", "content": str(assistant)}
+                    if "role" not in assistant:
+                        assistant = {**assistant, "role": "assistant"}
+                    working.append(assistant)
+                    calls = assistant.get("tool_calls") or []
+                    # Fallback: models sometimes emit XML/JSON tool tags in content
+                    if not calls and isinstance(assistant.get("content"), str):
+                        import re as _re
+                        for pattern in (r"<tool>\s*(.*?)\s*</tool>", r"```json\s*(\{.*?\})\s*```"):
+                            for match in _re.findall(pattern, assistant["content"], _re.S):
+                                try:
+                                    payload = json.loads(match) if match.strip().startswith("{") else {}
+                                    if isinstance(payload, dict) and payload.get("name"):
+                                        calls.append({"id": "x", "function": {"name": payload["name"], "arguments": json.dumps(payload.get("arguments") or {})}})
+                                except Exception:
+                                    pass
+                    if not calls:
+                        self.send_json(200, {"message": assistant, "messages": working[1:], "context": ctx.get("prefs")})
+                        return
+                    for call in calls:
+                        fn = (call.get("function") or {})
+                        name = fn.get("name") or ""
+                        raw_args = fn.get("arguments") or "{}"
+                        try:
+                            arguments = json.loads(raw_args) if isinstance(raw_args, str) else (raw_args or {})
+                        except json.JSONDecodeError:
+                            arguments = {}
+                        try:
+                            outcome = coding_tools.run_coding_tool(name, arguments)
+                        except Exception as tool_err:
+                            outcome = {"ok": False, "error": str(tool_err)}
+                        working.append({
+                            "role": "tool",
+                            "tool_call_id": call.get("id", ""),
+                            "content": json.dumps(outcome, ensure_ascii=False)[:65000],
+                        })
+                self.send_json(200, {"message": working[-1], "messages": working[1:], "note": "tool call limit reached"})
+            except Exception as error:
+                self.send_json(500, {"error": str(error)})
+            return
+        if self.path == "/api/local-tools":
+            try:
+                body = self.read_json()
+                tool = local_tools.save_local_tool(body)
+                self.send_json(201, {"tool": tool})
+            except ValueError as error:
+                self.send_json(400, {"error": str(error)})
+            except Exception as error:
+                self.send_json(500, {"error": str(error)})
+            return
+        if self.path == "/api/local-tools/parse":
+            try:
+                body = self.read_json()
+                parsed = local_tools.parse_generated_tool(str(body.get("text", "")))
+                self.send_json(200, {"parsed": parsed})
+            except ValueError as error:
+                self.send_json(400, {"error": str(error)})
+            return
+        if self.path == "/api/local-tools/test":
+            try:
+                body = self.read_json()
+                result = local_tools.run_source(str(body.get("source", "")), body.get("arguments") or {})
+                self.send_json(200, result)
+            except ValueError as error:
+                self.send_json(400, {"error": str(error)})
+            except Exception as error:
+                self.send_json(500, {"error": str(error)})
+            return
+        if self.path == "/api/local-tools/run":
+            try:
+                body = self.read_json()
+                result = local_tools.run_local_tool(str(body.get("name", "")), body.get("arguments") or {})
+                self.send_json(200, result)
+            except ValueError as error:
+                self.send_json(400, {"error": str(error)})
+            except Exception as error:
+                self.send_json(500, {"error": str(error)})
+            return
+        if self.path == "/api/local-tools/generate-prompt":
+            try:
+                body = self.read_json()
+                self.send_json(200, {"prompt": local_tools.generation_prompt(str(body.get("request", "")))})
+            except Exception as error:
+                self.send_json(500, {"error": str(error)})
+            return
+
         if self.path == "/api/images/generate":
             try:
                 payload = self.read_json()
@@ -918,6 +1096,11 @@ class AppHandler(BaseHTTPRequestHandler):
             self.send_json(400, {"error": str(error)})
 
     def do_DELETE(self) -> None:  # noqa: N802
+        if self.path.startswith("/api/local-tools/"):
+            name = urllib.parse.unquote(self.path.removeprefix("/api/local-tools/").strip("/"))
+            removed = local_tools.delete_local_tool(name)
+            self.send_json(200 if removed else 404, {"ok": removed})
+            return
         if self.path.startswith("/api/tools/"):
             tool_id = self.path.removeprefix("/api/tools/")
             removed = storage.delete_custom_tool(tool_id)

@@ -47,29 +47,21 @@ Stop Docker before using native mode: `docker compose --env-file .env.docker dow
 
 ## Working now
 
-- Chat with local **MLX** models (preferred) and GGUF models through the app-managed engines.
-- Discover and run local Apple MLX models. Qwen2.5-Coder-14B-Instruct-MLX-4bit is preferred when present.
-- Recommended model links are listed in the Models page for manual download.
-- Find public single-file GGUF models on Hugging Face, download them into the app, or add a GGUF from this Mac.
-- Generate images through the app-managed stable-diffusion.cpp engine without calling ComfyUI. The Image Studio reads local SD/SDXL checkpoints and LoRAs from the app's image folders and shared model folders.
-- Set image seed mode (random, fixed, incrementing), seed, width, height, steps, guidance scale, sampler, images per run, and LoRA strength.
-- Save and resume chats, image settings, generated images, and image metadata with each local session.
-- Keep generated images, created PDFs, and files added from this Mac in the local Library.
-- Create PDFs from text, extract text from saved PDFs, and revise them by adding a note page or updating title metadata. The source PDF stays intact.
-- Enable PDF creation, reading, or editing for individual chats so the local assistant can invoke those tools.
-- Create and run basic custom HTTP tools and configure local MCP stdio servers.
+- Chat with local **MLX** models (preferred, listed first) and GGUF models through the app-managed engines.
+- Recommended model links on the Models page for manual download.
+- **Image Studio engines:** Auto / PyTorch MPS / stable-diffusion.cpp (select in UI). Optional: `pip install torch torchvision diffusers transformers accelerate safetensors` in `.venv`.
+- **Code workspace (MVP):** set a project folder, browse tree, select context files, chat with coding agent tools (`list_dir`, `read_file`, `write_file`, `run_command`, `add_lesson`).
+- **Local tool create/review (MVP):** Tools page → describe tool → generate → review/edit source → test → approve. Tools stored under `app/data/tools/`.
+- PDF create/read/edit tools; Library; custom HTTP tools; MCP stdio config.
 
 ## Still to build
 
-- Coding workspace: project folder access, project-aware skills, reviewable file edits, a scoped terminal, and a small-app workflow.
-- Model Center: hardware-aware controls, provider/API connections, runtime status for each engine, and clearer model downloads across formats.
-- Model Workshop: dataset preparation, LoRA/QLoRA training jobs, evaluation, and adding trained adapters to chat.
-- Tools and integrations: a complete custom tool editor, MCP lifecycle controls, and third-party app connections. The first built-in PDF tools and per-chat tool selection are now available.
-- Automations: integrate n8n inside the app and manage workflows and runs.
-- Jarvis mode: voice input, speech output, and the alternate conversational interface.
-- Session management: rename, search, archive, export, and delete sessions.
-- Image reliability: blank-frame detection, safer native defaults, optional PyTorch-MPS engine.
-- Native packaging: proper macOS app / improved launcher (move fully away from Docker as primary).
+- Coding workspace polish: diff preview UI, stronger sandbox, richer playbook.
+- Local tools: expose approved tools as per-chat LLM tools; better schema editor.
+- Blank-frame detection for sd.cpp; PyTorch LoRA support.
+- Model Center hardware controls; Model Workshop (LoRA training).
+- MCP lifecycle controls; Automations (n8n); Jarvis voice; session management.
+- Native macOS packaging (beyond `run.command`).
 
 ## App layout
 

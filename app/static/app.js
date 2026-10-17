@@ -123,7 +123,7 @@ async function refreshImageCatalog() {
     const mpsReady = !!pytorch.mps_available;
     const sdReady = !!(engines.sd_cpp && engines.sd_cpp.ready) || !!data.sd_cpp_ready;
     let engineNote = "";
-    if (mpsReady) engineNote = " PyTorch MPS is ready (preferred for reliability).";
+    if (mpsReady) engineNote = " PyTorch MPS is available (preferred for reliability).";
     else if (pytorch.torch_installed) engineNote = " PyTorch is using CPU; this can be slow. Auto will use stable-diffusion.cpp.";
     else if (pytorch.message) engineNote = ` ${pytorch.message}`;
     if (sdReady) engineNote += " stable-diffusion.cpp is available.";
@@ -810,3 +810,273 @@ document.querySelector("#pdf-edit-form").addEventListener("submit", async (event
 });
 
 initializeSessions();
+
+
+
+/* —— Coding workspace MVP —— */
+const codeLog = document.querySelector("#code-chat-log");
+const codeInput = document.querySelector("#code-input");
+let codeMessages = [];
+
+async function refreshCodeProject() {
+  try {
+    const prefs = await fetch("/api/coding/prefs", { cache: "no-store" }).then((r) => r.json());
+    const pathInput = document.querySelector("#code-project-path");
+    if (pathInput && prefs.project_root) pathInput.value = prefs.project_root;
+    document.querySelector("#code-project-title").textContent = prefs.project_root || "No project folder selected";
+    document.querySelector("#code-project-copy").textContent = prefs.project_root
+      ? "Agent tools are scoped to this folder."
+      : "Choose a folder on this Mac. The agent can only read and write inside it.";
+    document.querySelector("#code-project-state").textContent = prefs.project_root ? "READY" : "IDLE";
+    if (prefs.project_root) await refreshCodeTree();
+  } catch (e) {
+    document.querySelector("#code-project-state").textContent = "ERROR";
+  }
+}
+
+async function refreshCodeTree() {
+  const tree = document.querySelector("#code-tree");
+  try {
+    const data = await fetch("/api/coding/tree", { cache: "no-store" }).then((r) => r.json());
+    if (data.error) throw new Error(data.error);
+    const prefs = await fetch("/api/coding/prefs", { cache: "no-store" }).then((r) => r.json());
+    const selected = new Set(prefs.selected_files || []);
+    tree.innerHTML = (data.entries || []).map((e) => {
+      const mark = e.type === "dir" ? "📁" : "📄";
+      const active = selected.has(e.path) ? " style=\"outline:1px solid var(--accent, #6c8);\"" : "";
+      return `<button type="button" class="secondary-button" data-code-path="${escapeHtml(e.path)}" data-code-type="${e.type}"${active}>${mark} ${escapeHtml(e.path)}${e.size != null ? " · " + formatSize(e.size) : ""}</button>`;
+    }).join("") || '<div class="empty-card">Empty folder.</div>';
+    tree.querySelectorAll("[data-code-path]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        if (btn.dataset.codeType === "dir") return;
+        const path = btn.dataset.codePath;
+        const prefs = await fetch("/api/coding/prefs", { cache: "no-store" }).then((r) => r.json());
+        let files = prefs.selected_files || [];
+        if (files.includes(path)) files = files.filter((f) => f !== path);
+        else files = [...files, path].slice(0, 40);
+        await fetch("/api/coding/select-files", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ files }),
+        });
+        refreshCodeTree();
+      });
+    });
+  } catch (e) {
+    tree.innerHTML = `<div class="empty-card">${escapeHtml(e.message || "Could not list files")}</div>`;
+  }
+}
+
+document.querySelector("#code-set-project")?.addEventListener("click", async () => {
+  const path = document.querySelector("#code-project-path").value.trim();
+  document.querySelector("#code-status").textContent = "Setting project…";
+  try {
+    const res = await fetch("/api/coding/project", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed");
+    codeMessages = [];
+    if (codeLog) codeLog.textContent = "Project set. Ask the agent to explore or edit.";
+    await refreshCodeProject();
+    document.querySelector("#code-status").textContent = "Project ready.";
+  } catch (e) {
+    document.querySelector("#code-status").textContent = e.message || "Could not set project";
+  }
+});
+
+document.querySelector("#code-refresh-tree")?.addEventListener("click", refreshCodeTree);
+
+document.querySelector("#code-send")?.addEventListener("click", async () => {
+  const text = (codeInput?.value || "").trim();
+  if (!text) return;
+  const model = elements.modelSelect?.value || "";
+  codeMessages.push({ role: "user", content: text });
+  codeInput.value = "";
+  if (codeLog) codeLog.textContent = (codeLog.textContent || "") + "\n\nYou: " + text + "\n\nAgent: …";
+  document.querySelector("#code-status").textContent = "Coding agent working…";
+  document.querySelector("#code-send").disabled = true;
+  try {
+    const res = await fetch("/api/coding/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: codeMessages, model }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Coding chat failed");
+    const msg = data.message || {};
+    const content = msg.content || JSON.stringify(msg).slice(0, 4000);
+    codeMessages.push({ role: "assistant", content });
+    if (codeLog) codeLog.textContent = (codeLog.textContent || "").replace(/Agent: …$/, "Agent: " + content);
+    document.querySelector("#code-status").textContent = "Done.";
+    refreshCodeTree();
+  } catch (e) {
+    document.querySelector("#code-status").textContent = e.message || "Error";
+    if (codeLog) codeLog.textContent = (codeLog.textContent || "") + "\n\nError: " + (e.message || e);
+  } finally {
+    document.querySelector("#code-send").disabled = false;
+  }
+});
+
+/* —— Local tool create / review —— */
+async function refreshLocalTools() {
+  const box = document.querySelector("#local-tools-list");
+  if (!box) return;
+  try {
+    const data = await fetch("/api/local-tools", { cache: "no-store" }).then((r) => r.json());
+    const tools = data.tools || [];
+    if (!tools.length) {
+      box.innerHTML = '<div class="empty-card">No local tools saved yet.</div>';
+      return;
+    }
+    box.innerHTML = tools.map((t) => `
+      <div class="pdf-tool-card" style="margin-bottom:10px;">
+        <h3>${escapeHtml(t.name)}</h3>
+        <p>${escapeHtml(t.description || "")}</p>
+        <button type="button" class="secondary-button" data-run-local="${escapeHtml(t.name)}">Run</button>
+        <button type="button" class="secondary-button" data-del-local="${escapeHtml(t.name)}">Delete</button>
+      </div>`).join("");
+    box.querySelectorAll("[data-run-local]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        let args = {};
+        try { args = JSON.parse(document.querySelector("#tool-args")?.value || "{}"); } catch (_) {}
+        const res = await fetch("/api/local-tools/run", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: btn.dataset.runLocal, arguments: args }),
+        });
+        const data = await res.json();
+        document.querySelector("#tool-review-status").textContent = JSON.stringify(data).slice(0, 500);
+      });
+    });
+    box.querySelectorAll("[data-del-local]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        await fetch("/api/local-tools/" + encodeURIComponent(btn.dataset.delLocal), { method: "DELETE" });
+        refreshLocalTools();
+      });
+    });
+  } catch (e) {
+    box.innerHTML = `<div class="empty-card">${escapeHtml(e.message || "Failed to load tools")}</div>`;
+  }
+}
+
+document.querySelector("#tool-build-prompt")?.addEventListener("click", async () => {
+  const request = document.querySelector("#tool-request")?.value || "";
+  const res = await fetch("/api/local-tools/generate-prompt", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ request }),
+  });
+  const data = await res.json();
+  document.querySelector("#tool-gen-status").textContent = "Prompt ready — paste into chat or use Generate.";
+  if (data.prompt) document.querySelector("#tool-source").value = "# Prompt for coder:\n# " + data.prompt.slice(0, 500) + "\n";
+});
+
+document.querySelector("#tool-generate")?.addEventListener("click", async () => {
+  const request = document.querySelector("#tool-request")?.value?.trim();
+  if (!request) return;
+  const status = document.querySelector("#tool-gen-status");
+  status.textContent = "Generating with current model…";
+  try {
+    const promptRes = await fetch("/api/local-tools/generate-prompt", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ request }),
+    });
+    const { prompt } = await promptRes.json();
+    const model = elements.modelSelect?.value || "";
+    // Reuse coding chat endpoint-style via main chat API if present; fallback: ask user to paste
+    // Use a minimal generate via /api/coding/chat without project if needed — instead call model through sessions
+    // Prefer dedicated: post as single-turn using coding chat with empty project fails — use fetch to a simple completion
+    const res = await fetch("/api/local-tools/parse", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: "" }),
+    }).catch(() => null);
+    // Generate via coding agent system by piggybacking chat API
+    const chatRes = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messages: [{ role: "user", content: prompt }],
+        model,
+        tools: [],
+      }),
+    });
+    if (chatRes.ok) {
+      const chatData = await chatRes.json();
+      const content = chatData.message?.content || chatData.content || chatData.reply || JSON.stringify(chatData);
+      const parsedRes = await fetch("/api/local-tools/parse", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: content }),
+      });
+      const parsedData = await parsedRes.json();
+      if (!parsedRes.ok) throw new Error(parsedData.error || "Parse failed");
+      const parsed = parsedData.parsed;
+      document.querySelector("#tool-name").value = parsed.name || "custom_tool";
+      document.querySelector("#tool-description").value = parsed.description || "";
+      document.querySelector("#tool-source").value = parsed.source || "";
+      status.textContent = "Draft ready — review and approve.";
+    } else {
+      // Fallback: put prompt in status for manual chat
+      status.textContent = "Could not auto-generate (chat API). Copy the request into Chat with a coder model, then paste the reply into Source and click parse via Approve after editing.";
+      document.querySelector("#tool-source").value = prompt;
+    }
+  } catch (e) {
+    status.textContent = e.message || "Generate failed";
+  }
+});
+
+document.querySelector("#tool-test")?.addEventListener("click", async () => {
+  const status = document.querySelector("#tool-review-status");
+  // Test the draft without registering it; approval is a separate action.
+  try {
+    const args = JSON.parse(document.querySelector("#tool-args").value || "{}");
+    const run = await fetch("/api/local-tools/test", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ source: document.querySelector("#tool-source").value, arguments: args }),
+    });
+    const result = await run.json();
+    if (!run.ok) throw new Error(result.error || "Draft test failed");
+    status.textContent = JSON.stringify(result).slice(0, 800);
+  } catch (e) {
+    status.textContent = e.message || "Test failed";
+  }
+});
+
+document.querySelector("#tool-approve")?.addEventListener("click", async () => {
+  const status = document.querySelector("#tool-review-status");
+  try {
+    const body = {
+      name: document.querySelector("#tool-name").value.trim(),
+      description: document.querySelector("#tool-description").value.trim(),
+      source: document.querySelector("#tool-source").value,
+    };
+    const res = await fetch("/api/local-tools", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Save failed");
+    status.textContent = "Saved " + data.tool.name;
+    refreshLocalTools();
+  } catch (e) {
+    status.textContent = e.message || "Approve failed";
+  }
+});
+
+document.querySelector("#tool-refresh-list")?.addEventListener("click", refreshLocalTools);
+
+// Hook view switches
+const _origShow = typeof showView === "function" ? showView : null;
+document.querySelectorAll("[data-view='code']").forEach((el) => {
+  el.addEventListener("click", () => setTimeout(refreshCodeProject, 50));
+});
+document.querySelectorAll("[data-view='tools']").forEach((el) => {
+  el.addEventListener("click", () => setTimeout(refreshLocalTools, 50));
+});

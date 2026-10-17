@@ -108,21 +108,40 @@
           </div>
         </section>
 
-        <section class="view" id="view-code">
+                <section class="view" id="view-code">
           <div class="page-content">
-            <div class="page-intro"><div class="eyebrow"><span class="eyebrow-line"></span> BUILD WITH CONTEXT</div><h1>Code <em>workspace</em></h1><p>A focused place for your projects, coding agent, and reviewable changes.</p></div>
-            <div class="code-empty-state">
-              <div class="code-window-icon"><span>‹/›</span></div><div class="status-tag planned"><span></span> LOCAL CODING MODEL AVAILABLE</div>
-              <h2>Try the Qwen coder.</h2><p>Qwen2.5-Coder-14B is loaded from this Mac. Its first small app, Daylight, is ready to try and saved in your Library. Project folders, direct file edits, and the scoped terminal are the next coding-workspace steps.</p>
-              <button class="primary-button" id="use-coder-model" type="button">Open Qwen Coder in chat <span>↗</span></button>
-              <a class="primary-button" href="/daylight.html" target="_blank" rel="noreferrer">Open Daylight app <span>↗</span></a>
-              <div class="code-capabilities"><div><span>01</span><strong>Project-aware skills</strong><small>Detect languages, frameworks, CMSs, and project rules.</small></div><div><span>02</span><strong>Review every change</strong><small>Inspect a diff before accepting edits or running commands.</small></div><div><span>03</span><strong>Scoped execution</strong><small>Keep file access and terminal actions within the project.</small></div></div>
-              <div class="prototype-note">Folder access and the coding agent are not connected in this first preview.</div>
+            <div class="page-intro"><div class="eyebrow"><span class="eyebrow-line"></span> BUILD WITH CONTEXT</div><h1>Code <em>workspace</em></h1><p>Project-aware agent with file tools, a scoped terminal, and a playbook that grows with you.</p></div>
+            <div class="runtime-banner"><div class="runtime-symbol">{ }</div><div><strong id="code-project-title">No project folder selected</strong><p id="code-project-copy">Choose a folder on this Mac. The agent can only read and write inside it.</p></div><span class="runtime-state" id="code-project-state">IDLE</span></div>
+            <div class="model-ingest-grid" style="margin-bottom:20px;">
+              <section class="model-ingest-card">
+                <div class="ingest-eyebrow">PROJECT</div>
+                <h2>Folder</h2>
+                <label class="field-label" for="code-project-path">Absolute path</label>
+                <input class="model-text-input" id="code-project-path" placeholder="/Users/you/Projects/my-app" autocomplete="off">
+                <button class="primary-button" id="code-set-project" type="button">Use this folder</button>
+                <button class="secondary-button" id="code-refresh-tree" type="button">Refresh tree</button>
+              </section>
+              <section class="model-ingest-card">
+                <div class="ingest-eyebrow">TREE</div>
+                <h2>Files</h2>
+                <div id="code-tree" class="lora-list" style="max-height:220px;overflow:auto;"><div class="empty-card">Select a project folder.</div></div>
+                <small>Click files to add them to agent context (max 40).</small>
+              </section>
+            </div>
+            <div class="section-heading"><div><h2>Coding agent</h2><p>Uses the selected chat model with list/read/write/run tools scoped to the project.</p></div></div>
+            <div class="image-workspace">
+              <div id="code-chat-log" class="pdf-read-result" style="min-height:180px;max-height:320px;overflow:auto;margin-bottom:12px;">Messages appear here.</div>
+              <label class="field-label" for="code-input">Message</label>
+              <textarea id="code-input" rows="3" maxlength="12000" placeholder="e.g. List the project structure and propose a small fix to README…"></textarea>
+              <div class="image-form-footer" style="margin-top:10px;">
+                <small id="code-status">Ready when a project folder is set.</small>
+                <button class="primary-button" id="code-send" type="button">Send to coding agent <span>↗</span></button>
+              </div>
             </div>
           </div>
         </section>
 
-        <section class="view" id="view-models">
+<section class="view" id="view-models">
           <div class="page-content">
             <div class="page-intro split-intro"><div><div class="eyebrow"><span class="eyebrow-line"></span> YOUR INFERENCE CONTROL ROOM</div><h1>Model <em>center</em></h1><p>Choose a local model for chat, coding, and other app features.</p></div><button class="secondary-button" id="refresh-models">↻ Refresh</button></div>
             <div class="runtime-banner" id="runtime-banner"><div class="runtime-symbol">◈</div><div><strong id="runtime-title">Checking the in-app model engine…</strong><p id="runtime-copy">Looking for supported local models and the in-app engine.</p></div><span class="runtime-state" id="runtime-state">CHECKING</span></div>
@@ -200,8 +219,8 @@
               <form id="image-form" class="image-form">
                 <label class="field-label" for="image-engine">Image engine</label>
                 <select id="image-engine">
-                  <option value="auto">Auto (checking available engines)</option>
-                  <option value="pytorch">PyTorch (checking availability)</option>
+                  <option value="auto">Auto (prefer PyTorch MPS when available)</option>
+                  <option value="pytorch">PyTorch MPS (reliable / modern models)</option>
                   <option value="sd_cpp">stable-diffusion.cpp (lightweight)</option>
                 </select>
                 <label class="field-label" for="image-checkpoint">Image model</label><select id="image-checkpoint" required><option value="">Finding image models…</option></select>
@@ -239,7 +258,36 @@
                 <form class="pdf-tool-card" id="pdf-edit-form"><div class="tool-row-icon green">✎</div><h3>Edit a PDF</h3><label for="pdf-edit-source">Original PDF</label><select id="pdf-edit-source"><option value="">Choose from Library…</option></select><label for="pdf-edit-title">New title (optional)</label><input id="pdf-edit-title" maxlength="180" placeholder="Update document title"><label for="pdf-edit-note">Append a note page (optional)</label><textarea id="pdf-edit-note" maxlength="20000" rows="4" placeholder="Add context or a revision note…"></textarea><button class="primary-button" type="submit">Save revised copy <span>↗</span></button><small>The original stays in your Library.</small></form>
               </div>
             </div>
-            <div class="section-heading"><div><h2>Your toolbox</h2><p>Start with a small, understandable set. Add capabilities when you need them.</p></div><button class="secondary-button" disabled>＋ Add tool</button></div>
+
+            <div class="section-heading"><div><h2>Create a local tool</h2><p>Describe a tool → the coder drafts Python → you review, edit, approve, then run it.</p></div><span class="status-tag ready"><span></span> MVP</span></div>
+            <div class="model-ingest-grid">
+              <section class="model-ingest-card">
+                <div class="ingest-eyebrow">REQUEST</div>
+                <h2>Describe the tool</h2>
+                <textarea id="tool-request" rows="4" maxlength="4000" placeholder="e.g. A tool that counts words in a string and returns {ok, word_count, unique_words}"></textarea>
+                <button class="secondary-button" id="tool-build-prompt" type="button">Build prompt for coder</button>
+                <button class="primary-button" id="tool-generate" type="button">Generate with current model</button>
+                <div class="model-download-status" id="tool-gen-status" role="status"></div>
+              </section>
+              <section class="model-ingest-card">
+                <div class="ingest-eyebrow">REVIEW</div>
+                <h2>Source &amp; metadata</h2>
+                <label class="field-label" for="tool-name">Name</label>
+                <input class="model-text-input" id="tool-name" placeholder="word_counter" autocomplete="off">
+                <label class="field-label" for="tool-description">Description</label>
+                <input class="model-text-input" id="tool-description" placeholder="Counts words in text">
+                <label class="field-label" for="tool-source">Python source</label>
+                <textarea id="tool-source" rows="10" maxlength="80000" placeholder="def run(**kwargs):&#10;    text = kwargs.get('text', '')&#10;    return {'ok': True, 'result': len(text.split())}"></textarea>
+                <label class="field-label" for="tool-args">Test arguments (JSON)</label>
+                <input class="model-text-input" id="tool-args" value="{}" autocomplete="off">
+                <button class="secondary-button" id="tool-test" type="button">Test run</button>
+                <button class="primary-button" id="tool-approve" type="button">Approve &amp; save</button>
+                <div class="model-download-status" id="tool-review-status" role="status"></div>
+              </section>
+            </div>
+            <div class="section-heading"><div><h2>Saved local tools</h2><p>Approved Python tools you can run manually or expose to chat later.</p></div><button class="secondary-button" id="tool-refresh-list" type="button">↻ Refresh</button></div>
+            <div id="local-tools-list" class="lora-list"><div class="empty-card">No local tools saved yet.</div></div>
+<div class="section-heading"><div><h2>Your toolbox</h2><p>Start with a small, understandable set. Add capabilities when you need them.</p></div><button class="secondary-button" disabled>＋ Add tool</button></div>
             <div class="tool-list">
               <article class="tool-row"><span class="tool-row-icon blue">⌕</span><div><strong>Project search</strong><p>Find files and symbols inside an approved workspace.</p></div><span class="status-tag upcoming"><span></span> PLANNED</span></article>
               <article class="tool-row"><span class="tool-row-icon violet">▤</span><div><strong>Skill library</strong><p>Reusable playbooks for languages, CMSs, frameworks, and workflows.</p></div><span class="status-tag upcoming"><span></span> PLANNED</span></article>
