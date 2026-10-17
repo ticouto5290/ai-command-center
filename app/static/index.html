@@ -128,13 +128,50 @@
             <div class="runtime-banner" id="runtime-banner"><div class="runtime-symbol">◈</div><div><strong id="runtime-title">Checking the in-app model engine…</strong><p id="runtime-copy">Looking for supported local models and the in-app engine.</p></div><span class="runtime-state" id="runtime-state">CHECKING</span></div>
             <div class="section-heading"><div><h2>Models in this app</h2><p>Selected models load directly from their existing files.</p></div><span class="count-badge" id="model-count">0 models</span></div>
             <div class="model-grid" id="model-grid"><div class="empty-card">Checking for installed models…</div></div>
+
+            <div class="section-heading import-heading"><div><h2>Recommended models (manual download)</h2><p>Primary path is Apple MLX on native macOS. Download the MLX or GGUF files below, then add them via the sections further down or place MLX models where the app already discovers them.</p></div></div>
+            <div class="model-recommend-grid" style="display:grid;gap:14px;margin-bottom:28px;">
+              <section class="model-ingest-card">
+                <div class="ingest-eyebrow">PRIMARY · CHAT + NSFW/SFW · MLX</div>
+                <h2>Qwen3.8-27B Uncensored (MLX)</h2>
+                <p>Best all-rounder for this app. Handles normal and uncensored content, tool calling, and long context. Prefer the 4-bit MLX build on Apple Silicon.</p>
+                <p style="font-size:13px;opacity:.85;margin:8px 0 12px;">Typical size ~15–18 GB · Recommended RAM 32 GB+</p>
+                <a class="model-doc-link" href="https://huggingface.co/sktthehacker/Qwen3.8-27B-Uncensored-MLX" target="_blank" rel="noreferrer">Hugging Face · MLX builds ↗</a>
+                <a class="model-doc-link" href="https://huggingface.co/models?search=Qwen3.8-27B+Uncensored+MLX" target="_blank" rel="noreferrer" style="margin-left:12px;">Search related MLX ↗</a>
+              </section>
+              <section class="model-ingest-card">
+                <div class="ingest-eyebrow">FAST MOE · MLX / GGUF</div>
+                <h2>Qwen3.6-35B-A3B Abliterated</h2>
+                <p>Mixture-of-Experts (~3B active). Very fast decode on Apple Silicon while keeping strong quality. Good second model when you want speed.</p>
+                <p style="font-size:13px;opacity:.85;margin:8px 0 12px;">Typical size ~18–22 GB · Recommended RAM 24–32 GB+</p>
+                <a class="model-doc-link" href="https://huggingface.co/models?search=Qwen3.6-35B-A3B+abliterated" target="_blank" rel="noreferrer">Search Abliterated builds ↗</a>
+                <a class="model-doc-link" href="https://huggingface.co/models?search=Qwen3.6-35B-A3B+MLX" target="_blank" rel="noreferrer" style="margin-left:12px;">Search MLX ↗</a>
+              </section>
+              <section class="model-ingest-card">
+                <div class="ingest-eyebrow">CODING SPECIALIST</div>
+                <h2>Qwen3-Coder / Qwen3.8 Coder family</h2>
+                <p>Use these for coding workspace, app generation, edits, and tool creation. Prefer MLX when available; GGUF also works via llama.cpp.</p>
+                <p style="font-size:13px;opacity:.85;margin:8px 0 12px;">14B–30B class · 16–32 GB depending on quant</p>
+                <a class="model-doc-link" href="https://huggingface.co/models?search=Qwen3-Coder" target="_blank" rel="noreferrer">Qwen3-Coder search ↗</a>
+                <a class="model-doc-link" href="https://huggingface.co/models?search=Qwen2.5-Coder-14B+MLX" target="_blank" rel="noreferrer" style="margin-left:12px;">Existing 14B MLX ↗</a>
+              </section>
+              <section class="model-ingest-card">
+                <div class="ingest-eyebrow">SMALLER / FASTER</div>
+                <h2>Qwen3.5-9B or Gemma-4 12B/26B Heretic</h2>
+                <p>Good when you need lower memory or higher tokens/sec. Uncensored / Heretic / Aggressive variants exist for both SFW and NSFW use.</p>
+                <p style="font-size:13px;opacity:.85;margin:8px 0 12px;">~6–12 GB · Fits 16–24 GB Macs more comfortably</p>
+                <a class="model-doc-link" href="https://huggingface.co/models?search=Qwen3.5-9B+uncensored" target="_blank" rel="noreferrer">Qwen3.5-9B uncensored ↗</a>
+                <a class="model-doc-link" href="https://huggingface.co/models?search=Gemma-4+Heretic" target="_blank" rel="noreferrer" style="margin-left:12px;">Gemma-4 Heretic ↗</a>
+              </section>
+            </div>
+
             <div class="section-heading import-heading"><div><h2>Local GGUF models</h2><p>Models in LM Studio and this app’s model folder appear here.</p></div></div>
             <div class="model-grid" id="import-grid"><div class="empty-card">Looking for local GGUF files…</div></div>
             <div class="model-ingest-grid">
               <section class="model-ingest-card">
                 <div class="ingest-eyebrow">PUBLIC HUGGING FACE REPOSITORY</div><h2>Get a model</h2>
-                <p>Choose a single-file GGUF quantization. For a 7B model on this 16 GB Mac, start with a Q4 quant around 4–5 GB. Standard Safetensors files are not supported by this chat engine yet.</p>
-                <label class="field-label" for="hf-repo">Repository</label><input class="model-text-input" id="hf-repo" value="bartowski/Qwen2.5-7B-Instruct-GGUF" autocomplete="off">
+                <p>Choose a single-file GGUF quantization. Prefer Q4_K_M when available. MLX models are preferred on native macOS (see recommended list above). Standard Safetensors are not supported by the GGUF chat engine.</p>
+                <label class="field-label" for="hf-repo">Repository</label><input class="model-text-input" id="hf-repo" value="bartowski/Qwen2.5-Coder-14B-Instruct-GGUF" autocomplete="off">
                 <button class="secondary-button" id="hf-list-files" type="button">Find GGUF files</button>
                 <label class="field-label model-file-label" for="hf-file">Model file</label><select class="model-text-input" id="hf-file" disabled><option value="">Find files in a repository first</option></select>
                 <button class="primary-button" id="hf-download" type="button" disabled>Download to this app <span>↓</span></button>
