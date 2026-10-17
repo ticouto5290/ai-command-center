@@ -1,0 +1,148 @@
+IRIS / AI Command Center — remaining work (detailed)
+=====================================================
+Updated: 2026-10-17
+
+This file lists what is still left to develop. Items already shipped are noted
+at the bottom for reference.
+
+
+-------------------------------------------------------------------------------
+A. CHAT / MODELS
+-------------------------------------------------------------------------------
+A1. Model reliability
+    - Surface clear errors when llama-server / MLX fail to start (log tail in UI).
+    - Auto-retry CPU fallback when Metal context fails.
+    - Show load progress while a large model is starting.
+
+A2. Model path UX (partially done)
+    - DONE: Register .gguf or MLX folder from any absolute path.
+    - DONE: Discovery scans LM Studio, app store, env AICC_MODEL_DIRS, common folders.
+    - TODO: Folder picker native dialog (currently paste path only).
+    - TODO: Watch folders for new models without Refresh.
+    - TODO: Validate quant / arch before load; warn if RAM may be insufficient.
+
+A3. Multi-model
+    - Keep last N models warm or faster switch.
+    - Per-session model sticky with visible status badge.
+
+
+-------------------------------------------------------------------------------
+B. IMAGES
+-------------------------------------------------------------------------------
+B1. DONE: PyTorch MPS engine, LoRA load attempt, lower peak memory (slicing/offload).
+B2. DONE: Engine selector Auto / PyTorch / sd.cpp.
+B3. TODO: Blank-frame detection for sd.cpp path (mean/std check + log tail).
+B4. TODO: Robust LoRA formats for PyTorch (more weight_name variants, SDXL specifics).
+B5. TODO: Progress % / step UI during generation.
+B6. TODO: img2img / inpaint / upscale.
+B7. TODO: Flux / SD3 pipelines when checkpoints present.
+
+
+-------------------------------------------------------------------------------
+C. CODE WORKSPACE
+-------------------------------------------------------------------------------
+C1. DONE (MVP): project folder, tree, select context, coding chat tools
+    list_dir / read_file / write_file / run_command / add_lesson.
+C2. TODO: Diff preview UI before applying write_file.
+C3. TODO: Stronger command sandbox (allowlist binaries).
+C4. TODO: Git status panel; commit message helper.
+C5. TODO: Multi-file edit plan + apply with rollback.
+
+
+-------------------------------------------------------------------------------
+D. TOOLS
+-------------------------------------------------------------------------------
+D1. DONE (MVP): Local tool generate / review / approve / test / run / delete.
+D2. DONE: PDF create / read / revise; HTTP custom tools; MCP server config storage.
+D3. DONE: Expose approved local Python tools to chat; each tool must be selected for the conversation.
+D3a. DONE: Optional Brave web search tool with per-chat enablement, local key storage,
+    freshness/country options, untrusted-result handling, and source URL output.
+D4. TODO: Schema form builder for tool arguments (not only JSON textarea).
+D5. TODO: MCP full lifecycle (connect/disconnect/status, tool list live).
+D6. TODO: Richer PDF (markdown→PDF, merge/split, tables).
+
+
+-------------------------------------------------------------------------------
+E. IRIS UI (HYBRID)
+-------------------------------------------------------------------------------
+E1. DONE: Orbital home HUD (Prop 1 style).
+E2. DONE: Node open → Chat/Code/Images/Tools switch to real views; Email/Voice stay in split.
+E3. DONE: Live-ish status hooks (MLX, image engine, coding project, tool count).
+E4. TODO: Embed live chat/code/images INSIDE the split workspace (no view jump).
+E5. TODO: Real Approvals queue (email drafts, code diffs, image batches) with
+    Approve / Reject / Edit actions persisted in storage.
+E6. PARTIAL: Push-to-talk STT and browser TTS controls are implemented. Assistant
+    replies can optionally be spoken aloud, and transcripts remain reviewable before
+    sending. Recognition
+    uses the browser's speech service when available, so audio processing and network
+    behavior depend on the browser/provider. Transcript is reviewed before insertion
+    into chat. Voice names are best-effort matches from installed browser voices.
+    TODO: fully local offline STT model; thinking-state tied to model stream; macOS say fallback.
+E7. TODO: Email node: read inbox / draft / save draft / user Send (connector).
+E8. TODO: Node canvas automation graph (optional advanced mode).
+E9. TODO: Sound design / orb animation tied to voice state.
+
+
+-------------------------------------------------------------------------------
+F. SESSIONS
+-------------------------------------------------------------------------------
+F1. DONE: Rename, archive, export JSON, delete from recent list menu.
+F2. TODO: Search sessions by title/content.
+F3. DONE: Browse and restore archived sessions from the session list.
+F4. TODO: Export as Markdown.
+
+
+-------------------------------------------------------------------------------
+G. PLATFORM / PACKAGING
+-------------------------------------------------------------------------------
+G1. TODO: Native macOS app packaging (Tauri or similar) beyond run.command.
+G2. TODO: First-run wizard (engines, models path, IRIS intro).
+G3. TODO: Move Docker files to optional/ and document as CPU-only legacy.
+G4. TODO: Auto-update or version badge.
+
+
+-------------------------------------------------------------------------------
+H. AUTOMATIONS / INTEGRATIONS
+-------------------------------------------------------------------------------
+H1. TODO: n8n or internal workflow runner.
+H2. TODO: Folder watchers → proposals only (no silent side effects).
+H3. TODO: Calendar / email connectors with explicit OAuth and review-before-act.
+
+
+-------------------------------------------------------------------------------
+I. SECURITY / HARDENING
+-------------------------------------------------------------------------------
+I1. TODO: Stricter path allowlists for coding tools when desired.
+I2. TODO: Tool execution resource limits (CPU time, memory).
+I3. PARTIAL: Brave API key stays outside prompts/logs in an ignored, owner-only
+    local data file. TODO: use macOS Keychain and add settings for other provider keys.
+
+
+-------------------------------------------------------------------------------
+ALREADY SHIPPED (summary)
+-------------------------------------------------------------------------------
+- Native-first README; Docker optional
+- Recommended model links on Models page
+- MLX preferred in model list
+- Any-path model registration (GGUF + MLX folder)
+- Browser-based IRIS push-to-talk, transcript review, and selectable voice test
+- Optional spoken assistant replies in IRIS voice mode
+- Web search from chat using Brave Search, with local key configuration
+- Approved local Python tools available as per-chat model tools
+- PyTorch image engine + LoRAs + memory opts
+- Coding workspace MVP
+- Local tool create/review MVP
+- Session rename/archive/restore/export/delete
+- IRIS hybrid UI shell (orbital home + node routing)
+
+
+-------------------------------------------------------------------------------
+SUGGESTED NEXT IMPLEMENTATION ORDER
+-------------------------------------------------------------------------------
+1. A1 model error surfacing + load status (chat reliability)
+2. C2 diff preview before project file writes
+3. D5 live MCP connect/disconnect and tool discovery
+4. E5 approvals queue + E7 email draft flow
+5. B3 blank-frame detection and image runtime diagnostics
+6. E6 offline speech recognition
+7. G1 native macOS packaging

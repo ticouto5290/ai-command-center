@@ -10,7 +10,9 @@ Requires macOS on Apple Silicon, Python 3.11+, Git, and CMake. Double-click `run
 
 The app binds to localhost. Local models and session data stay on this Mac. Model files already stored by LM Studio are read in place; the app does not launch or call LM Studio. Coding file tools are restricted to the selected project folder. Terminal commands run with your macOS account permissions and are not isolated by an OS sandbox.
 
-The Models page discovers MLX folders and GGUF files in the LM Studio model directory. This Mac currently has Qwen3 4B MLX, Qwen2.5 Coder 14B MLX, and Qwen2.5 0.5B GGUF registered for selection. Model weights stay in their existing folders and load into the app-managed runtime when you send a message.
+The Models page discovers MLX folders and GGUF files in the LM Studio model directory and common model folders. You can also register a GGUF file or MLX folder by its absolute path. Registration points IRIS at the existing files; it does not copy model weights. Models load into the app-managed runtime when selected for use.
+
+For optional web search, add a Brave Search API key in Settings. The key is stored locally under `app/data/` with owner-only file permissions and is ignored by Git. When **Search the web** is enabled for a conversation, the query and key are sent to Brave Search; results are returned to the selected local model with source URLs.
 
 **Preferred engines on native macOS**
 - Chat / coding: Apple **MLX first** (models listed first in the UI), then llama.cpp (GGUF + Metal).
@@ -51,20 +53,24 @@ Stop Docker before using native mode: `docker compose --env-file .env.docker dow
 
 - Chat with local **MLX** models (preferred, listed first) and GGUF models through the app-managed engines.
 - Recommended model links on the Models page for manual download.
+- **Local models:** discover GGUF and MLX models or register them directly by path; model weights remain in place.
+- **Chat tools:** PDF tools and approved local Python tools can be selected per conversation. Local tools run only when selected and invoked by the model.
+- **Web search:** optional Brave Search integration can be enabled per conversation after adding an API key in Settings. Queries are sent to Brave; results and source URLs are provided to the local model.
+- **IRIS voice controls (browser-based):** push-to-talk speech recognition, transcript review before insertion into chat, selectable browser text-to-speech voices, a voice test, and optional spoken model replies. Speech recognition availability and audio processing depend on the browser and its speech service; voice names are best-effort matches.
 - **Image Studio engines:** Auto / PyTorch MPS / stable-diffusion.cpp (select in UI). PyTorch path uses attention/VAE slicing and sequential CPU offload to lower peak memory (slower is OK). Optional: `pip install torch torchvision diffusers transformers accelerate safetensors` in `.venv`.
 - **Code workspace (MVP):** set a project folder, browse tree, select context files, chat with coding agent tools (`list_dir`, `read_file`, `write_file`, `run_command`, `add_lesson`).
 - **Sessions:** rename, archive and restore, export JSON, delete from the recent list menu (⋯). Session data cascades when deleted.
-- **IRIS hybrid workspace (early UI):** live model/image/code/tool status, an orbital overview, and navigable Chat/Code/Images/Tools/Email/Voice nodes. Email and Voice are visual placeholders; their integrations remain to be built.
-- **Local tool create/review (MVP):** Tools page → describe tool → generate → review/edit source → test a draft → approve. Draft tests do not register or save the tool. Approved tools are stored under `app/data/tools/`.
+- **IRIS hybrid workspace (early UI):** live model/image/code/tool status, an orbital overview, and navigable Chat/Code/Images/Tools/Email/Voice nodes. Email remains a visual placeholder; deeper voice integration such as offline recognition remains to be built.
+- **Local tool create/review (MVP):** Tools page → describe tool → generate → review/edit source → test a draft → approve. Draft tests do not register or save the tool. Approved tools are stored under `app/data/tools/` and can be enabled for chat.
 - PDF create/read/edit tools; Library; custom HTTP tools; MCP stdio config.
 
 ## Still to build
 
 - Coding workspace polish: diff preview UI, stronger sandbox, richer playbook.
-- Local tools: expose approved tools as per-chat LLM tools; better schema editor.
+- Local tools: better schema editor and richer approval controls.
 - Blank-frame detection for sd.cpp; stronger image runtime diagnostics.
 - Model Center hardware controls; Model Workshop (LoRA training).
-- MCP lifecycle controls; Automations (n8n); Jarvis voice; coding diff review and an OS-level terminal sandbox.
+- MCP lifecycle controls; Automations (n8n); offline Jarvis speech recognition; coding diff review and an OS-level terminal sandbox.
 - Native macOS packaging (beyond `run.command`).
 
 ## App layout

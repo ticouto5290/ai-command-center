@@ -91,6 +91,8 @@
                   <label><input type="checkbox" data-chat-tool="create_pdf"><span><strong>Create PDF</strong><small>Turn a request into a saved document</small></span></label>
                   <label><input type="checkbox" data-chat-tool="read_pdf"><span><strong>Read PDF</strong><small>Find and summarize library documents</small></span></label>
                   <label><input type="checkbox" data-chat-tool="edit_pdf"><span><strong>Edit PDF</strong><small>Save a revised copy with notes or title</small></span></label>
+                  <label id="web-search-tool-row"><input type="checkbox" data-chat-tool="web_search" disabled><span><strong>Search the web</strong><small id="web-search-tool-status">Add a Brave Search key in Settings to enable it.</small></span></label>
+                  <div id="local-chat-tools"></div>
                 </div>
                 <button class="text-link" data-view="tools">Open tool workspace <span>↗</span></button>
               </div>
@@ -206,6 +208,14 @@
                 <div class="model-upload-name" id="gguf-file-name">No file selected</div>
                 <button class="primary-button" id="gguf-add" type="button" disabled>Add model to app <span>↗</span></button>
               </section>
+              <section class="model-ingest-card">
+                <div class="ingest-eyebrow">ANYWHERE ON THIS MAC</div><h2>Use a model by path</h2>
+                <p>Register a <strong>.gguf file</strong> or an <strong>MLX model folder</strong> containing config.json and weights. IRIS uses the model in place; it does not copy the files.</p>
+                <label class="field-label" for="model-path-input">Absolute path</label>
+                <input class="model-text-input" id="model-path-input" placeholder="/Users/you/Models/my-model.gguf" autocomplete="off">
+                <button class="primary-button" id="model-path-add" type="button">Add model path <span>↗</span></button>
+                <div class="model-download-status" id="model-path-status" role="status"></div>
+              </section>
             </div>
             <div class="section-heading import-heading"><div><h2>Model workshop</h2><p>A home for adapting a base model to your own data.</p></div><span class="status-tag planned"><span></span> NEXT PHASE</span></div>
             <section class="model-ingest-card workshop-card"><div><div class="ingest-eyebrow">CUSTOM MODEL TRAINING</div><h2>Fine-tune your own assistant</h2><p>Training a foundation model from scratch takes far more data and compute than this laptop provides. A practical first version is LoRA or QLoRA fine-tuning: choose a base model, add example conversations or task data, train an adapter, compare its answers, then use the adapter in chat. Training controls, dataset checks, and evaluation are not connected yet.</p><a class="model-doc-link" href="https://github.com/ml-explore/mlx-lm/blob/main/mlx_lm/LORA.md" target="_blank" rel="noreferrer">See Apple MLX fine-tuning guide ↗</a></div><div class="workshop-steps"><span>01 · Base model</span><span>02 · Training examples</span><span>03 · Fine-tune & evaluate</span><span>04 · Add to chat</span></div></section>
@@ -287,10 +297,11 @@
                 <div class="model-download-status" id="tool-review-status" role="status"></div>
               </section>
             </div>
-            <div class="section-heading"><div><h2>Saved local tools</h2><p>Approved Python tools you can run manually or expose to chat later.</p></div><button class="secondary-button" id="tool-refresh-list" type="button">↻ Refresh</button></div>
+            <div class="section-heading"><div><h2>Saved local tools</h2><p>Approved Python tools you can run manually or enable for chat.</p></div><button class="secondary-button" id="tool-refresh-list" type="button">↻ Refresh</button></div>
             <div id="local-tools-list" class="lora-list"><div class="empty-card">No local tools saved yet.</div></div>
 <div class="section-heading"><div><h2>Your toolbox</h2><p>Start with a small, understandable set. Add capabilities when you need them.</p></div><button class="secondary-button" disabled>＋ Add tool</button></div>
             <div class="tool-list">
+              <article class="tool-row"><span class="tool-row-icon blue">⌕</span><div><strong>Internet search</strong><p>Search with Brave and bring cited results into a local chat. Configure the API key in Settings.</p></div><span class="status-tag ready"><span></span> AVAILABLE</span></article>
               <article class="tool-row"><span class="tool-row-icon blue">⌕</span><div><strong>Project search</strong><p>Find files and symbols inside an approved workspace.</p></div><span class="status-tag upcoming"><span></span> PLANNED</span></article>
               <article class="tool-row"><span class="tool-row-icon violet">▤</span><div><strong>Skill library</strong><p>Reusable playbooks for languages, CMSs, frameworks, and workflows.</p></div><span class="status-tag upcoming"><span></span> PLANNED</span></article>
               <article class="tool-row"><span class="tool-row-icon amber">⛓</span><div><strong>MCP connections</strong><p>Connect this assistant to compatible local or remote tool servers.</p></div><span class="status-tag upcoming"><span></span> PLANNED</span></article>
@@ -382,13 +393,25 @@
                 <aside class="iris-voice-rail">
                   <h3>VOICE</h3>
                   <div class="iris-mini-orb" id="iris-voice-orb">IRIS</div>
-                  <p class="iris-voice-state" id="iris-voice-state">Idle · push-to-talk later</p>
-                  <div class="iris-wave"></div>
-                  <p class="iris-muted">Local STT/TTS will attach here. Mic stays on-device.</p>
+                  <p class="iris-voice-state" id="iris-voice-state">Idle</p>
+                  <div class="iris-wave" id="iris-wave"></div>
+                  <label class="field-label" for="iris-voice-select" style="color:#7a93b0;font-size:10px;letter-spacing:0.12em;">VOICE</label>
+                  <select id="iris-voice-select" class="model-text-input" style="margin:6px 0 10px;background:#0a1628;color:#e8f4ff;border-color:rgba(0,212,255,0.25);">
+                    <option value="A">Voice A — warm</option>
+                    <option value="B">Voice B — clear</option>
+                  </select>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+                    <button type="button" class="primary-button" id="iris-ptt" style="flex:1;">Hold to talk</button>
+                    <button type="button" class="secondary-button" id="iris-stop-speak">Stop</button>
+                  </div>
+                  <button type="button" class="secondary-button" id="iris-test-voice" style="width:100%;margin-bottom:10px;">Test selected voice</button>
+                  <label class="iris-speak-replies"><input type="checkbox" id="iris-speak-replies"><span>Speak assistant replies aloud</span></label>
+                  <p class="iris-muted" id="iris-voice-hint">Voice recognition uses your browser's speech service when available. Text-to-speech uses installed browser voices.</p>
                   <div class="iris-panel" style="margin-top:16px;">
                     <h3>CONTEXT</h3>
                     <div class="iris-row"><span>Node</span><span id="iris-active-node">—</span></div>
                     <div class="iris-row"><span>Model</span><span id="iris-node-model">—</span></div>
+                    <div class="iris-row"><span>Voice</span><span id="iris-voice-name">—</span></div>
                   </div>
                 </aside>
                 <section class="iris-workspace">
@@ -422,7 +445,19 @@
                   </div>
                   <div id="iris-ws-voice" class="iris-ws" hidden>
                     <h3>VOICE NODE</h3>
-                    <p class="iris-muted">Always-on presence for IRIS. STT/TTS hooks will live in the left rail.</p>
+                    <p class="iris-muted">Use push-to-talk to capture a transcript, then place it in Chat for you to review and send.</p>
+                    <div class="iris-panel" style="margin-top:12px;">
+                      <h3 style="margin:0 0 8px;font-size:10px;letter-spacing:0.16em;color:#00d4ff;">TRANSCRIPT</h3>
+                      <div id="iris-transcript" class="iris-muted" style="min-height:120px;white-space:pre-wrap;">Press “Hold to talk” on the left, or use the button below.</div>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+                      <button type="button" class="primary-button" id="iris-ptt-main">Hold to talk</button>
+                      <button type="button" class="secondary-button" id="iris-send-transcript">Place transcript in Chat</button>
+                    </div>
+                    <div class="iris-panel" style="margin-top:16px;">
+                      <strong>Voice choices</strong>
+                      <p class="iris-muted" style="margin:8px 0 0;">Voice A and B are selected from the voices available to your browser. Voice names are used as a best-effort match; availability varies by browser and macOS.</p>
+                    </div>
                   </div>
                 </section>
               </div>
@@ -441,6 +476,14 @@
           <div class="page-content">
             <div class="page-intro"><div class="eyebrow"><span class="eyebrow-line"></span> YOUR SPACE, YOUR RULES</div><h1>Settings</h1><p>Local workspace preferences and connection status.</p></div>
             <div class="settings-list"><div class="setting-row"><div><strong>Workspace location</strong><small>This app is served from your Mac and bound to localhost.</small></div><span class="setting-value">This device</span></div><div class="setting-row"><div><strong>Local model service</strong><small>Used to discover models and send local chat messages.</small></div><span class="setting-value" id="settings-runtime">Checking…</span></div><div class="setting-row"><div><strong>Session storage</strong><small>Chats, selected models, image prompts, and image history are saved locally.</small></div><span class="setting-value">On this Mac</span></div></div>
+            <section class="model-ingest-card search-settings-card">
+              <div class="ingest-eyebrow">OPTIONAL INTERNET TOOL</div><h2>Brave Search</h2>
+              <p>Use web search from chat by enabling “Search the web” under Tools in this chat. Search queries go to Brave Search; results are sent to your selected local model. The API key is saved only on this Mac in the ignored app data folder and is never included in chat prompts or logs.</p>
+              <a class="model-doc-link" href="https://api-dashboard.search.brave.com/" target="_blank" rel="noreferrer">Get a Brave Search API key ↗</a>
+              <label class="field-label" for="brave-search-key">API key</label>
+              <input class="model-text-input" id="brave-search-key" type="password" autocomplete="off" placeholder="Paste your Brave Search API key">
+              <div class="settings-action-row"><button class="primary-button" id="save-brave-search-key" type="button">Save key</button><button class="secondary-button" id="clear-brave-search-key" type="button">Remove saved key</button><span class="setting-value" id="brave-search-state" role="status">Checking…</span></div>
+            </section>
           </div>
         </section>
       </main>

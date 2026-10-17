@@ -303,7 +303,7 @@ function updateActiveModel() {
 }
 
 elements.modelSelect.addEventListener("change", updateActiveModel);
-document.querySelector("#use-coder-model").addEventListener("click", async () => {
+document.querySelector("#use-coder-model")?.addEventListener("click", async () => {
   const coder = [...elements.modelSelect.options].find((option) => option.value === "Qwen2.5-Coder-14B-Instruct-MLX-4bit");
   if (!coder) return showToast("Qwen Coder is not available in the local model folder.");
   elements.modelSelect.value = coder.value;
@@ -606,6 +606,83 @@ function selectedChatTools() {
   return [...document.querySelectorAll("[data-chat-tool]:checked")].map((input) => input.dataset.chatTool);
 }
 
+async function refreshChatTools() {
+  const host = document.querySelector("#local-chat-tools");
+  const searchBox = document.querySelector("[data-chat-tool='web_search']");
+  const searchStatus = document.querySelector("#web-search-tool-status");
+  try {
+    const response = await fetch("/api/chat-tools", { cache: "no-store" });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Could not load chat tools.");
+    if (searchBox) {
+      searchBox.disabled = !data.web_search_configured;
+      if (!data.web_search_configured) searchBox.checked = false;
+    }
+    if (searchStatus) searchStatus.textContent = data.web_search_configured
+      ? "Search query goes to Brave Search; results are shared with this local model."
+      : "Add a Brave Search key in Settings to enable it.";
+    if (host) {
+      host.innerHTML = (data.tools || []).map((tool) => `<label><input type="checkbox" data-chat-tool="${escapeHtml(tool.chat_name)}"><span><strong>${escapeHtml(tool.name)}</strong><small>${escapeHtml(tool.description)}</small></span></label>`).join("");
+      host.querySelectorAll("[data-chat-tool]").forEach((input) => input.addEventListener("change", scheduleSessionStateSave));
+    }
+    applyChatToolSelection();
+  } catch (error) {
+    if (host) host.innerHTML = `<small>${escapeHtml(error.message || "Could not load approved tools.")}</small>`;
+  }
+}
+
+function applyChatToolSelection() {
+  const selected = Array.isArray(sessionState.chat_tools) ? sessionState.chat_tools : sessionState.pdf_tools || [];
+  document.querySelectorAll("[data-chat-tool]").forEach((input) => { input.checked = !input.disabled && selected.includes(input.dataset.chatTool); });
+}
+
+async function refreshSearchSettings() {
+  const state = document.querySelector("#brave-search-state");
+  try {
+    const response = await fetch("/api/search/config", { cache: "no-store" });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Could not read search settings.");
+    if (state) state.textContent = data.configured ? `Configured · ${data.source}` : "Not configured";
+  } catch (error) {
+    if (state) state.textContent = error.message || "Unavailable";
+  }
+}
+
+document.querySelector("#save-brave-search-key")?.addEventListener("click", async () => {
+  const input = document.querySelector("#brave-search-key");
+  const state = document.querySelector("#brave-search-state");
+  const key = input?.value?.trim();
+  if (!key) {
+    if (state) state.textContent = "Paste an API key first.";
+    return;
+  }
+  if (state) state.textContent = "Saving locally…";
+  try {
+    const response = await fetch("/api/search/config", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ api_key: key }) });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Could not save the key.");
+    input.value = "";
+    if (state) state.textContent = `Configured · ${data.source}`;
+    await refreshChatTools();
+  } catch (error) {
+    if (state) state.textContent = error.message || "Could not save the key.";
+  }
+});
+
+document.querySelector("#clear-brave-search-key")?.addEventListener("click", async () => {
+  const state = document.querySelector("#brave-search-state");
+  if (state) state.textContent = "Removing saved key…";
+  try {
+    const response = await fetch("/api/search/config", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ api_key: "" }) });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Could not remove the key.");
+    if (state) state.textContent = data.configured ? `Configured · ${data.source}` : "Not configured";
+    await refreshChatTools();
+  } catch (error) {
+    if (state) state.textContent = error.message || "Could not remove the key.";
+  }
+});
+
 function showPdfOutput(result, label) {
   const output = document.querySelector("#pdf-read-result");
   output.textContent = `${label}: ${result.filename}${result.pages ? ` · ${result.pages} pages` : ""}. Saved in your Library.`;
@@ -650,6 +727,7 @@ async function saveActiveSession() {
         sampler: document.querySelector("#image-sampler").value,
         scheduler: document.querySelector("#image-scheduler").value,
         count: Number(document.querySelector("#image-count").value),
+        chat_tools: selectedChatTools(),
       },
     }),
   });
@@ -703,6 +781,8 @@ async function startNewSession() {
 async function initializeSessions() {
   await refreshModels();
   await refreshLibrary();
+  await refreshChatTools();
+  await refreshSearchSettings();
   refreshPdfFiles();
   const response = await fetch("/api/sessions", { cache: "no-store" });
   const data = await response.json();
@@ -732,7 +812,7 @@ function applySessionState() {
   }
   if (typeof sessionState.negative_prompt === "string") document.querySelector("#image-negative").value = sessionState.negative_prompt;
   if (typeof sessionState.image_prompt === "string") document.querySelector("#image-prompt").value = sessionState.image_prompt;
-  document.querySelectorAll("[data-chat-tool]").forEach((input) => { input.checked = Array.isArray(sessionState.pdf_tools) && sessionState.pdf_tools.includes(input.dataset.chatTool); });
+  applyChatToolSelection();
   for (const [key, selector] of Object.entries({ seed_mode: "#seed-mode", seed: "#image-seed", width: "#image-width", height: "#image-height", steps: "#image-steps", cfg: "#image-cfg", sampler: "#image-sampler", scheduler: "#image-scheduler", count: "#image-count" })) {
     if (sessionState[key] !== undefined) document.querySelector(selector).value = String(sessionState[key]);
   }
@@ -746,6 +826,11 @@ function scheduleSessionStateSave() {
 
 elements.modelSelect.addEventListener("change", scheduleSessionStateSave);
 document.querySelectorAll("[data-chat-tool]").forEach((input) => input.addEventListener("change", scheduleSessionStateSave));
+const speakReplies = document.querySelector("#iris-speak-replies");
+if (speakReplies) {
+  speakReplies.checked = localStorage.getItem("iris-speak-replies") === "true";
+  speakReplies.addEventListener("change", () => localStorage.setItem("iris-speak-replies", speakReplies.checked ? "true" : "false"));
+}
 document.querySelector("#image-form").addEventListener("change", scheduleSessionStateSave);
 document.querySelector("#image-prompt").addEventListener("input", scheduleSessionStateSave);
 document.querySelector("#image-negative").addEventListener("input", scheduleSessionStateSave);
@@ -803,18 +888,29 @@ document.querySelector("#chat-form").addEventListener("submit", async (event) =>
     if (data.tool_actions?.length) {
       const notes = data.tool_actions.map((action) => {
         const result = action.result || {};
-        if (result.error) return `PDF tool error: ${result.error}`;
+        if (result.error) return `${action.name} failed: ${result.error}`;
         if (action.name === "read_pdf") return `Read ${result.filename} from your Library.`;
-        return `${action.name === "edit_pdf" ? "Revised copy saved" : "PDF saved"} in your Library as ${result.filename}.`;
+        if (action.name === "create_pdf" || action.name === "edit_pdf") return `${action.name === "edit_pdf" ? "Revised copy saved" : "PDF saved"} in your Library as ${result.filename}.`;
+        if (action.name === "web_search") return "Searched the web with Brave Search.";
+        if (action.name.startsWith("local__")) return `Ran approved local tool: ${action.name.slice(7)}.`;
+        return `Ran tool: ${action.name}.`;
       });
       answer = `${answer}\n\n${notes.join("\n")}`;
-      await refreshLibrary();
-      refreshPdfFiles();
+      const sources = [...new Map(data.tool_actions.filter((action) => action.name === "web_search")
+        .flatMap((action) => action.result?.results || [])
+        .filter((item) => item.url)
+        .map((item) => [item.url, item])).values()];
+      if (sources.length) answer += `\n\nSources:\n${sources.map((item) => `- ${item.title} — ${item.url}`).join("\n")}`;
+      if (data.tool_actions.some((action) => ["create_pdf", "read_pdf", "edit_pdf"].includes(action.name))) {
+        await refreshLibrary();
+        refreshPdfFiles();
+      }
     }
     conversation.push({ role: "assistant", content: answer });
     pending.remove();
     addMessage("assistant", answer);
     await saveActiveSession();
+    if (speakReplies?.checked) irisSpeak(answer);
   } catch (error) {
     pending.remove();
     const failure = error.message || "Something went wrong while contacting the local model.";
@@ -1251,3 +1347,231 @@ document.querySelectorAll("[data-view='iris']").forEach((el) => {
 });
 
 // Workspace buttons inside node view use existing data-view handlers
+
+
+document.querySelector("#model-path-add")?.addEventListener("click", async () => {
+  const path = document.querySelector("#model-path-input")?.value?.trim();
+  const status = document.querySelector("#model-path-status");
+  if (!path) {
+    if (status) status.textContent = "Enter an absolute path to a .gguf file or MLX model folder.";
+    return;
+  }
+  if (status) status.textContent = "Registering model path…";
+  try {
+    const res = await fetch("/api/models/import", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Could not register path");
+    if (status) status.textContent = "Added to model list: " + (data.model || path);
+    await refreshModels();
+  } catch (e) {
+    if (status) status.textContent = e.message || "Failed";
+  }
+});
+
+
+
+/* —— IRIS voice: two women voices (STT + TTS) —— */
+const irisVoice = {
+  pair: { A: null, B: null },
+  recognition: null,
+  listening: false,
+  transcript: "",
+  lastError: "",
+};
+
+function irisPickWomenVoices() {
+  const voices = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+  // Prefer known female English voices on macOS / browsers
+  const preferA = [/samantha/i, /karen/i, /moira/i, /fiona/i, /tessa/i, /veena/i, /serena/i, /female/i, /woman/i];
+  const preferB = [/karen/i, /moira/i, /fiona/i, /tessa/i, /veena/i, /samantha/i, /zira/i, /female/i];
+  const en = voices.filter((v) => /en(-|_|$)/i.test(v.lang) || /english/i.test(v.name));
+  const pool = en.length ? en : voices;
+  const score = (list, prefs) => {
+    for (const re of prefs) {
+      const hit = list.find((v) => re.test(v.name));
+      if (hit) return hit;
+    }
+    // heuristic: names often used for women on Apple
+    const soft = list.find((v) => /a$|ie$|y$/i.test(v.name.split(" ")[0] || ""));
+    return soft || list[0] || null;
+  };
+  let a = score(pool, preferA);
+  let b = score(pool.filter((v) => v !== a), preferB);
+  if (!b && pool.length > 1) b = pool.find((v) => v !== a) || a;
+  if (!a && voices.length) a = voices[0];
+  if (!b) b = a;
+  irisVoice.pair.A = a;
+  irisVoice.pair.B = b;
+  const nameEl = document.querySelector("#iris-voice-name");
+  const sel = document.querySelector("#iris-voice-select")?.value || "A";
+  const active = irisVoice.pair[sel];
+  if (nameEl) nameEl.textContent = active ? active.name : "No system voice";
+  const hint = document.querySelector("#iris-voice-hint");
+  if (hint && a) {
+    hint.textContent = `Voice A: ${a.name}${b && b !== a ? " · Voice B: " + b.name : " · Voice B uses the same voice because only one match was found"}. Browser voice names are a best-effort match.`;
+  }
+  return { A: a, B: b };
+}
+
+function irisActiveVoice() {
+  if (!irisVoice.pair.A && window.speechSynthesis) irisPickWomenVoices();
+  const sel = document.querySelector("#iris-voice-select")?.value || "A";
+  return irisVoice.pair[sel] || irisVoice.pair.A;
+}
+
+function irisSetVoiceState(state, detail) {
+  const el = document.querySelector("#iris-voice-state");
+  const orb = document.querySelector("#iris-voice-orb");
+  const wave = document.querySelector("#iris-wave");
+  if (el) el.textContent = detail || state;
+  document.querySelectorAll("#iris-ptt, #iris-ptt-main").forEach((button) => {
+    button.setAttribute("aria-pressed", state === "listening" ? "true" : "false");
+  });
+  if (orb) {
+    orb.classList.toggle("listening", state === "listening");
+    orb.classList.toggle("speaking", state === "speaking");
+  }
+  if (wave) wave.classList.toggle("active", state === "listening" || state === "speaking");
+}
+
+function irisSpeak(text) {
+  if (!window.speechSynthesis || !text) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(String(text).slice(0, 4000));
+  const voice = irisActiveVoice();
+  if (voice) u.voice = voice;
+  u.rate = 1.02;
+  u.pitch = 1.0;
+  u.onstart = () => irisSetVoiceState("speaking", "Speaking…");
+  u.onend = () => irisSetVoiceState("idle", "Idle");
+  u.onerror = () => irisSetVoiceState("idle", "Idle");
+  speechSynthesis.speak(u);
+}
+
+function irisStopSpeak() {
+  if (window.speechSynthesis) speechSynthesis.cancel();
+  irisSetVoiceState("idle", "Idle");
+}
+
+function irisEnsureRecognition() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return null;
+  if (irisVoice.recognition) return irisVoice.recognition;
+  const rec = new SR();
+  rec.continuous = false;
+  rec.interimResults = true;
+  rec.lang = "en-US";
+  rec.onstart = () => {
+    irisVoice.listening = true;
+    irisSetVoiceState("listening", "Listening…");
+  };
+  rec.onend = () => {
+    irisVoice.listening = false;
+    if (!irisVoice.lastError && !window.speechSynthesis?.speaking) irisSetVoiceState("idle", "Idle");
+  };
+  rec.onerror = (ev) => {
+    irisVoice.listening = false;
+    const messages = {
+      "not-allowed": "Microphone blocked. Allow microphone access for localhost in browser site settings.",
+      "service-not-allowed": "The browser speech service is unavailable for this page.",
+      network: "Browser speech service network error. Check the connection and try again.",
+      "no-speech": "No speech detected. Hold the button while speaking, then release.",
+      "audio-capture": "No microphone is available to the browser.",
+    };
+    irisVoice.lastError = messages[ev.error] || `Speech recognition error: ${ev.error || "unknown"}`;
+    irisSetVoiceState("idle", irisVoice.lastError);
+  };
+  rec.onresult = (ev) => {
+    let text = "";
+    for (let i = 0; i < ev.results.length; i++) {
+      text += ev.results[i][0].transcript;
+    }
+    irisVoice.transcript = text.trim();
+    const box = document.querySelector("#iris-transcript");
+    if (box) box.textContent = irisVoice.transcript || "…";
+    // Final result → optional auto-reply short ack with selected woman voice
+    if (ev.results[ev.results.length - 1].isFinal && irisVoice.transcript) {
+      irisSpeak("Got it.");
+    }
+  };
+  irisVoice.recognition = rec;
+  return rec;
+}
+
+function irisStartListen() {
+  const rec = irisEnsureRecognition();
+  if (!rec) {
+    irisSetVoiceState("idle", "Speech recognition not available in this browser");
+    return;
+  }
+  irisVoice.lastError = "";
+  try {
+    rec.start();
+  } catch (_) {
+    /* already started */
+  }
+}
+
+function irisStopListen() {
+  try {
+    irisVoice.recognition?.stop();
+  } catch (_) {}
+}
+
+function bindIrisPtt(btn) {
+  if (!btn) return;
+  const down = (e) => {
+    e.preventDefault();
+    if (e.pointerId !== undefined && btn.setPointerCapture) {
+      try { btn.setPointerCapture(e.pointerId); } catch (_) {}
+    }
+    irisStartListen();
+  };
+  const up = (e) => {
+    e.preventDefault();
+    irisStopListen();
+  };
+  btn.addEventListener("pointerdown", down);
+  btn.addEventListener("pointerup", up);
+  btn.addEventListener("pointercancel", up);
+  btn.addEventListener("keydown", (event) => { if ((event.key === " " || event.key === "Enter") && !event.repeat) down(event); });
+  btn.addEventListener("keyup", (event) => { if (event.key === " " || event.key === "Enter") up(event); });
+}
+
+bindIrisPtt(document.querySelector("#iris-ptt"));
+bindIrisPtt(document.querySelector("#iris-ptt-main"));
+
+document.querySelector("#iris-stop-speak")?.addEventListener("click", irisStopSpeak);
+document.querySelector("#iris-test-voice")?.addEventListener("click", () => {
+  irisPickWomenVoices();
+  const v = irisActiveVoice();
+  irisSpeak(v ? `Hello, I am IRIS, using ${v.name}.` : "Hello, I am IRIS.");
+});
+document.querySelector("#iris-voice-select")?.addEventListener("change", () => {
+  irisPickWomenVoices();
+  const v = irisActiveVoice();
+  if (v) irisSpeak(`Voice selected: ${v.name}`);
+});
+document.querySelector("#iris-send-transcript")?.addEventListener("click", async () => {
+  const text = irisVoice.transcript || document.querySelector("#iris-transcript")?.textContent || "";
+  if (!text || text.startsWith("Press")) {
+    irisSpeak("I did not catch a transcript yet.");
+    return;
+  }
+  switchView("chat");
+  if (elements.input) {
+    elements.input.value = text;
+    elements.input.dispatchEvent(new Event("input"));
+    elements.input.focus();
+  }
+  irisSpeak("Transcript placed in chat.");
+});
+
+if (window.speechSynthesis) {
+  speechSynthesis.onvoiceschanged = () => irisPickWomenVoices();
+  setTimeout(irisPickWomenVoices, 300);
+}

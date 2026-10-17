@@ -204,7 +204,7 @@ def save_image(session_id: str, image: dict) -> None:
 
 def save_state(session_id: str, data: dict) -> None:
     allowed = {"model", "image_checkpoint", "loras", "lora_strength", "negative_prompt", "image_prompt",
-               "seed_mode", "seed", "seed_offset", "width", "height", "steps", "cfg", "sampler", "scheduler", "count", "pdf_tools"}
+               "seed_mode", "seed", "seed_offset", "width", "height", "steps", "cfg", "sampler", "scheduler", "count", "pdf_tools", "chat_tools"}
     state = {key: value for key, value in data.items() if key in allowed}
     with _connect() as db:
         if not db.execute("SELECT 1 FROM sessions WHERE id = ?", (session_id,)).fetchone():
