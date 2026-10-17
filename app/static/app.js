@@ -14,6 +14,7 @@ const elements = {
   modelSelect: document.querySelector("#model-select"),
   modelGrid: document.querySelector("#model-grid"),
   importGrid: document.querySelector("#import-grid"),
+  imageEngine: document.querySelector("#image-engine"),
   imageCheckpoint: document.querySelector("#image-checkpoint"),
   imageLoraList: document.querySelector("#image-lora-list"),
   imageResult: document.querySelector("#image-result"),
@@ -116,10 +117,28 @@ async function refreshImageCatalog() {
     const ready = Boolean(data.engine_ready);
     const dockerCpu = Boolean(data.docker_cpu);
     document.querySelector("#image-runtime-title").textContent = checkpoints.length ? "Local image models found" : "No compatible image models found";
+    const pytorch = catalog.pytorch || {};
+    const engines = catalog.engines || {};
+    const pytorchReady = !!(engines.pytorch && engines.pytorch.ready);
+    const sdReady = !!(engines.sd_cpp && engines.sd_cpp.ready) || !!catalog.sd_cpp_ready;
+    let engineNote = "";
+    if (pytorchReady) engineNote = " PyTorch MPS is available (preferred for reliability).";
+    else if (pytorch.message) engineNote = ` ${pytorch.message}`;
+    if (sdReady) engineNote += " stable-diffusion.cpp is available.";
     document.querySelector("#image-runtime-copy").textContent = ready
-      ? `${checkpoints.length} checkpoints and ${loras.length} LoRAs are available. ${dockerCpu ? "Docker uses CPU image generation; start with a smaller image and fewer steps for faster results. " : ""}Image runs unload the chat model to free memory; the next chat message reloads it.`
-      : "The app image engine is setting up. Restart the app with run.command after setup finishes.";
-    document.querySelector("#image-runtime-state").textContent = ready ? "READY" : "SETTING UP";
+      ? `${checkpoints.length} checkpoints and ${loras.length} LoRAs are available.${engineNote} ${dockerCpu ? "Docker uses CPU image generation; start with a smaller image and fewer steps. " : ""}Image runs unload the chat model to free memory; the next chat message reloads it.`
+      : "No image engine is ready yet. On native macOS install PyTorch (see README) or finish sd.cpp setup with run.command.";
+    document.querySelector("#image-runtime-state").textContent = ready ? (pytorchReady ? "PYTORCH" : "READY") : "SETTING UP";
+    if (elements.imageEngine) {
+      const autoOpt = elements.imageEngine.querySelector('option[value="auto"]');
+      const ptOpt = elements.imageEngine.querySelector('option[value="pytorch"]');
+      const sdOpt = elements.imageEngine.querySelector('option[value="sd_cpp"]');
+      if (ptOpt) ptOpt.disabled = !pytorchReady;
+      if (sdOpt) sdOpt.disabled = !sdReady;
+      if (autoOpt) autoOpt.textContent = pytorchReady
+        ? "Auto (prefer PyTorch MPS when available)"
+        : "Auto (sd.cpp — install PyTorch for MPS)";
+    }
     banner.classList.toggle("is-connected", ready);
     elements.imageCheckpoint.innerHTML = checkpoints.length
       ? checkpoints.map((item) => `<option value="${escapeHtml(item.path)}">${escapeHtml(item.name)} · ${escapeHtml(item.location || "Local models")} · ${escapeHtml(formatSize(item.size))}</option>`).join("")
@@ -156,6 +175,7 @@ document.querySelector("#image-form").addEventListener("submit", async (event) =
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         checkpoint,
+        engine: elements.imageEngine ? elements.imageEngine.value : "auto",
         loras: [...elements.imageLoraList.querySelectorAll("input:checked")].map((input) => input.value),
         lora_strength: Number(document.querySelector("#lora-strength").value),
         session_id: activeSessionId,
@@ -248,7 +268,7 @@ function renderModels(models) {
 
   elements.modelGrid.innerHTML = models.map((model, index) => {
     const details = model.details || {};
-    const family = model.backend === "mlx" ? "Qwen Coder · Apple MLX" : details.family || details.families?.[0] || "Local model";
+    const family = model.backend === "mlx" ? "Apple MLX · preferred" : details.family || details.families?.[0] || "Local model";
     const quant = model.backend === "mlx" ? "MLX 4-bit" : details.quantization_level || "Installed";
     return `<article class="model-card ${index === 0 ? "featured-model" : ""}">
       <div class="model-card-top"><span class="model-emblem">◈</span><span class="model-ready"><i></i> READY</span></div>

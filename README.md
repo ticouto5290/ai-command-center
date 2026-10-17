@@ -11,8 +11,18 @@ Requires macOS on Apple Silicon, Python 3.11+, Git, and CMake. Double-click `run
 The app binds to localhost. Local models and session data stay on this Mac. Model files already stored by LM Studio are read in place; the app does not launch or call LM Studio.
 
 **Preferred engines on native macOS**
-- Chat / coding: Apple MLX first, then llama.cpp (GGUF + Metal).
-- Images: stable-diffusion.cpp (with safer defaults; blank-image detection planned).
+- Chat / coding: Apple **MLX first** (models listed first in the UI), then llama.cpp (GGUF + Metal).
+- Images: **PyTorch MPS** when installed (reliability / modern models), otherwise stable-diffusion.cpp.
+
+### Optional: enable PyTorch MPS image engine
+
+On native macOS, after the first `run.command` setup:
+
+```bash
+.venv/bin/pip install torch torchvision diffusers transformers accelerate safetensors
+```
+
+Then open Image Studio and choose **PyTorch MPS** (or Auto). Docker remains on the sd.cpp / CPU path only.
 
 ### Recommended models (download manually)
 

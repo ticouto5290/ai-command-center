@@ -54,6 +54,7 @@ _model_downloads: dict[str, dict] = {}
 
 
 def registered_models() -> list[dict]:
+    """Return models with MLX entries preferred (listed first) on native macOS."""
     try:
         saved = json.loads(MODEL_REGISTRY.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
@@ -73,7 +74,12 @@ def registered_models() -> list[dict]:
         if resolved is not None and resolved not in registered:
             registered.append(resolved)
     registered_paths = {item["path"] for item in registered}
-    return registered + [item for item in discover_mlx_models() if item["path"] not in registered_paths]
+    extras = [item for item in discover_mlx_models() if item["path"] not in registered_paths]
+    combined = registered + extras
+    # Prefer Apple MLX models first so the UI default and dropdown favor them.
+    mlx_models = [m for m in combined if m.get("backend") == "mlx"]
+    other_models = [m for m in combined if m.get("backend") != "mlx"]
+    return mlx_models + other_models
 
 
 def register_gguf(model_path: str) -> dict:
@@ -569,6 +575,26 @@ def upload_gguf_file(file_name: str, content_length: int, source_stream) -> dict
 
 
 def generate_image(payload: dict) -> dict:
+    """Route to PyTorch MPS or stable-diffusion.cpp based on engine preference."""
+    engine = str(payload.get("engine", "auto")).strip().lower()
+    if engine in ("pytorch", "pytorch-mps", "mps"):
+        import image_pytorch
+        return image_pytorch.generate_image(payload)
+    if engine in ("sd", "sd_cpp", "sd-cpp", "cpp"):
+        return image_runtime.generate_image(payload)
+    # auto: prefer PyTorch when available on native macOS
+    try:
+        import image_pytorch
+        status = image_pytorch.engine_status()
+        if status.get("available") and not status.get("docker"):
+            try:
+                result = image_pytorch.generate_image(payload)
+                result.setdefault("engine", "pytorch-mps" if status.get("device") == "mps" else "pytorch")
+                return result
+            except Exception:
+                pass
+    except Exception:
+        pass
     return image_runtime.generate_image(payload)
 
 

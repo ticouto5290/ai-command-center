@@ -79,11 +79,28 @@ def _catalog(roots: list[Path]) -> list[dict]:
 
 
 def image_catalog() -> dict:
+    pytorch_status = {}
+    try:
+        import image_pytorch
+        pytorch_status = image_pytorch.engine_status()
+    except Exception as exc:  # pragma: no cover
+        pytorch_status = {"available": False, "message": f"PyTorch engine unavailable: {exc}"}
+    sd_ready = IMAGE_RUNTIME.is_file()
     return {
-        "engine_ready": IMAGE_RUNTIME.is_file(),
+        "engine_ready": sd_ready or bool(pytorch_status.get("available")),
+        "sd_cpp_ready": sd_ready,
+        "pytorch": pytorch_status,
         "docker_cpu": os.environ.get("AICC_DOCKER") == "1",
         "checkpoints": _catalog(CHECKPOINT_ROOTS),
         "loras": _catalog(LORA_ROOTS),
+        "engines": {
+            "sd_cpp": {"ready": sd_ready, "label": "stable-diffusion.cpp"},
+            "pytorch": {
+                "ready": bool(pytorch_status.get("available")),
+                "label": "PyTorch MPS" if pytorch_status.get("device") == "mps" else "PyTorch",
+                "message": pytorch_status.get("message", ""),
+            },
+        },
     }
 
 

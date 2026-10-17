@@ -198,6 +198,12 @@
             <div class="runtime-banner" id="image-runtime-banner"><div class="runtime-symbol">▧</div><div><strong id="image-runtime-title">Finding your image models…</strong><p id="image-runtime-copy">Reading image models and LoRAs from local model folders.</p></div><span class="runtime-state" id="image-runtime-state">CHECKING</span></div>
             <div class="image-workspace">
               <form id="image-form" class="image-form">
+                <label class="field-label" for="image-engine">Image engine</label>
+                <select id="image-engine">
+                  <option value="auto">Auto (prefer PyTorch MPS when available)</option>
+                  <option value="pytorch">PyTorch MPS (reliable / modern models)</option>
+                  <option value="sd_cpp">stable-diffusion.cpp (lightweight)</option>
+                </select>
                 <label class="field-label" for="image-checkpoint">Image model</label><select id="image-checkpoint" required><option value="">Finding image models…</option></select>
                 <div class="section-heading lora-heading"><div><h2>LoRAs</h2><p>Choose any LoRAs for this image.</p></div><span class="count-badge" id="lora-count">0 found</span></div>
                 <div id="image-lora-list" class="lora-list"><div class="empty-card">Looking for LoRAs…</div></div>
